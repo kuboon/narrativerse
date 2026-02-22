@@ -36,8 +36,12 @@ class PlotElementsController < ApplicationController
     if @plot_element.save
       redirect_to plot_path(@plot), notice: "Element added"
     else
-      load_elements
-      render :new, status: :unprocessable_entity
+      if @plot_element.errors.details[:element_id].any? { |detail| detail[:error] == :taken }
+        redirect_to plot_path(@plot), alert: "Element already added"
+      else
+        load_elements
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 

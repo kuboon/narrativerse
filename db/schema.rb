@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2026_02_21_000008) do
+ActiveRecord::Schema[8.0].define(version: 2026_02_21_000009) do
   create_table "element_revisions", force: :cascade do |t|
     t.integer "element_id", null: false
     t.integer "user_id", null: false
@@ -44,6 +44,7 @@ ActiveRecord::Schema[8.0].define(version: 2026_02_21_000008) do
     t.datetime "updated_at", null: false
     t.index ["element_id"], name: "index_plot_elements_on_element_id"
     t.index ["element_revision_id"], name: "index_plot_elements_on_element_revision_id"
+    t.index ["plot_id", "element_id"], name: "index_plot_elements_on_plot_id_and_element_id", unique: true
     t.index ["plot_id"], name: "index_plot_elements_on_plot_id"
   end
 
