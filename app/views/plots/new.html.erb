@@ -9,6 +9,7 @@
       <div class="field">
         <%= form.label :summary %>
         <%= form.text_area :summary, rows: 4 %>
+        <%= button_to "AI summary", ai_assists_plot_summary_path, class: "btn ghost", form_class: "inline-action" %>
       </div>
       <div class="field">
         <%= form.label :scene_id, "Start scene" %>

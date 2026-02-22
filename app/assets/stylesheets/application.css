@@ -336,6 +336,10 @@ nav {
   gap: 10px;
 }
 
+.inline-action {
+  margin-top: 6px;
+}
+
 .filter-bar .actions {
   justify-content: flex-start;
 }
