@@ -257,6 +257,10 @@ nav {
   gap: 12px;
 }
 
+.card .detail-meta {
+  margin-top: 12px;
+}
+
 .meta-label {
   display: block;
   font-family: "Inter", sans-serif;

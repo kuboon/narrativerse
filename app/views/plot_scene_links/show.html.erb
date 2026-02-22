@@ -65,6 +65,16 @@
           <article class="card">
             <h3><%= branch.plot.title %></h3>
             <p><%= branch.plot.summary.presence || "No summary yet." %></p>
+            <div class="detail-meta">
+              <div>
+                <span class="meta-label">Author</span>
+                <span><%= branch.plot.user.name %></span>
+              </div>
+              <div>
+                <span class="meta-label">Scenes</span>
+                <span><%= branch.plot.plot_scene_links.count %></span>
+              </div>
+            </div>
             <%= link_to "Jump", plot_plot_scene_link_path(branch.plot, branch), class: "text-link" %>
           </article>
         <% end %>
