@@ -8,6 +8,7 @@ class PlotSceneLinksController < ApplicationController
 
     @plot_elements = @payload[:plot].plot_elements.includes(:element, :element_revision)
     @owns_plot = current_user == @payload[:plot].user
+    @fork_allowed = current_user && PlotNavigation.new(@payload[:plot]).plot_chain.none? { |plot| plot.user_id == current_user.id }
   end
 
   def new

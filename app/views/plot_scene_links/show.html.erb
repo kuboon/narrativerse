@@ -6,8 +6,10 @@
         <h1>Scene <%= @payload[:scene].id %></h1>
       </div>
       <div class="detail-actions">
-        <% if current_user %>
+        <% if @fork_allowed %>
           <%= button_to "Fork from here", fork_plot_scene_link_path(@payload[:plot], @payload[:link]), method: :post, class: "btn ghost" %>
+        <% elsif current_user %>
+          <span class="badge notice">Fork disabled for your lineage</span>
         <% end %>
       </div>
     </div>
