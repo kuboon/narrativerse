@@ -331,6 +331,23 @@ nav {
   justify-content: flex-start;
 }
 
+.flash {
+  padding: 12px 16px;
+  border-radius: var(--radius-sm);
+  background: var(--highlight);
+  border: 1px solid var(--border);
+  margin: 16px auto 0;
+  max-width: var(--max-width);
+  font-family: "Inter", sans-serif;
+  color: var(--muted);
+}
+
+.flash.error {
+  background: #fbe6e1;
+  border-color: #e7b4a7;
+  color: #7a3020;
+}
+
 .field {
   display: flex;
   flex-direction: column;

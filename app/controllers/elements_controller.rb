@@ -1,12 +1,12 @@
 class ElementsController < ApplicationController
   before_action :require_login, except: [:index, :show]
+  before_action :set_element, only: :show
 
   def index
     @elements = Element.order(created_at: :desc)
   end
 
   def show
-    @element = Element.find(params[:id])
     @latest_revision = @element.latest_revision
   end
 
@@ -19,10 +19,12 @@ class ElementsController < ApplicationController
     @element.user = current_user
 
     if @element.save
-      revision = @element.element_revisions.build(revision_params)
-      revision.user = current_user
-      revision.revision = 1
-      if revision.save
+      revision = ElementRevisionManager.new(
+        element: @element,
+        user: current_user,
+        revision_params: revision_params
+      ).create_initial
+      if revision.persisted?
         redirect_to @element, notice: "Element created"
       else
         @element.destroy
@@ -42,11 +44,12 @@ class ElementsController < ApplicationController
     @element = current_user.elements.find(params[:id])
 
     if @element.update(element_params)
-      new_revision_number = (@element.latest_revision&.revision || 0) + 1
-      revision = @element.element_revisions.build(revision_params)
-      revision.user = current_user
-      revision.revision = new_revision_number
-      if revision.save
+      revision = ElementRevisionManager.new(
+        element: @element,
+        user: current_user,
+        revision_params: revision_params
+      ).create_next
+      if revision.persisted?
         redirect_to @element, notice: "Element updated"
       else
         @revision = @element.latest_revision
@@ -59,6 +62,10 @@ class ElementsController < ApplicationController
   end
 
   private
+
+  def set_element
+    @element = Element.find(params[:id])
+  end
 
   def element_params
     params.require(:element).permit(:name, :element_type)

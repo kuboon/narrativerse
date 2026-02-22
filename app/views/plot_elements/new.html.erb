@@ -23,6 +23,12 @@
       </div>
     <% end %>
 
+    <% if @plot_element.errors.any? %>
+      <div class="flash error">
+        <p><%= @plot_element.errors.full_messages.to_sentence %></p>
+      </div>
+    <% end %>
+
     <div class="cards">
       <% @elements.each do |element| %>
         <article class="card">

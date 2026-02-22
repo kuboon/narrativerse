@@ -1,12 +1,12 @@
 class ScenesController < ApplicationController
   before_action :require_login, except: [:index, :show]
+  before_action :set_scene, only: :show
 
   def index
     @scenes = Scene.order(created_at: :desc)
   end
 
   def show
-    @scene = Scene.find(params[:id])
   end
 
   def new
@@ -39,6 +39,10 @@ class ScenesController < ApplicationController
   end
 
   private
+
+  def set_scene
+    @scene = Scene.find(params[:id])
+  end
 
   def scene_params
     params.require(:scene).permit(:text)

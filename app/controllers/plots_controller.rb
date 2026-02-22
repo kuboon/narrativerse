@@ -1,13 +1,14 @@
 class PlotsController < ApplicationController
   before_action :require_login, except: [:index, :show]
+  before_action :set_plot, only: :show
 
   def index
     @plots = Plot.order(created_at: :desc)
   end
 
   def show
-    @plot = Plot.includes(plot_elements: [:element, :element_revision]).find(params[:id])
   end
+
 
   def new
     @plot = Plot.new
@@ -42,6 +43,10 @@ class PlotsController < ApplicationController
   end
 
   private
+
+  def set_plot
+    @plot = Plot.includes(plot_elements: [:element, :element_revision]).find(params[:id])
+  end
 
   def plot_params
     params.require(:plot).permit(:title, :summary, :scene_id)

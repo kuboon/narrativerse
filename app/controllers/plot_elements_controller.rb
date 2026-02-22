@@ -13,6 +13,13 @@ class PlotElementsController < ApplicationController
     element = Element.find(plot_element_params[:element_id])
     revision = element.latest_revision
 
+    unless revision
+      @plot_element = @plot.plot_elements.new
+      load_elements
+      @plot_element.errors.add(:base, "Element has no revision")
+      return render :new, status: :unprocessable_entity
+    end
+
     @plot_element = @plot.plot_elements.new(
       element: element,
       element_revision: revision,
