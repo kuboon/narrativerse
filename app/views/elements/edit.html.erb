@@ -19,12 +19,12 @@
       <div class="field">
         <%= label_tag "element_revision_summary", "Summary" %>
         <%= text_area_tag "element_revision[summary]", @revision&.summary, rows: 3 %>
-        <%= button_to "AI summary", ai_assists_element_summary_path, class: "btn ghost", form_class: "inline-action" %>
+        <%= link_to "AI summary", ai_assists_element_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="field">
         <%= label_tag "element_revision_text", "Text" %>
         <%= text_area_tag "element_revision[text]", @revision&.text, rows: 6 %>
-        <%= button_to "AI draft", ai_assists_element_text_path, class: "btn ghost", form_class: "inline-action" %>
+        <%= link_to "AI draft", ai_assists_element_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
         <%= form.submit @owns_element ? "Update" : "Create revision", class: "btn primary" %>

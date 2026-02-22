@@ -5,7 +5,7 @@
       <div class="field">
         <%= form.label :text %>
         <%= form.text_area :text, rows: 8, required: true %>
-        <%= button_to "AI draft", ai_assists_scene_text_path, class: "btn ghost", form_class: "inline-action" %>
+        <%= link_to "AI draft", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
         <%= form.submit "Create", class: "btn primary" %>
