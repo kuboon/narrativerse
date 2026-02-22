@@ -3,7 +3,13 @@ class ElementsController < ApplicationController
   before_action :set_element, only: [:show, :edit, :update]
 
   def index
+    @query = params[:q].to_s.strip
     @elements = Element.order(created_at: :desc)
+    if @query.present?
+      query = "%#{@query}%"
+      @elements = @elements.where("name LIKE ? OR element_type LIKE ?", query, query)
+    end
+    @elements = @elements.limit(50)
   end
 
   def show

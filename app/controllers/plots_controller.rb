@@ -3,7 +3,13 @@ class PlotsController < ApplicationController
   before_action :set_plot, only: :show
 
   def index
+    @query = params[:q].to_s.strip
     @plots = Plot.order(created_at: :desc)
+    if @query.present?
+      query = "%#{@query}%"
+      @plots = @plots.where("title LIKE ? OR summary LIKE ?", query, query)
+    end
+    @plots = @plots.limit(50)
   end
 
   def show

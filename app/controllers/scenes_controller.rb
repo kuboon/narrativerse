@@ -3,7 +3,13 @@ class ScenesController < ApplicationController
   before_action :set_scene, only: :show
 
   def index
+    @query = params[:q].to_s.strip
     @scenes = Scene.order(created_at: :desc)
+    if @query.present?
+      query = "%#{@query}%"
+      @scenes = @scenes.where("text LIKE ?", query)
+    end
+    @scenes = @scenes.limit(50)
   end
 
   def show
