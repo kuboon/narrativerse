@@ -28,7 +28,7 @@
     </div>
     <div class="card-actions">
       <% if @owns_plot %>
-        <%= link_to "New scene", new_plot_scene_link_path(@payload[:plot]), class: "btn ghost" %>
+        <%= link_to "New scene", new_plot_plot_scene_link_path(@payload[:plot]), class: "btn ghost" %>
       <% end %>
       <% if @payload[:previous_link] %>
         <%= link_to "Back", plot_plot_scene_link_path(@payload[:previous_link].plot, @payload[:previous_link]), class: "btn ghost" %>

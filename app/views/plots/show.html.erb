@@ -7,7 +7,7 @@
           <%= link_to "Read", plot_plot_scene_link_path(@plot, @plot.plot_scene_links.first), class: "btn primary" %>
         <% end %>
         <% if @owns_plot %>
-          <%= link_to "Add scene", new_plot_scene_link_path(@plot), class: "btn ghost" %>
+          <%= link_to "Add scene", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
           <%= link_to "Edit", edit_plot_path(@plot), class: "btn ghost" %>
         <% end %>
       </div>
