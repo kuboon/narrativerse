@@ -1,5 +1,5 @@
 class PlotsController < ApplicationController
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [ :index, :show ]
   before_action :set_plot, only: :show
 
   def index
@@ -52,7 +52,7 @@ class PlotsController < ApplicationController
   private
 
   def set_plot
-    @plot = Plot.includes(plot_elements: [:element, :element_revision]).find(params[:id])
+    @plot = Plot.includes(plot_elements: [ :element, :element_revision ]).find(params[:id])
   end
 
   def plot_params

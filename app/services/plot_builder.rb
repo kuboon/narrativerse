@@ -47,6 +47,6 @@ class PlotBuilder
     PlotSceneLink
       .where(scene_id: scene_id)
       .where.not(plot_id: @plot_id)
-      .includes(plot: [:user, :plot_scene_links])
+      .includes(plot: [ :user, :plot_scene_links ])
   end
 end

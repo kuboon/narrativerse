@@ -4,7 +4,7 @@ class PlotNavigation
   end
 
   def plot_chain
-    chain = [@plot]
+    chain = [ @plot ]
     queue = @plot.parent_plots.to_a
 
     until queue.empty?

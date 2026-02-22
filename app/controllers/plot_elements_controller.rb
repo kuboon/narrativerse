@@ -2,7 +2,7 @@ class PlotElementsController < ApplicationController
   before_action :require_login
   before_action :set_plot
   before_action :authorize_plot
-  before_action :set_plot_element, only: [:edit, :update, :destroy, :refresh_revision]
+  before_action :set_plot_element, only: [ :edit, :update, :destroy, :refresh_revision ]
 
   def new
     @plot_element = @plot.plot_elements.new

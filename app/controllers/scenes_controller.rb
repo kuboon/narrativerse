@@ -1,5 +1,5 @@
 class ScenesController < ApplicationController
-  before_action :require_login, except: [:index, :show]
+  before_action :require_login, except: [ :index, :show ]
   before_action :set_scene, only: :show
 
   def index

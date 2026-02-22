@@ -7,6 +7,6 @@ class CreatePlotSceneLinks < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :plot_scene_links, [:plot_id, :scene_id], unique: true
+    add_index :plot_scene_links, [ :plot_id, :scene_id ], unique: true
   end
 end

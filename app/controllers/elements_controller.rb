@@ -1,6 +1,6 @@
 class ElementsController < ApplicationController
-  before_action :require_login, except: [:index, :show]
-  before_action :set_element, only: [:show, :edit, :update]
+  before_action :require_login, except: [ :index, :show ]
+  before_action :set_element, only: [ :show, :edit, :update ]
 
   def index
     @query = params[:q].to_s.strip

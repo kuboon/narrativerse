@@ -9,6 +9,6 @@ class CreateElementRevisions < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :element_revisions, [:element_id, :revision], unique: true
+    add_index :element_revisions, [ :element_id, :revision ], unique: true
   end
 end

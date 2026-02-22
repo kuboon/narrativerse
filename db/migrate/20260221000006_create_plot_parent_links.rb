@@ -6,6 +6,6 @@ class CreatePlotParentLinks < ActiveRecord::Migration[8.0]
       t.timestamps
     end
 
-    add_index :plot_parent_links, [:child_plot_id, :parent_plot_id], unique: true, name: "index_plot_parents_on_child_and_parent"
+    add_index :plot_parent_links, [ :child_plot_id, :parent_plot_id ], unique: true, name: "index_plot_parents_on_child_and_parent"
   end
 end
