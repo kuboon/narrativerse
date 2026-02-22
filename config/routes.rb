@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :elements, except: :destroy
   resources :scenes, except: :destroy
   resources :plots, except: :destroy do
+    resources :plot_elements, except: [:index, :show]
     resources :plot_scene_links, only: [:show, :new, :create] do
       post :fork, on: :member
     end

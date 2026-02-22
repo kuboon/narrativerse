@@ -202,6 +202,7 @@ nav {
   display: flex;
   gap: 12px;
   margin-top: 12px;
+  flex-wrap: wrap;
 }
 
 .text-link {
@@ -293,6 +294,41 @@ nav {
   border: 1px solid var(--border);
   box-shadow: 0 16px 26px var(--shadow);
   max-width: 640px;
+}
+
+.filter-bar {
+  display: grid;
+  gap: 16px;
+  padding: 20px;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+  background: rgba(255, 255, 255, 0.6);
+  margin-bottom: 24px;
+}
+
+.checkbox-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.inline-form {
+  margin-top: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.filter-bar .actions {
+  justify-content: flex-start;
 }
 
 .field {

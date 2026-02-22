@@ -37,6 +37,24 @@
     </div>
   </section>
 
+  <% if @plot_elements.any? %>
+    <section class="grid">
+      <div class="grid-header">
+        <h2>Cast & props</h2>
+      </div>
+      <div class="cards">
+        <% @plot_elements.each do |plot_element| %>
+          <article class="card">
+            <h3><%= plot_element.element.name %></h3>
+            <p class="badge"><%= plot_element.element.element_type %></p>
+            <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "No summary yet." %></p>
+            <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
+          </article>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+
   <% if @payload[:branches].any? %>
     <section class="grid">
       <div class="grid-header">

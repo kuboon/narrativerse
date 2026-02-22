@@ -1,0 +1,20 @@
+<main class="page">
+  <section class="form-card">
+    <h1>Edit plot element</h1>
+    <p class="badge"><%= @plot_element.element.name %> · <%= @plot_element.element.element_type %></p>
+    <%= form_with model: [@plot, @plot_element] do |form| %>
+      <div class="field">
+        <%= form.label :summary, "Role in plot" %>
+        <%= form.text_area :summary, rows: 3 %>
+      </div>
+      <div class="field">
+        <%= form.label :secrets, "Secrets" %>
+        <%= form.text_area :secrets, rows: 3 %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Update", class: "btn primary" %>
+        <%= link_to "Back", plot_path(@plot), class: "btn ghost" %>
+      </div>
+    <% end %>
+  </section>
+</main>

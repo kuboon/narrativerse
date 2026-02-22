@@ -6,7 +6,7 @@ class PlotsController < ApplicationController
   end
 
   def show
-    @plot = Plot.find(params[:id])
+    @plot = Plot.includes(plot_elements: [:element, :element_revision]).find(params[:id])
   end
 
   def new

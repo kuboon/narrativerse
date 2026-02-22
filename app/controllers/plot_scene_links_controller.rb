@@ -5,6 +5,8 @@ class PlotSceneLinksController < ApplicationController
     builder = PlotBuilder.new(params[:plot_id], params[:id])
     @payload = builder.call
     return render plain: "Not found", status: :not_found unless @payload[:plot]
+
+    @plot_elements = @payload[:plot].plot_elements.includes(:element, :element_revision)
   end
 
   def new
@@ -37,27 +39,8 @@ class PlotSceneLinksController < ApplicationController
     return render plain: "Not found", status: :not_found unless source_link.plot_id == source_plot.id
     return render plain: "Login required", status: :unauthorized unless current_user
 
-    navigation = PlotNavigation.new(source_plot)
-    parent_chain = navigation.link_chain_to(source_link.scene_id)
-
-    new_plot = Plot.create!(
-      user: current_user,
-      title: "Fork of #{source_plot.title}",
-      summary: source_plot.summary,
-      scene_id: source_link.scene_id
-    )
-    PlotParentLink.create!(child_plot: new_plot, parent_plot: source_plot)
-
-    created_links = parent_chain.map do |link|
-      PlotSceneLink.create!(plot: new_plot, scene_id: link.scene_id, next_scene_id: link.next_scene_id)
-    end
-
-    new_link = PlotSceneLink.create!(plot: new_plot, scene: source_link.scene, next_scene: nil)
-    if created_links.any?
-      created_links.last.update!(next_scene_id: new_link.scene_id)
-    end
-
-    redirect_to plot_plot_scene_link_path(new_link.plot, new_link), notice: "Forked plot"
+    result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
+    redirect_to plot_plot_scene_link_path(result[:plot], result[:link]), notice: "Forked plot"
   end
 
   private

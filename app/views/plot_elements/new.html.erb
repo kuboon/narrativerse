@@ -1,0 +1,48 @@
+<main class="page">
+  <section class="form-card">
+    <h1>Add element to <%= @plot.title %></h1>
+    <%= form_with url: plot_plot_elements_path(@plot), method: :get, class: "filter-bar" do |form| %>
+      <div class="field">
+        <%= form.label :q, "Keyword" %>
+        <%= form.text_field :q, value: @query, placeholder: "Detective, fantasy..." %>
+      </div>
+      <div class="field">
+        <span>Types</span>
+        <div class="checkbox-row">
+          <% @element_types.each do |type| %>
+            <label class="checkbox">
+              <%= check_box_tag "types[]", type, @selected_types.include?(type) %>
+              <span><%= type %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+      <div class="actions">
+        <%= form.submit "Filter", class: "btn ghost" %>
+        <%= link_to "New element", new_element_path, class: "btn primary" %>
+      </div>
+    <% end %>
+
+    <div class="cards">
+      <% @elements.each do |element| %>
+        <article class="card">
+          <h3><%= element.name %></h3>
+          <p class="badge"><%= element.element_type %></p>
+          <p><%= element.latest_revision&.summary.presence || "No summary yet." %></p>
+          <%= form_with model: [@plot, PlotElement.new], class: "inline-form" do |form| %>
+            <%= form.hidden_field :element_id, value: element.id %>
+            <div class="field">
+              <%= form.label :summary, "Role in plot" %>
+              <%= form.text_area :summary, rows: 2 %>
+            </div>
+            <div class="field">
+              <%= form.label :secrets, "Secrets" %>
+              <%= form.text_area :secrets, rows: 2 %>
+            </div>
+            <%= form.submit "Add", class: "btn primary" %>
+          <% end %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</main>

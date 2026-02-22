@@ -28,5 +28,34 @@
         <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "None" %></span>
       </div>
     </div>
+    <div class="detail-actions">
+      <% if current_user == @plot.user %>
+        <%= link_to "Add element", new_plot_plot_element_path(@plot), class: "btn ghost" %>
+      <% end %>
+    </div>
+
+    <% if @plot.plot_elements.any? %>
+      <div class="grid">
+        <div class="grid-header">
+          <h2>Cast & props</h2>
+        </div>
+        <div class="cards">
+          <% @plot.plot_elements.includes(:element, :element_revision).each do |plot_element| %>
+            <article class="card">
+              <h3><%= plot_element.element.name %></h3>
+              <p class="badge"><%= plot_element.element.element_type %></p>
+              <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "No summary yet." %></p>
+              <div class="card-actions">
+                <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
+                <% if current_user == @plot.user %>
+                  <%= link_to "Edit", edit_plot_plot_element_path(@plot, plot_element), class: "text-link" %>
+                  <%= button_to "Remove", plot_plot_element_path(@plot, plot_element), method: :delete, class: "btn ghost" %>
+                <% end %>
+              </div>
+            </article>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </section>
 </main>
