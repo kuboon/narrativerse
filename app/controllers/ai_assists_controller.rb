@@ -14,6 +14,6 @@ class AiAssistsController < ApplicationController
   end
 
   def scene_text
-    redirect_back fallback_location: new_scene_path, alert: "AI assist is not configured yet"
+    redirect_back fallback_location: new_plot_path, alert: "AI assist is not configured yet"
   end
 end

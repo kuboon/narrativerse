@@ -539,6 +539,17 @@ nav {
   line-height: 1.7;
 }
 
+.story-flow {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+.panel.focus {
+  border-color: var(--accent);
+  box-shadow: 0 12px 20px rgba(139, 63, 44, 0.18);
+}
+
 .form-card {
   background: var(--surface-card);
   padding: 32px;

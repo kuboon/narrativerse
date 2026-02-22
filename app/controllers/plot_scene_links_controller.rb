@@ -1,15 +1,5 @@
 class PlotSceneLinksController < ApplicationController
-  before_action :require_login, except: :show
-
-  def show
-    builder = PlotBuilder.new(params[:plot_id], params[:id])
-    @payload = builder.call
-    return render plain: "Not found", status: :not_found unless @payload[:plot]
-
-    @plot_elements = @payload[:plot].plot_elements.includes(:element, :element_revision)
-    @owns_plot = current_user == @payload[:plot].user
-    @fork_allowed = current_user && PlotNavigation.new(@payload[:plot]).plot_chain.none? { |plot| plot.user_id == current_user.id }
-  end
+  before_action :require_login
 
   def new
     @plot = Plot.find(params[:plot_id])
@@ -29,7 +19,7 @@ class PlotSceneLinksController < ApplicationController
       last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
       last_link.update!(next_scene_id: @scene.id) if last_link
       new_link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
-      redirect_to plot_plot_scene_link_path(@plot, new_link)
+      redirect_to reader_link_path(@plot, new_link)
     else
       render :new, status: :unprocessable_entity
     end
@@ -43,9 +33,9 @@ class PlotSceneLinksController < ApplicationController
 
     begin
       result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
-      redirect_to plot_plot_scene_link_path(result[:plot], result[:link]), notice: "Forked plot"
+      redirect_to reader_link_path(result[:plot], result[:link]), notice: "Forked plot"
     rescue ArgumentError => e
-      redirect_to plot_plot_scene_link_path(source_plot, source_link), alert: e.message
+      redirect_to reader_link_path(source_plot, source_link), alert: e.message
     end
   end
 

@@ -14,6 +14,7 @@ class PlotsController < ApplicationController
 
   def show
     @owns_plot = current_user == @plot.user
+    @story_links = PlotStory.new(@plot).call[:story_links]
   end
 
 

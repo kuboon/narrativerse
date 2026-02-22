@@ -3,11 +3,11 @@
     <div class="detail-header">
       <h1><%= @plot.title %></h1>
       <div class="detail-actions">
-        <% if @plot.plot_scene_links.any? %>
-          <%= link_to "Read", plot_plot_scene_link_path(@plot, @plot.plot_scene_links.first), class: "btn primary" %>
+        <% if @story_links.any? %>
+          <%= link_to "Read", reader_path(@plot), class: "btn primary" %>
         <% end %>
         <% if @owns_plot %>
-          <%= link_to "Add scene", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
+          <%= link_to "Add story segment", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
           <%= link_to "Edit", edit_plot_path(@plot), class: "btn ghost" %>
         <% end %>
       </div>
@@ -20,8 +20,8 @@
         <span><%= @plot.user.name %></span>
       </div>
       <div>
-        <span class="meta-label">Start scene</span>
-        <span><%= @plot.scene_id %></span>
+        <span class="meta-label">Start</span>
+        <span>Story begins here</span>
       </div>
       <div>
         <span class="meta-label">Parents</span>
@@ -31,6 +31,23 @@
     <% if @owns_plot %>
       <div class="detail-actions">
         <%= link_to "Add element", new_plot_plot_element_path(@plot), class: "btn ghost" %>
+      </div>
+    <% end %>
+
+    <% if @story_links.any? %>
+      <div class="grid">
+        <div class="grid-header">
+          <h2>Story flow</h2>
+          <%= link_to "Read", reader_path(@plot), class: "text-link" %>
+        </div>
+        <div class="story-flow">
+          <% @story_links.each do |link| %>
+            <article class="panel">
+              <p class="meta-label">Story segment</p>
+              <p><%= link.scene.text %></p>
+            </article>
+          <% end %>
+        </div>
       </div>
     <% end %>
 

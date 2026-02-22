@@ -1,13 +1,15 @@
 <main class="page">
   <section class="form-card">
-    <h1>New scene for <%= @plot.title %></h1>
+    <h1>Add to story</h1>
+    <p class="lede">Scenes are created behind the scenes. Write the next part of the story here.</p>
     <%= form_with model: @scene, url: plot_plot_scene_links_path(@plot) do |form| %>
       <div class="field">
-        <%= form.label :text %>
+        <%= form.label :text, "Next story segment" %>
         <%= form.text_area :text, rows: 8, required: true %>
+        <%= link_to "AI draft", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
-        <%= form.submit "Create", class: "btn primary" %>
+        <%= form.submit "Add", class: "btn primary" %>
         <%= link_to "Cancel", plot_path(@plot), class: "btn ghost" %>
       </div>
     <% end %>

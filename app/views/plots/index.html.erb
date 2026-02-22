@@ -21,7 +21,7 @@
           <div class="card-actions">
             <%= link_to "Open", plot_path(plot), class: "text-link" %>
             <% if plot.plot_scene_links.any? %>
-              <%= link_to "Read", plot_plot_scene_link_path(plot, plot.plot_scene_links.first), class: "text-link" %>
+              <%= link_to "Read", reader_path(plot), class: "text-link" %>
             <% end %>
           </div>
         </article>
