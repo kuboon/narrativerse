@@ -280,6 +280,11 @@ nav {
   font-size: 12px;
 }
 
+.badge.notice {
+  background: #f6e7b5;
+  color: #64480a;
+}
+
 .panel {
   margin-top: 20px;
   background: var(--surface);

@@ -48,7 +48,12 @@
             <h3><%= plot_element.element.name %></h3>
             <p class="badge"><%= plot_element.element.element_type %></p>
             <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "No summary yet." %></p>
-            <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
+            <div class="card-actions">
+              <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
+              <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
+                <span class="badge notice">New revision</span>
+              <% end %>
+            </div>
           </article>
         <% end %>
       </div>

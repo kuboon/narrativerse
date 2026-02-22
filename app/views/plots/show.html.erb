@@ -49,6 +49,9 @@
                 <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
                 <% if current_user == @plot.user %>
                   <%= link_to "Edit", edit_plot_plot_element_path(@plot, plot_element), class: "text-link" %>
+                  <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
+                    <%= button_to "Update revision", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn ghost" %>
+                  <% end %>
                   <%= button_to "Remove", plot_plot_element_path(@plot, plot_element), method: :delete, class: "btn ghost" %>
                 <% end %>
               </div>

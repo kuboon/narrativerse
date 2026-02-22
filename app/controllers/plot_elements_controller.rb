@@ -2,7 +2,7 @@ class PlotElementsController < ApplicationController
   before_action :require_login
   before_action :set_plot
   before_action :authorize_plot
-  before_action :set_plot_element, only: [:edit, :update, :destroy]
+  before_action :set_plot_element, only: [:edit, :update, :destroy, :refresh_revision]
 
   def new
     @plot_element = @plot.plot_elements.new
@@ -50,6 +50,16 @@ class PlotElementsController < ApplicationController
   def destroy
     @plot_element.destroy
     redirect_to plot_path(@plot), notice: "Element removed"
+  end
+
+  def refresh_revision
+    latest = @plot_element.element.latest_revision
+    if latest && latest.id != @plot_element.element_revision_id
+      @plot_element.update!(element_revision: latest)
+      redirect_to plot_path(@plot), notice: "Revision updated"
+    else
+      redirect_to plot_path(@plot), notice: "Already up to date"
+    end
   end
 
   private
