@@ -12,6 +12,11 @@ class PlotElementsController < ApplicationController
   def create
     element = Element.find(plot_element_params[:element_id])
 
+    if @plot.plot_elements.exists?(element_id: element.id)
+      redirect_to plot_path(@plot), alert: "Element already added"
+      return
+    end
+
     revision = element.latest_revision
 
     unless revision
