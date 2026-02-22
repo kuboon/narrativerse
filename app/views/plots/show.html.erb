@@ -6,8 +6,8 @@
         <% if @plot.plot_scene_links.any? %>
           <%= link_to "Read", plot_plot_scene_link_path(@plot, @plot.plot_scene_links.first), class: "btn primary" %>
         <% end %>
-        <%= link_to "Add scene", new_plot_scene_link_path(@plot), class: "btn ghost" %>
-        <% if current_user == @plot.user %>
+        <% if @owns_plot %>
+          <%= link_to "Add scene", new_plot_scene_link_path(@plot), class: "btn ghost" %>
           <%= link_to "Edit", edit_plot_path(@plot), class: "btn ghost" %>
         <% end %>
       </div>
@@ -28,11 +28,11 @@
         <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "None" %></span>
       </div>
     </div>
-    <div class="detail-actions">
-      <% if current_user == @plot.user %>
+    <% if @owns_plot %>
+      <div class="detail-actions">
         <%= link_to "Add element", new_plot_plot_element_path(@plot), class: "btn ghost" %>
-      <% end %>
-    </div>
+      </div>
+    <% end %>
 
     <% if @plot.plot_elements.any? %>
       <div class="grid">
@@ -47,7 +47,7 @@
               <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "No summary yet." %></p>
               <div class="card-actions">
                 <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
-                <% if current_user == @plot.user %>
+                <% if @owns_plot %>
                   <%= link_to "Edit", edit_plot_plot_element_path(@plot, plot_element), class: "text-link" %>
                   <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
                     <%= button_to "Update revision", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn ghost" %>

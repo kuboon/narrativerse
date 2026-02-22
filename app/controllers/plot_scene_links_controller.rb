@@ -7,6 +7,7 @@ class PlotSceneLinksController < ApplicationController
     return render plain: "Not found", status: :not_found unless @payload[:plot]
 
     @plot_elements = @payload[:plot].plot_elements.includes(:element, :element_revision)
+    @owns_plot = current_user == @payload[:plot].user
   end
 
   def new

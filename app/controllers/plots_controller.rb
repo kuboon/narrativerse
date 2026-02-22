@@ -13,6 +13,7 @@ class PlotsController < ApplicationController
   end
 
   def show
+    @owns_plot = current_user == @plot.user
   end
 
 
