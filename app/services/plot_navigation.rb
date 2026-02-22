@@ -18,6 +18,10 @@ class PlotNavigation
     chain
   end
 
+  def root_plot
+    plot_chain.last
+  end
+
   def previous_link_for(scene_id)
     plot_chain.each do |plot|
       previous_link = PlotSceneLink.find_by(plot_id: plot.id, next_scene_id: scene_id)

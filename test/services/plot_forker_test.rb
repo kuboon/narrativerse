@@ -3,9 +3,10 @@ require "test_helper"
 class PlotForkerTest < ActiveSupport::TestCase
   def setup
     @user = User.create!(name: "Forker")
-    @scene1 = Scene.create!(user: @user, text: "Scene 1")
-    @scene2 = Scene.create!(user: @user, text: "Scene 2")
-    @plot = Plot.create!(user: @user, title: "Plot", scene: @scene1)
+    @other_user = User.create!(name: "Other")
+    @scene1 = Scene.create!(user: @other_user, text: "Scene 1")
+    @scene2 = Scene.create!(user: @other_user, text: "Scene 2")
+    @plot = Plot.create!(user: @other_user, title: "Plot", scene: @scene1)
     @link1 = PlotSceneLink.create!(plot: @plot, scene: @scene1, next_scene: @scene2)
     @link2 = PlotSceneLink.create!(plot: @plot, scene: @scene2, next_scene: nil)
   end
@@ -17,5 +18,11 @@ class PlotForkerTest < ActiveSupport::TestCase
     assert result[:link].persisted?
     assert_equal @plot.id, result[:plot].parent_plots.first.id
     assert_equal @scene2.id, result[:plot].scene_id
+  end
+
+  test "prevents forking own lineage" do
+    assert_raises(ArgumentError) do
+      PlotForker.new(plot: @plot, link: @link2, user: @other_user).call
+    end
   end
 end

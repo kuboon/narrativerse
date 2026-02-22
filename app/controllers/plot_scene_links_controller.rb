@@ -39,8 +39,12 @@ class PlotSceneLinksController < ApplicationController
     return render plain: "Not found", status: :not_found unless source_link.plot_id == source_plot.id
     return render plain: "Login required", status: :unauthorized unless current_user
 
-    result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
-    redirect_to plot_plot_scene_link_path(result[:plot], result[:link]), notice: "Forked plot"
+    begin
+      result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
+      redirect_to plot_plot_scene_link_path(result[:plot], result[:link]), notice: "Forked plot"
+    rescue ArgumentError => e
+      redirect_to plot_plot_scene_link_path(source_plot, source_link), alert: e.message
+    end
   end
 
   private
