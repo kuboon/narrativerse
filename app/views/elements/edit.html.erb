@@ -2,14 +2,20 @@
   <section class="form-card">
     <h1>Edit element</h1>
     <%= form_with model: @element do |form| %>
-      <div class="field">
-        <%= form.label :element_type, "Type" %>
-        <%= form.select :element_type, Element::ELEMENT_TYPES %>
-      </div>
-      <div class="field">
-        <%= form.label :name %>
-        <%= form.text_field :name, required: true %>
-      </div>
+      <% if @owns_element %>
+        <div class="field">
+          <%= form.label :element_type, "Type" %>
+          <%= form.select :element_type, Element::ELEMENT_TYPES %>
+        </div>
+        <div class="field">
+          <%= form.label :name %>
+          <%= form.text_field :name, required: true %>
+        </div>
+      <% else %>
+        <div class="panel">
+          <p>You are creating a new revision for an element you do not own. The name and type cannot be changed.</p>
+        </div>
+      <% end %>
       <div class="field">
         <%= label_tag "element_revision_summary", "Summary" %>
         <%= text_area_tag "element_revision[summary]", @revision&.summary, rows: 3 %>
@@ -19,7 +25,7 @@
         <%= text_area_tag "element_revision[text]", @revision&.text, rows: 6 %>
       </div>
       <div class="actions">
-        <%= form.submit "Update", class: "btn primary" %>
+        <%= form.submit @owns_element ? "Update" : "Create revision", class: "btn primary" %>
         <%= link_to "Cancel", element_path(@element), class: "btn ghost" %>
       </div>
     <% end %>

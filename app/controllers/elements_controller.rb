@@ -1,6 +1,6 @@
 class ElementsController < ApplicationController
   before_action :require_login, except: [:index, :show]
-  before_action :set_element, only: :show
+  before_action :set_element, only: [:show, :edit, :update]
 
   def index
     @elements = Element.order(created_at: :desc)
@@ -36,27 +36,31 @@ class ElementsController < ApplicationController
   end
 
   def edit
-    @element = current_user.elements.find(params[:id])
     @revision = @element.latest_revision
+    @owns_element = @element.user == current_user
   end
 
   def update
-    @element = current_user.elements.find(params[:id])
+    owns_element = @element.user == current_user
+    element_updated = owns_element ? @element.update(element_params) : true
 
-    if @element.update(element_params)
+    if element_updated
       revision = ElementRevisionManager.new(
         element: @element,
         user: current_user,
         revision_params: revision_params
       ).create_next
       if revision.persisted?
-        redirect_to @element, notice: "Element updated"
+        message = owns_element ? "Element updated" : "Revision created"
+        redirect_to @element, notice: message
       else
         @revision = @element.latest_revision
+        @owns_element = owns_element
         render :edit, status: :unprocessable_entity
       end
     else
       @revision = @element.latest_revision
+      @owns_element = owns_element
       render :edit, status: :unprocessable_entity
     end
   end
@@ -68,6 +72,8 @@ class ElementsController < ApplicationController
   end
 
   def element_params
+    return {} unless params[:element]
+
     params.require(:element).permit(:name, :element_type)
   end
 

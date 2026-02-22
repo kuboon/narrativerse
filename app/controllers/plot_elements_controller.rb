@@ -11,6 +11,7 @@ class PlotElementsController < ApplicationController
 
   def create
     element = Element.find(plot_element_params[:element_id])
+
     revision = element.latest_revision
 
     unless revision

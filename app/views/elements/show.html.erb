@@ -3,8 +3,8 @@
     <div class="detail-header">
       <h1><%= @element.name %></h1>
       <div class="detail-actions">
-        <% if current_user == @element.user %>
-          <%= link_to "Edit", edit_element_path(@element), class: "btn ghost" %>
+        <% if current_user %>
+          <%= link_to current_user == @element.user ? "Edit" : "Create revision", edit_element_path(@element), class: "btn ghost" %>
         <% end %>
       </div>
     </div>
