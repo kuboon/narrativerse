@@ -1,0 +1,23 @@
+<main class="page">
+  <section class="form-card">
+    <h1>Create user</h1>
+    <%= form_with model: @user do |form| %>
+      <div class="field">
+        <%= form.label :name %>
+        <%= form.text_field :name, required: true %>
+      </div>
+      <div class="field">
+        <%= form.label :icon %>
+        <%= form.text_field :icon %>
+      </div>
+      <div class="field">
+        <%= form.label :bio %>
+        <%= form.text_area :bio, rows: 4 %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Create", class: "btn primary" %>
+        <%= link_to "Cancel", root_path, class: "btn ghost" %>
+      </div>
+    <% end %>
+  </section>
+</main>

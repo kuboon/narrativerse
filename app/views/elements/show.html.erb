@@ -1,0 +1,28 @@
+<main class="page">
+  <section class="detail">
+    <div class="detail-header">
+      <h1><%= @element.name %></h1>
+      <div class="detail-actions">
+        <% if current_user == @element.user %>
+          <%= link_to "Edit", edit_element_path(@element), class: "btn ghost" %>
+        <% end %>
+      </div>
+    </div>
+    <p class="badge"><%= @element.element_type %></p>
+    <p><%= @latest_revision&.summary.presence || "No summary yet." %></p>
+    <div class="detail-meta">
+      <div>
+        <span class="meta-label">Owner</span>
+        <span><%= @element.user.name %></span>
+      </div>
+      <div>
+        <span class="meta-label">Revision</span>
+        <span><%= @latest_revision&.revision || 0 %></span>
+      </div>
+    </div>
+    <article class="panel">
+      <h3>Description</h3>
+      <p><%= @latest_revision&.text.presence || "No description yet." %></p>
+    </article>
+  </section>
+</main>

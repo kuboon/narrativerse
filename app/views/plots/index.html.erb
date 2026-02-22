@@ -1,0 +1,22 @@
+<main class="page">
+  <section class="grid">
+    <div class="grid-header">
+      <h1>Plots</h1>
+      <%= link_to "New plot", new_plot_path, class: "btn primary" %>
+    </div>
+    <div class="cards">
+      <% @plots.each do |plot| %>
+        <article class="card">
+          <h3><%= plot.title %></h3>
+          <p><%= plot.summary.presence || "No summary yet." %></p>
+          <div class="card-actions">
+            <%= link_to "Open", plot_path(plot), class: "text-link" %>
+            <% if plot.plot_scene_links.any? %>
+              <%= link_to "Read", plot_plot_scene_link_path(plot, plot.plot_scene_links.first), class: "text-link" %>
+            <% end %>
+          </div>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,32 @@
+<main class="page">
+  <section class="detail">
+    <div class="detail-header">
+      <h1><%= @plot.title %></h1>
+      <div class="detail-actions">
+        <% if @plot.plot_scene_links.any? %>
+          <%= link_to "Read", plot_plot_scene_link_path(@plot, @plot.plot_scene_links.first), class: "btn primary" %>
+        <% end %>
+        <%= link_to "Add scene", new_plot_scene_link_path(@plot), class: "btn ghost" %>
+        <% if current_user == @plot.user %>
+          <%= link_to "Edit", edit_plot_path(@plot), class: "btn ghost" %>
+        <% end %>
+      </div>
+    </div>
+    <p><%= @plot.summary.presence || "No summary yet." %></p>
+
+    <div class="detail-meta">
+      <div>
+        <span class="meta-label">Owner</span>
+        <span><%= @plot.user.name %></span>
+      </div>
+      <div>
+        <span class="meta-label">Start scene</span>
+        <span><%= @plot.scene_id %></span>
+      </div>
+      <div>
+        <span class="meta-label">Parents</span>
+        <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "None" %></span>
+      </div>
+    </div>
+  </section>
+</main>

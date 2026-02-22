@@ -1,0 +1,15 @@
+<main class="page">
+  <section class="form-card">
+    <h1>Login</h1>
+    <%= form_with url: session_path do |form| %>
+      <div class="field">
+        <%= form.label :user_id, "Choose user" %>
+        <%= form.select :user_id, @users.map { |user| [user.name, user.id] }, prompt: "Select" %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Login", class: "btn primary" %>
+        <%= link_to "Create user", new_user_path, class: "btn ghost" %>
+      </div>
+    <% end %>
+  </section>
+</main>

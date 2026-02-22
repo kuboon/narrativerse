@@ -1,0 +1,19 @@
+<main class="page">
+  <section class="form-card">
+    <h1>Edit plot</h1>
+    <%= form_with model: @plot do |form| %>
+      <div class="field">
+        <%= form.label :title %>
+        <%= form.text_field :title, required: true %>
+      </div>
+      <div class="field">
+        <%= form.label :summary %>
+        <%= form.text_area :summary, rows: 4 %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Update", class: "btn primary" %>
+        <%= link_to "Cancel", plot_path(@plot), class: "btn ghost" %>
+      </div>
+    <% end %>
+  </section>
+</main>

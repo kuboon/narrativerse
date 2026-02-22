@@ -1,0 +1,15 @@
+<main class="page">
+  <section class="form-card">
+    <h1>New scene</h1>
+    <%= form_with model: @scene do |form| %>
+      <div class="field">
+        <%= form.label :text %>
+        <%= form.text_area :text, rows: 8, required: true %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Create", class: "btn primary" %>
+        <%= link_to "Cancel", scenes_path, class: "btn ghost" %>
+      </div>
+    <% end %>
+  </section>
+</main>

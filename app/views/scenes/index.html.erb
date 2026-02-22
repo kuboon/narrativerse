@@ -1,0 +1,17 @@
+<main class="page">
+  <section class="grid">
+    <div class="grid-header">
+      <h1>Scenes</h1>
+      <%= link_to "New scene", new_scene_path, class: "btn primary" %>
+    </div>
+    <div class="cards">
+      <% @scenes.each do |scene| %>
+        <article class="card">
+          <h3>Scene <%= scene.id %></h3>
+          <p><%= truncate(scene.text, length: 120) %></p>
+          <%= link_to "Open", scene_path(scene), class: "text-link" %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</main>

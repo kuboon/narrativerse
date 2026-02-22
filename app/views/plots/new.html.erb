@@ -1,0 +1,23 @@
+<main class="page">
+  <section class="form-card">
+    <h1>New plot</h1>
+    <%= form_with model: @plot do |form| %>
+      <div class="field">
+        <%= form.label :title %>
+        <%= form.text_field :title, required: true %>
+      </div>
+      <div class="field">
+        <%= form.label :summary %>
+        <%= form.text_area :summary, rows: 4 %>
+      </div>
+      <div class="field">
+        <%= form.label :scene_id, "Start scene" %>
+        <%= form.select :scene_id, @scenes.map { |scene| ["Scene #{scene.id}", scene.id] }, prompt: "Choose scene" %>
+      </div>
+      <div class="actions">
+        <%= form.submit "Create", class: "btn primary" %>
+        <%= link_to "Cancel", plots_path, class: "btn ghost" %>
+      </div>
+    <% end %>
+  </section>
+</main>

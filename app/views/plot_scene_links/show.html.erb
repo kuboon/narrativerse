@@ -1,0 +1,56 @@
+<main class="page">
+  <section class="detail">
+    <div class="detail-header">
+      <div>
+        <p class="eyebrow">Plot: <%= @payload[:plot].title %></p>
+        <h1>Scene <%= @payload[:scene].id %></h1>
+      </div>
+      <div class="detail-actions">
+        <% if current_user %>
+          <%= button_to "Fork from here", fork_plot_scene_link_path(@payload[:plot], @payload[:link]), method: :post, class: "btn ghost" %>
+        <% end %>
+      </div>
+    </div>
+    <article class="panel">
+      <p><%= @payload[:scene].text %></p>
+    </article>
+    <div class="detail-meta">
+      <div>
+        <span class="meta-label">Previous</span>
+        <span><%= @payload[:previous_scene]&.id || "Start" %></span>
+      </div>
+      <div>
+        <span class="meta-label">Next</span>
+        <span><%= @payload[:next_scene]&.id || "End" %></span>
+      </div>
+    </div>
+    <div class="card-actions">
+      <% if current_user == @payload[:plot].user %>
+        <%= link_to "New scene", new_plot_scene_link_path(@payload[:plot]), class: "btn ghost" %>
+      <% end %>
+      <% if @payload[:previous_link] %>
+        <%= link_to "Back", plot_plot_scene_link_path(@payload[:previous_link].plot, @payload[:previous_link]), class: "btn ghost" %>
+      <% end %>
+      <% if @payload[:next_link] %>
+        <%= link_to "Next", plot_plot_scene_link_path(@payload[:next_link].plot, @payload[:next_link]), class: "btn primary" %>
+      <% end %>
+    </div>
+  </section>
+
+  <% if @payload[:branches].any? %>
+    <section class="grid">
+      <div class="grid-header">
+        <h2>Other branches</h2>
+      </div>
+      <div class="cards">
+        <% @payload[:branches].each do |branch| %>
+          <article class="card">
+            <h3><%= branch.plot.title %></h3>
+            <p><%= branch.plot.summary.presence || "No summary yet." %></p>
+            <%= link_to "Jump", plot_plot_scene_link_path(branch.plot, branch), class: "text-link" %>
+          </article>
+        <% end %>
+      </div>
+    </section>
+  <% end %>
+</main>

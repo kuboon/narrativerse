@@ -1,0 +1,53 @@
+<main class="page">
+  <section class="hero">
+    <div>
+      <p class="eyebrow">Narrativerse</p>
+      <h1>Character-first branching stories.</h1>
+      <p class="lede">Create characters, items, and scenes, then weave them into plots that can branch from any moment.</p>
+      <div class="hero-actions">
+        <%= link_to "Create user", new_user_path, class: "btn primary" %>
+        <%= link_to "Browse plots", plots_path, class: "btn ghost" %>
+      </div>
+    </div>
+    <div class="hero-card">
+      <div class="card-header">Quick start</div>
+      <ol>
+        <li>Create your characters and scenes.</li>
+        <li>Start a plot from a scene.</li>
+        <li>Fork from any moment to branch.</li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="grid-header">
+      <h2>Latest plots</h2>
+      <%= link_to "All plots", plots_path, class: "text-link" %>
+    </div>
+    <div class="cards">
+      <% @plots.each do |plot| %>
+        <article class="card">
+          <h3><%= plot.title %></h3>
+          <p><%= plot.summary.presence || "No summary yet." %></p>
+          <%= link_to "Open", plot_path(plot), class: "text-link" %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+
+  <section class="grid">
+    <div class="grid-header">
+      <h2>Latest elements</h2>
+      <%= link_to "All elements", elements_path, class: "text-link" %>
+    </div>
+    <div class="cards">
+      <% @elements.each do |element| %>
+        <article class="card">
+          <h3><%= element.name %></h3>
+          <p><%= element.element_type %></p>
+          <%= link_to "Open", element_path(element), class: "text-link" %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</main>

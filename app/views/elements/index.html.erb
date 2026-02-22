@@ -1,0 +1,17 @@
+<main class="page">
+  <section class="grid">
+    <div class="grid-header">
+      <h1>Elements</h1>
+      <%= link_to "New element", new_element_path, class: "btn primary" %>
+    </div>
+    <div class="cards">
+      <% @elements.each do |element| %>
+        <article class="card">
+          <h3><%= element.name %></h3>
+          <p><%= element.element_type %></p>
+          <%= link_to "Open", element_path(element), class: "text-link" %>
+        </article>
+      <% end %>
+    </div>
+  </section>
+</main>
