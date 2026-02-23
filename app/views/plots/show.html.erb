@@ -6,9 +6,7 @@
         <% if @story_links.any? %>
           <%= link_to "読む", reader_path(@plot), class: "btn primary" %>
         <% end %>
-        <% if policy(@plot).manage_story? %>
-          <%= link_to "ストーリー追加", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
-        <% end %>
+        <%# Story-add button removed per new flow (manage via plots#show content) %>
         <% if policy(@plot).update? %>
           <%= link_to "編集", edit_plot_path(@plot), class: "btn ghost" %>
         <% end %>
@@ -20,10 +18,6 @@
       <div>
         <span class="meta-label">作成者</span>
         <span><%= @plot.user.name %></span>
-      </div>
-      <div>
-        <span class="meta-label">開始地点</span>
-        <span>ここから物語が始まります</span>
       </div>
       <div>
         <span class="meta-label">親プロット</span>
@@ -38,14 +32,9 @@
 
     <% if @story_links.any? %>
       <div class="grid">
-        <div class="grid-header">
-          <h2>ストーリー</h2>
-          <%= link_to "読む", reader_path(@plot), class: "text-link" %>
-        </div>
         <div class="story-flow">
           <% @story_links.each do |link| %>
             <article class="panel">
-              <p class="meta-label">ストーリー断片</p>
               <p><%= link.scene.text %></p>
             </article>
           <% end %>
@@ -53,26 +42,7 @@
       </div>
     <% end %>
 
-    <% if policy(@plot).manage_story? %>
-      <div class="grid">
-        <div class="grid-header">
-          <h2>ストーリーを追加</h2>
-        </div>
-        <div class="form-card">
-          <p class="lede">次のストーリーをここに書いてください。</p>
-          <%= form_with model: Scene.new, url: plot_plot_scene_links_path(@plot) do |form| %>
-            <div class="field">
-              <%= form.label :text, "次のストーリー" %>
-              <%= form.text_area :text, rows: 8, required: true %>
-              <%= link_to "AI下書き", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
-            </div>
-            <div class="actions">
-              <%= form.submit "追加", class: "btn primary" %>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
+    <%# Inline story-add form removed; use plots#show for links from reader and manage story elsewhere. %>
 
     <% if @plot.plot_elements.any? %>
       <div class="grid">

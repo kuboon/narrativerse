@@ -6,7 +6,7 @@
       </div>
       <div class="detail-actions">
         <% if policy(@plot).manage_story? %>
-          <%= link_to "ストーリー追加", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
+          <%= link_to "ストーリー追加", plot_path(@plot), class: "btn ghost" %>
         <% end %>
         <% if policy(@plot).fork? && @focus_link %>
           <%= button_to "ここから分岐", fork_plot_plot_scene_link_path(@plot, @focus_link), method: :post, class: "btn ghost" %>

@@ -12,9 +12,9 @@
         <%= link_to "AI要約", ai_assists_plot_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="field">
-        <%= form.label :scene_id, "最初の場面" %>
-        <%= form.select :scene_id, @scenes.map { |scene| ["場面 #{scene.id}", scene.id] }, prompt: "選択" %>
-        <p class="helper-text">※ ストーリーはプロットの内部で使われます。</p>
+        <%= form.label :scene_text, "最初の場面の本文" %>
+        <%= form.text_area :scene_text, rows: 6, required: true %>
+        <p class="helper-text">※ 入力した本文がこのプロットの最初の場面として保存されます。</p>
       </div>
       <div class="actions">
         <%= form.submit "作成", class: "btn primary" %>

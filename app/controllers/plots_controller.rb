@@ -21,7 +21,6 @@ class PlotsController < ApplicationController
   def new
     @plot = Plot.new
     authorize @plot
-    @scenes = current_user.scenes.order(created_at: :desc)
   end
 
   def create
@@ -29,11 +28,24 @@ class PlotsController < ApplicationController
     @plot.user = current_user
     authorize @plot
 
+    # If a scene text was provided on the new form, create the first Scene
+    scene_text = params.dig(:plot, :scene_text).to_s.strip
+    if scene_text.present?
+      scene = current_user.scenes.build(text: scene_text)
+      unless scene.save
+        scene.errors.full_messages.each { |m| @plot.errors.add(:base, m) }
+        render :new, status: :unprocessable_entity and return
+      end
+      @plot.scene = scene
+    elsif params.dig(:plot, :scene_id).present?
+      # Backwards-compatible: allow selecting an existing scene if provided
+      @plot.scene_id = params.dig(:plot, :scene_id)
+    end
+
     if @plot.save
       PlotSceneLink.create!(plot: @plot, scene_id: @plot.scene_id, next_scene_id: nil)
       redirect_to @plot, notice: "プロットを作成しました"
     else
-      @scenes = current_user.scenes.order(created_at: :desc)
       render :new, status: :unprocessable_entity
     end
   end
@@ -59,7 +71,7 @@ class PlotsController < ApplicationController
   end
 
   def plot_params
-    params.require(:plot).permit(:title, :summary, :scene_id)
+    params.require(:plot).permit(:title, :summary)
   end
 
   def plot_update_params

@@ -5,7 +5,8 @@ class PlotSceneLinksController < ApplicationController
     @plot = Plot.find(params[:plot_id])
     authorize @plot, :manage_story?
 
-    @scene = Scene.new
+    # This screen is deprecated — redirect to the plot show page.
+    redirect_to plot_path(@plot)
   end
 
   def create
