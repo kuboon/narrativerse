@@ -34,7 +34,7 @@
 
 ## TODO / Next Steps
 1. Reader migration cleanup
-   - Remove unused legacy PlotBuilder view if no longer needed.
+   - Remove unused legacy PlotBuilder view if no longer needed. (done)
 2. Plot story authoring UX
    - Provide inline editor on plot show.
 3. Reader UX polish
