@@ -9,7 +9,6 @@
       <div class="field">
         <%= form.label :summary, "概要" %>
         <%= form.text_area :summary, rows: 4 %>
-        <%= link_to "AI要約", ai_assists_plot_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
         <%= form.submit "更新", class: "btn primary" %>

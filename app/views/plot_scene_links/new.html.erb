@@ -6,7 +6,6 @@
       <div class="field">
         <%= form.label :text, "次のストーリー" %>
         <%= form.text_area :text, rows: 8, required: true %>
-        <%= link_to "AI下書き", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
         <%= form.submit "追加", class: "btn primary" %>

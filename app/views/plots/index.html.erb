@@ -19,6 +19,12 @@
       <% @plots.each do |plot| %>
         <article class="card">
           <h3><%= plot.title %></h3>
+            <div class="detail-meta">
+              <div>
+                <span class="meta-label">作成者</span>
+                <span><%= plot.user.name %></span>
+              </div>
+            </div>
             <p><%= plot.summary.presence || "まだ概要がありません。" %></p>
             <div class="card-actions">
               <%= link_to "詳細", plot_path(plot), class: "text-link" %>

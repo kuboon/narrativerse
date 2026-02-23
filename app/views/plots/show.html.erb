@@ -30,20 +30,6 @@
       </div>
     <% end %>
 
-    <% if @story_links.any? %>
-      <div class="grid">
-        <div class="story-flow">
-          <% @story_links.each do |link| %>
-            <article class="panel">
-              <p><%= link.scene.text %></p>
-            </article>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-
-    <%# Inline story-add form removed; use plots#show for links from reader and manage story elsewhere. %>
-
     <% if @plot.plot_elements.any? %>
       <div class="grid">
         <div class="grid-header">
@@ -70,5 +56,81 @@
         </div>
       </div>
     <% end %>
+
+    <% if @story_links.any? %>
+      <div class="grid">
+        <div class="story-flow" id="story-flow">
+          <% @story_links.each do |link| %>
+            <%= render "scenes/panel", link: link, plot: @plot %>
+          <% end %>
+        </div>
+        <% if policy(@plot).manage_story? %>
+          <div class="actions mt-4">
+            <%= button_to "シーンを追加", plot_plot_scene_links_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn primary w-full text-center" %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
   </section>
 </main>
+
+<script>
+  (function() {
+    let currentEditor = null;
+
+    const startEditing = (container) => {
+      if (currentEditor && currentEditor !== container) {
+        stopEditing(currentEditor);
+      }
+      currentEditor = container;
+      container.querySelector(".scene-display").classList.add("hidden");
+      const editor = container.querySelector(".scene-editor");
+      editor.classList.remove("hidden");
+      const textarea = editor.querySelector("textarea");
+      textarea.focus();
+      // Adjust height
+      textarea.style.height = 'auto';
+      textarea.style.height = textarea.scrollHeight + 'px';
+    };
+
+    const stopEditing = (container) => {
+      if (!container) return;
+      const form = container.querySelector("form");
+      if (form) form.requestSubmit();
+      
+      // UI update will be handled by Turbo Stream response
+      // But we can eagerly revert to display state or keep editing state until response?
+      // Turbo replacement will reset the state to display (default in partial).
+      // So we just need to submit.
+      currentEditor = null;
+    };
+
+    document.addEventListener("click", (e) => {
+      const display = e.target.closest(".scene-display");
+      if (display) {
+        const container = display.closest(".scene-container");
+        if (container) startEditing(container);
+      }
+    });
+
+    document.addEventListener("focusout", (e) => {
+      if (currentEditor && currentEditor.contains(e.target)) {
+        // Check if new focus is still within the editor
+        setTimeout(() => {
+          if (!currentEditor.contains(document.activeElement)) {
+            stopEditing(currentEditor);
+          }
+        }, 0);
+      }
+    });
+
+    // Auto-resize textarea
+    document.addEventListener("input", (e) => {
+      if (e.target.matches(".scene-textarea")) {
+        e.target.style.height = 'auto';
+        e.target.style.height = e.target.scrollHeight + 'px';
+      }
+    });
+  })();
+</script>

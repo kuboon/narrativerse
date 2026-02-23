@@ -12,6 +12,7 @@ Rails.application.routes.draw do
   root "home#index"
 
   resources :elements, except: :destroy
+  resources :scenes, only: :update
   resources :plots, except: :destroy do
     resources :plot_elements, except: [ :index, :show ] do
       patch :refresh_revision, on: :member
@@ -28,8 +29,8 @@ Rails.application.routes.draw do
   resource :session, only: [ :new, :create, :destroy ]
   resources :users, only: [ :new, :create ]
 
-  post "ai_assists/element_summary", to: "ai_assists#element_summary"
-  post "ai_assists/element_text", to: "ai_assists#element_text"
-  post "ai_assists/plot_summary", to: "ai_assists#plot_summary"
-  post "ai_assists/scene_text", to: "ai_assists#scene_text"
+  # post "ai_assists/element_summary", to: "ai_assists#element_summary"
+  # post "ai_assists/element_text", to: "ai_assists#element_text"
+  # post "ai_assists/plot_summary", to: "ai_assists#plot_summary"
+  # post "ai_assists/scene_text", to: "ai_assists#scene_text"
 end

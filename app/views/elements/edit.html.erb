@@ -19,12 +19,10 @@
       <div class="field">
         <%= label_tag "element_revision_summary", "概要" %>
         <%= text_area_tag "element_revision[summary]", @revision&.summary, rows: 3 %>
-        <%= link_to "AI要約", ai_assists_element_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="field">
         <%= label_tag "element_revision_text", "本文" %>
         <%= text_area_tag "element_revision[text]", @revision&.text, rows: 6 %>
-        <%= link_to "AI下書き", ai_assists_element_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
         <%= form.submit @owns_element ? "更新" : "改訂を作成", class: "btn primary" %>

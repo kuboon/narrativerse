@@ -19,8 +19,12 @@ class PlotSceneLinksController < ApplicationController
     if @scene.save
       last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
       last_link.update!(next_scene_id: @scene.id) if last_link
-      new_link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
-      redirect_to reader_link_path(@plot, new_link)
+      @link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
+
+      respond_to do |format|
+        format.html { redirect_to reader_link_path(@plot, @link) }
+        format.turbo_stream
+      end
     else
       render :new, status: :unprocessable_entity
     end

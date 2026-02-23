@@ -54,29 +54,6 @@
       </div>
     </section>
   <% end %>
-
-  <% if @plot_elements.any? %>
-    <section class="grid">
-      <div class="grid-header">
-        <h2>登場要素</h2>
-      </div>
-      <div class="cards">
-        <% @plot_elements.each do |plot_element| %>
-          <article class="card">
-            <h3><%= plot_element.element.name %></h3>
-            <p class="badge"><%= t("elements.types.#{plot_element.element.element_type.downcase}") %></p>
-            <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
-            <div class="card-actions">
-              <%= link_to "詳細", element_path(plot_element.element), class: "text-link" %>
-              <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
-                <span class="badge notice">更新あり</span>
-              <% end %>
-            </div>
-          </article>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
 </main>
 
 <script>

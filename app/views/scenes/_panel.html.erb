@@ -1,0 +1,15 @@
+<article id="link-<%= link.id %>" class="panel scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
+  <div class="scene-display cursor-pointer hover:bg-gray-50 p-2 rounded">
+    <%= simple_format(link.scene.text.presence || "（テキストを入力してください）") %>
+  </div>
+  <div class="scene-editor hidden">
+    <%= form_with model: link.scene, url: scene_path(link.scene), method: :patch, class: "scene-form w-full", html: { data: { turbo: true } } do |f| %>
+      <%= hidden_field_tag :link_id, link.id %>
+      <%= hidden_field_tag :plot_id, plot.id %>
+      <%= f.text_area :text, class: "w-full p-2 border rounded scene-textarea min-h-[100px]", rows: 5 %>
+      <div class="actions mt-2 text-right">
+        <%= f.submit "保存", class: "btn primary btn-sm" %>
+      </div>
+    <% end %>
+  </div>
+</article>

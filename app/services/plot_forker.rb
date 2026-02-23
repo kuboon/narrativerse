@@ -24,6 +24,15 @@ class PlotForker
     PlotParentLink.create!(child_plot: new_plot, parent_plot: @plot)
     new_link = PlotSceneLink.create!(plot: new_plot, scene: @link.scene, next_scene: nil)
 
+    @plot.plot_elements.each do |pe|
+      PlotElement.create!(
+        plot: new_plot,
+        element: pe.element,
+        element_revision: pe.element_revision,
+        summary: pe.summary
+      )
+    end
+
     { plot: new_plot, link: new_link }
   end
 end

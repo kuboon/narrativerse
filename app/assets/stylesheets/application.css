@@ -770,3 +770,45 @@ textarea {
 .page h3 {
   letter-spacing: -0.02em;
 }
+
+/* Utility and Scene Editing Styles */
+.hidden {
+  display: none !important;
+}
+
+.scene-display {
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.scene-display:hover {
+  background: rgba(255, 255, 255, 0.5);
+  border-color: var(--border);
+}
+
+.scene-textarea {
+  width: 100%;
+  min-height: 120px;
+  padding: 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-family: inherit;
+  font-size: inherit;
+  line-height: 1.6;
+  resize: none;
+  background: white;
+}
+
+.scene-textarea:focus {
+  outline: 2px solid var(--accent);
+  border-color: transparent;
+}
+
+.w-full { width: 100%; }
+.mt-2 { margin-top: 8px; }
+.mt-4 { margin-top: 16px; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
