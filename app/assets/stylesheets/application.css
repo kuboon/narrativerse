@@ -621,6 +621,11 @@ nav {
   max-width: 640px;
 }
 
+.grid .form-card {
+  max-width: none;
+  box-shadow: 0 12px 20px var(--shadow);
+}
+
 .filter-bar {
   display: grid;
   gap: 16px;

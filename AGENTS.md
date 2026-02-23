@@ -36,7 +36,7 @@
 1. Reader migration cleanup
    - Remove unused legacy PlotBuilder view if no longer needed. (done)
 2. Plot story authoring UX
-   - Provide inline editor on plot show.
+   - Provide inline editor on plot show. (done)
 3. Reader UX polish
    - Smooth scroll anchors to focus link and add scroll progress. (done)
 4. Auth/permissions tightening

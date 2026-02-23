@@ -51,6 +51,27 @@
       </div>
     <% end %>
 
+    <% if @owns_plot %>
+      <div class="grid">
+        <div class="grid-header">
+          <h2>ストーリーを追加</h2>
+        </div>
+        <div class="form-card">
+          <p class="lede">次のストーリーをここに書いてください。</p>
+          <%= form_with model: Scene.new, url: plot_plot_scene_links_path(@plot) do |form| %>
+            <div class="field">
+              <%= form.label :text, "次のストーリー" %>
+              <%= form.text_area :text, rows: 8, required: true %>
+              <%= link_to "AI下書き", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
+            </div>
+            <div class="actions">
+              <%= form.submit "追加", class: "btn primary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <% if @plot.plot_elements.any? %>
       <div class="grid">
         <div class="grid-header">
