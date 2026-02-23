@@ -21,9 +21,8 @@ if Rails.env.development?
     { plot: plots[0],   scene: scenes[0],  next_scene: scenes[1] },
     { plot: plots[0],   scene: scenes[1], next_scene: scenes[2] },
     { plot: plots[0],   scene: scenes[2], next_scene: scenes[3] },
-    { plot: plots[1],   scene: scenes[2], next_scene: scenes[4] },
+    { plot: plots[1],   scene: scenes[2], next_scene: scenes[4] }
   ])
 
   puts "✅ Development seeds (users, stories, characters, plots, scenes) loaded successfully."
 end
-

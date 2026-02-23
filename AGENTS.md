@@ -11,6 +11,7 @@
 - UI strings are Japanese-first; locale default set to `:ja`.
 - Tests added for PlotBuilder, PlotForker, PlotSceneLinksController, ElementRevisionManager.
 - PlotSceneLinksController tests stay IntegrationTest-based with Spec DSL for request helpers.
+- RuboCop lint clean; seeds updated for trailing comma rules.
 
 ## Recent Commits
 - (current) Reader migration and hidden scenes
