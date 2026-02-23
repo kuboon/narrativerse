@@ -14,7 +14,7 @@
       <div class="field">
         <%= form.label :scene_id, "最初の場面" %>
         <%= form.select :scene_id, @scenes.map { |scene| ["場面 #{scene.id}", scene.id] }, prompt: "選択" %>
-        <p class="helper-text">※ Scene はプロットの内部で使われます。</p>
+        <p class="helper-text">※ ストーリーはプロットの内部で使われます。</p>
       </div>
       <div class="actions">
         <%= form.submit "作成", class: "btn primary" %>

@@ -10,6 +10,7 @@
 - Plot show now renders story flow by stitching linked scenes.
 - UI strings are Japanese-first; locale default set to `:ja`.
 - Tests added for PlotBuilder, PlotForker, PlotSceneLinksController, ElementRevisionManager.
+- PlotSceneLinksController tests stay IntegrationTest-based with Spec DSL for request helpers.
 
 ## Recent Commits
 - (current) Reader migration and hidden scenes
@@ -28,7 +29,7 @@
 - PlotSceneLinksController now only handles authoring (new/create/fork), reader is public.
 - PlotForker duplicates a plot from a specific scene and links to parent plot (self-fork guard).
 - ElementRevisionManager updates owned plot elements to latest revision and prunes unreferenced revisions.
- - Locale config: `config.i18n.default_locale = :ja` in `config/application.rb`.
+- Locale config: `config.i18n.default_locale = :ja` in `config/application.rb`.
 
 ## TODO / Next Steps
 1. Reader migration cleanup

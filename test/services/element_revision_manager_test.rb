@@ -1,38 +1,39 @@
 require "test_helper"
 
-class ElementRevisionManagerTest < ActiveSupport::TestCase
-  def setup
-    @user = User.create!(name: "Author")
-    @element = Element.create!(user: @user, element_type: "Character", name: "Hero")
-    @scene = Scene.create!(user: @user, text: "Scene")
-    @plot = Plot.create!(user: @user, title: "Plot", scene: @scene)
-    PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene: nil)
+describe ElementRevisionManager do
+  let(:user) { User.create!(name: "Author") }
+  let(:element) { Element.create!(user: user, element_type: "Character", name: "Hero") }
+  let(:scene) { Scene.create!(user: user, text: "Scene") }
+  let(:plot) { Plot.create!(user: user, title: "Plot", scene: scene) }
+
+  before do
+    PlotSceneLink.create!(plot: plot, scene: scene, next_scene: nil)
   end
 
-  test "creates initial revision" do
-    manager = ElementRevisionManager.new(element: @element, user: @user, revision_params: { summary: "Lead" })
+  it "creates initial revision" do
+    manager = ElementRevisionManager.new(element: element, user: user, revision_params: { summary: "Lead" })
     revision = manager.create_initial
 
-    assert revision.persisted?
-    assert_equal 1, revision.revision
+    _(revision.persisted?).must_equal true
+    _(revision.revision).must_equal 1
   end
 
-  test "creates next revision" do
-    ElementRevisionManager.new(element: @element, user: @user, revision_params: { summary: "Lead" }).create_initial
-    manager = ElementRevisionManager.new(element: @element, user: @user, revision_params: { summary: "Update" })
+  it "creates next revision" do
+    ElementRevisionManager.new(element: element, user: user, revision_params: { summary: "Lead" }).create_initial
+    manager = ElementRevisionManager.new(element: element, user: user, revision_params: { summary: "Update" })
     revision = manager.create_next
 
-    assert revision.persisted?
-    assert_equal 2, revision.revision
+    _(revision.persisted?).must_equal true
+    _(revision.revision).must_equal 2
   end
 
-  test "updates owned plot elements to latest revision" do
-    initial = ElementRevisionManager.new(element: @element, user: @user, revision_params: { summary: "Lead" }).create_initial
-    plot_element = PlotElement.create!(plot: @plot, element: @element, element_revision: initial)
+  it "updates owned plot elements to latest revision" do
+    initial = ElementRevisionManager.new(element: element, user: user, revision_params: { summary: "Lead" }).create_initial
+    plot_element = PlotElement.create!(plot: plot, element: element, element_revision: initial)
 
-    updated = ElementRevisionManager.new(element: @element, user: @user, revision_params: { summary: "Update" }).create_next
+    updated = ElementRevisionManager.new(element: element, user: user, revision_params: { summary: "Update" }).create_next
 
     plot_element.reload
-    assert_equal updated.id, plot_element.element_revision_id
+    _(plot_element.element_revision_id).must_equal updated.id
   end
 end
