@@ -1,4 +1,4 @@
-<main class="page">
+<main class="page reader-page">
   <section class="detail">
     <div class="detail-header">
       <div>
@@ -15,9 +15,12 @@
     </div>
 
   <% if @story_links.any? %>
-    <div class="story-flow">
+    <div class="reader-progress" data-reader-progress>
+      <span class="reader-progress-fill" data-reader-progress-fill></span>
+    </div>
+    <div class="story-flow" data-reader-flow data-focus-link-id="<%= @focus_link&.id %>">
       <% @story_links.each do |link| %>
-          <article class="panel <%= "focus" if @focus_link && link.id == @focus_link.id %>">
+          <article id="link-<%= link.id %>" data-link-id="<%= link.id %>" class="panel <%= "focus" if @focus_link && link.id == @focus_link.id %>">
             <%= link.scene.text %>
           </article>
         <% end %>
@@ -75,3 +78,48 @@
     </section>
   <% end %>
 </main>
+
+<script>
+  (function() {
+    const initReader = () => {
+      const flow = document.querySelector("[data-reader-flow]");
+      const progress = document.querySelector("[data-reader-progress]");
+      if (!flow || !progress) return;
+      if (flow.dataset.readerBound === "true") return;
+      flow.dataset.readerBound = "true";
+
+      const fill = progress.querySelector("[data-reader-progress-fill]");
+      const focusId = flow.dataset.focusLinkId;
+
+      const updateProgress = () => {
+        const flowTop = flow.getBoundingClientRect().top + window.scrollY;
+        const flowHeight = flow.offsetHeight;
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const maxScroll = flowTop + flowHeight - viewportHeight;
+        if (maxScroll <= flowTop) {
+          fill.style.width = "100%";
+          return;
+        }
+        const progressValue = (window.scrollY - flowTop) / (maxScroll - flowTop);
+        const clamped = Math.max(0, Math.min(1, progressValue));
+        fill.style.width = `${Math.round(clamped * 100)}%`;
+      };
+
+      updateProgress();
+      window.addEventListener("scroll", updateProgress, { passive: true });
+      window.addEventListener("resize", updateProgress);
+
+      if (focusId) {
+        const focusPanel = document.getElementById(`link-${focusId}`);
+        if (focusPanel) {
+          requestAnimationFrame(() => {
+            focusPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+          });
+        }
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", initReader);
+    document.addEventListener("turbo:load", initReader);
+  })();
+</script>

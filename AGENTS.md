@@ -38,7 +38,7 @@
 2. Plot story authoring UX
    - Provide inline editor on plot show.
 3. Reader UX polish
-   - Smooth scroll anchors to focus link and add scroll progress.
+   - Smooth scroll anchors to focus link and add scroll progress. (done)
 4. Auth/permissions tightening
    - Ensure edit/create actions are consistently restricted to owners.
 
