@@ -1,0 +1,6 @@
+ja:
+  elements:
+    types:
+      character: "人物"
+      item: "小道具"
+      field: "場面"

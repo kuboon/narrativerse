@@ -13,7 +13,7 @@ class PlotElementsController < ApplicationController
     element = Element.find(plot_element_params[:element_id])
 
     if @plot.plot_elements.exists?(element_id: element.id)
-      redirect_to plot_path(@plot), alert: "Element already added"
+      redirect_to plot_path(@plot), alert: "すでに追加されています"
       return
     end
 
@@ -34,10 +34,10 @@ class PlotElementsController < ApplicationController
     )
 
     if @plot_element.save
-      redirect_to plot_path(@plot), notice: "Element added"
+      redirect_to plot_path(@plot), notice: "要素を追加しました"
     else
       if @plot_element.errors.details[:element_id].any? { |detail| detail[:error] == :taken }
-        redirect_to plot_path(@plot), alert: "Element already added"
+        redirect_to plot_path(@plot), alert: "すでに追加されています"
       else
         load_elements
         render :new, status: :unprocessable_entity
@@ -50,7 +50,7 @@ class PlotElementsController < ApplicationController
 
   def update
     if @plot_element.update(plot_element_update_params)
-      redirect_to plot_path(@plot), notice: "Element updated"
+      redirect_to plot_path(@plot), notice: "要素を更新しました"
     else
       render :edit, status: :unprocessable_entity
     end
@@ -58,16 +58,16 @@ class PlotElementsController < ApplicationController
 
   def destroy
     @plot_element.destroy
-    redirect_to plot_path(@plot), notice: "Element removed"
+    redirect_to plot_path(@plot), notice: "要素を削除しました"
   end
 
   def refresh_revision
     latest = @plot_element.element.latest_revision
     if latest && latest.id != @plot_element.element_revision_id
       @plot_element.update!(element_revision: latest)
-      redirect_to plot_path(@plot), notice: "Revision updated"
+      redirect_to plot_path(@plot), notice: "リビジョンを更新しました"
     else
-      redirect_to plot_path(@plot), notice: "Already up to date"
+      redirect_to plot_path(@plot), notice: "最新の状態です"
     end
   end
 
@@ -80,7 +80,7 @@ class PlotElementsController < ApplicationController
   def authorize_plot
     return if @plot.user == current_user
 
-    redirect_to plot_path(@plot), alert: "Forbidden"
+    redirect_to plot_path(@plot), alert: "権限がありません"
   end
 
   def set_plot_element

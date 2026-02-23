@@ -2,17 +2,17 @@
   <section class="detail">
     <div class="detail-header">
       <div>
-        <p class="eyebrow">Plot: <%= @plot.title %></p>
-        <h1>Story</h1>
+        <p class="eyebrow">プロット: <%= @plot.title %></p>
+        <h1>ストーリー</h1>
       </div>
       <div class="detail-actions">
         <% if @owns_plot %>
-          <%= link_to "Add story segment", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
+          <%= link_to "ストーリー追加", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
         <% end %>
         <% if @fork_allowed && @focus_link %>
-          <%= button_to "Fork from here", fork_plot_plot_scene_link_path(@plot, @focus_link), method: :post, class: "btn ghost" %>
+          <%= button_to "ここから分岐", fork_plot_plot_scene_link_path(@plot, @focus_link), method: :post, class: "btn ghost" %>
         <% elsif current_user %>
-          <span class="badge notice">Fork disabled for your lineage</span>
+          <span class="badge notice">自分の系譜からは分岐できません</span>
         <% end %>
       </div>
     </div>
@@ -20,15 +20,15 @@
   <% if @story_links.any? %>
     <div class="story-flow">
       <% @story_links.each do |link| %>
-        <article class="panel <%= "focus" if @focus_link && link.id == @focus_link.id %>">
-          <p class="meta-label">Story segment</p>
-          <p><%= link.scene.text %></p>
-        </article>
-      <% end %>
+          <article class="panel <%= "focus" if @focus_link && link.id == @focus_link.id %>">
+            <p class="meta-label">ストーリー断片</p>
+            <p><%= link.scene.text %></p>
+          </article>
+        <% end %>
     </div>
     <% else %>
       <div class="empty-state">
-        <p>No scenes yet. Add a scene to begin the story.</p>
+        <p>まだストーリーがありません。最初の文章を追加しましょう。</p>
       </div>
     <% end %>
   </section>
@@ -36,20 +36,20 @@
   <% if @branches.any? && @focus_link %>
     <section class="grid">
       <div class="grid-header">
-        <h2>Other branches from this scene</h2>
+        <h2>この場面からの分岐</h2>
       </div>
       <div class="cards">
         <% @branches.each do |branch| %>
           <article class="card">
             <h3><%= branch.plot.title %></h3>
-            <p><%= branch.plot.summary.presence || "No summary yet." %></p>
+            <p><%= branch.plot.summary.presence || "まだ概要がありません。" %></p>
             <div class="detail-meta">
               <div>
-                <span class="meta-label">Author</span>
+                <span class="meta-label">作成者</span>
                 <span><%= branch.plot.user.name %></span>
               </div>
             </div>
-            <%= link_to "Jump", reader_link_path(branch.plot, branch.id), class: "text-link" %>
+            <%= link_to "移動", reader_link_path(branch.plot, branch.id), class: "text-link" %>
           </article>
         <% end %>
       </div>
@@ -59,18 +59,18 @@
   <% if @plot_elements.any? %>
     <section class="grid">
       <div class="grid-header">
-        <h2>Cast & props</h2>
+        <h2>登場要素</h2>
       </div>
       <div class="cards">
         <% @plot_elements.each do |plot_element| %>
           <article class="card">
             <h3><%= plot_element.element.name %></h3>
-            <p class="badge"><%= plot_element.element.element_type %></p>
-            <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "No summary yet." %></p>
+            <p class="badge"><%= t("elements.types.#{plot_element.element.element_type.downcase}") %></p>
+            <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
             <div class="card-actions">
-              <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
+              <%= link_to "詳細", element_path(plot_element.element), class: "text-link" %>
               <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
-                <span class="badge notice">New revision</span>
+                <span class="badge notice">更新あり</span>
               <% end %>
             </div>
           </article>

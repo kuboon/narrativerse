@@ -1,24 +1,24 @@
 <main class="page">
   <section class="grid">
     <div class="grid-header">
-      <h1>Elements</h1>
-      <%= link_to "New element", new_element_path, class: "btn primary" %>
+      <h1>要素</h1>
+      <%= link_to "要素作成", new_element_path, class: "btn primary" %>
     </div>
     <%= form_with url: elements_path, method: :get, class: "filter-bar" do |form| %>
       <div class="field">
-        <%= form.label :q, "Search" %>
-        <%= form.text_field :q, value: @query, placeholder: "Name or type" %>
+        <%= form.label :q, "検索" %>
+        <%= form.text_field :q, value: @query, placeholder: "名前 / 種別" %>
       </div>
       <div class="actions">
-        <%= form.submit "Filter", class: "btn ghost" %>
+        <%= form.submit "絞り込む", class: "btn ghost" %>
       </div>
     <% end %>
     <div class="cards">
       <% @elements.each do |element| %>
         <article class="card">
           <h3><%= element.name %></h3>
-          <p><%= element.element_type %></p>
-          <%= link_to "Open", element_path(element), class: "text-link" %>
+          <p><%= t("elements.types.#{element.element_type.downcase}") %></p>
+          <%= link_to "詳細", element_path(element), class: "text-link" %>
         </article>
       <% end %>
     </div>

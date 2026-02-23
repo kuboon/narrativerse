@@ -1,25 +1,25 @@
 <main class="page">
   <section class="form-card">
-    <h1>Add element to <%= @plot.title %></h1>
+    <h1><%= @plot.title %> に要素を追加</h1>
     <%= form_with url: plot_plot_elements_path(@plot), method: :get, class: "filter-bar" do |form| %>
       <div class="field">
-        <%= form.label :q, "Keyword" %>
-        <%= form.text_field :q, value: @query, placeholder: "Detective, fantasy..." %>
+        <%= form.label :q, "キーワード" %>
+        <%= form.text_field :q, value: @query, placeholder: "探偵、ファンタジー..." %>
       </div>
       <div class="field">
-        <span>Types</span>
+        <span>種別</span>
         <div class="checkbox-row">
           <% @element_types.each do |type| %>
             <label class="checkbox">
               <%= check_box_tag "types[]", type, @selected_types.include?(type) %>
-              <span><%= type %></span>
+              <span><%= t("elements.types.#{type.downcase}") %></span>
             </label>
           <% end %>
         </div>
       </div>
       <div class="actions">
-        <%= form.submit "Filter", class: "btn ghost" %>
-        <%= link_to "New element", new_element_path, class: "btn primary" %>
+        <%= form.submit "絞り込む", class: "btn ghost" %>
+        <%= link_to "要素作成", new_element_path, class: "btn primary" %>
       </div>
     <% end %>
 
@@ -33,19 +33,19 @@
       <% @elements.each do |element| %>
         <article class="card">
           <h3><%= element.name %></h3>
-          <p class="badge"><%= element.element_type %></p>
-          <p><%= element.latest_revision&.summary.presence || "No summary yet." %></p>
+            <p class="badge"><%= t("elements.types.#{element.element_type.downcase}") %></p>
+          <p><%= element.latest_revision&.summary.presence || "まだ概要がありません。" %></p>
           <%= form_with model: [@plot, PlotElement.new], class: "inline-form" do |form| %>
             <%= form.hidden_field :element_id, value: element.id %>
             <div class="field">
-              <%= form.label :summary, "Role in plot" %>
+              <%= form.label :summary, "プロット内の役割" %>
               <%= form.text_area :summary, rows: 2 %>
             </div>
             <div class="field">
-              <%= form.label :secrets, "Secrets" %>
+              <%= form.label :secrets, "秘密の設定" %>
               <%= form.text_area :secrets, rows: 2 %>
             </div>
-            <%= form.submit "Add", class: "btn primary" %>
+            <%= form.submit "追加", class: "btn primary" %>
           <% end %>
         </article>
       <% end %>

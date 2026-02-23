@@ -624,6 +624,12 @@ nav {
   font-family: "Inter", sans-serif;
 }
 
+.helper-text {
+  font-size: 12px;
+  color: var(--muted);
+  margin: 0;
+}
+
 input,
 select,
 textarea {

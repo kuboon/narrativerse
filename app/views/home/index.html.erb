@@ -5,84 +5,84 @@
     <div class="hero-grid">
       <div class="hero-copy">
         <p class="eyebrow">Narrativerse</p>
-        <h1>Build branching stories from characters, props, and scenes.</h1>
-        <p class="lede">Start with a shared library of elements, stitch scenes into plots, and fork at any moment to explore new possibilities without losing context.</p>
+        <h1>登場人物・小道具・場面から分岐する物語をつくる。</h1>
+        <p class="lede">共有された要素を起点に、場面をつなげてプロットを作成。いつでも分岐して、文脈を保ったまま新しい物語に広げられます。</p>
         <div class="hero-actions">
-          <%= link_to "Create user", new_user_path, class: "btn primary" %>
-          <%= link_to "Start a plot", new_plot_path, class: "btn ghost" %>
-          <%= link_to "Browse elements", elements_path, class: "btn ghost" %>
+          <%= link_to "ユーザー作成", new_user_path, class: "btn primary" %>
+          <%= link_to "プロットを始める", new_plot_path, class: "btn ghost" %>
+          <%= link_to "要素を見る", elements_path, class: "btn ghost" %>
         </div>
         <div class="hero-meta">
-          <span class="meta-pill">Revision-safe</span>
-          <span class="meta-pill">Shared library</span>
-          <span class="meta-pill">Forkable plots</span>
-          <span class="meta-pill">AI assist ready</span>
+          <span class="meta-pill">安全なリビジョン</span>
+          <span class="meta-pill">共有ライブラリ</span>
+          <span class="meta-pill">分岐プロット</span>
+          <span class="meta-pill">AI支援</span>
         </div>
       </div>
       <div class="hero-panel">
-        <div class="panel-header">Story map</div>
+        <div class="panel-header">ストーリーマップ</div>
         <div class="story-map">
-          <div class="map-node">Scene 1</div>
+          <div class="map-node">場面 1</div>
           <div class="map-branch">
-            <div class="map-node">Scene 2</div>
-            <div class="map-node alt">Scene 2B</div>
+            <div class="map-node">場面 2</div>
+            <div class="map-node alt">場面 2B</div>
           </div>
-          <div class="map-node">Scene 3</div>
+          <div class="map-node">場面 3</div>
         </div>
-        <div class="panel-footer">Fork from any moment.</div>
+        <div class="panel-footer">どこからでも分岐できます。</div>
       </div>
     </div>
   </section>
 
   <section class="landing-steps">
     <div class="grid-header">
-      <h2>How it works</h2>
-      <%= link_to "Start a plot", new_plot_path, class: "text-link" %>
+      <h2>使い方</h2>
+      <%= link_to "プロットを始める", new_plot_path, class: "text-link" %>
     </div>
     <div class="step-grid">
       <article class="step-card">
         <span class="step-number">01</span>
-        <h3>Create elements</h3>
-        <p>Draft characters, items, and fields as reusable building blocks.</p>
+        <h3>要素を作る</h3>
+        <p>登場人物・小道具・場面を作り、再利用できる土台にします。</p>
       </article>
       <article class="step-card">
         <span class="step-number">02</span>
-        <h3>Write scenes</h3>
-        <p>Keep each scene focused and link them into a coherent plot.</p>
+        <h3>ストーリーを書く</h3>
+        <p>場面を積み重ねて、プロットとして物語をつなげます。</p>
       </article>
       <article class="step-card">
         <span class="step-number">03</span>
-        <h3>Fork branches</h3>
-        <p>Let readers jump between branches or spin up new storylines.</p>
+        <h3>分岐させる</h3>
+        <p>読者は分岐を選び、新しい物語の流れへ移動できます。</p>
       </article>
     </div>
   </section>
 
   <section class="landing-features">
     <div class="grid-header">
-      <h2>Designed for collaboration</h2>
-      <%= link_to "Browse plots", plots_path, class: "text-link" %>
+      <h2>共同制作のために</h2>
+      <%= link_to "プロットを見る", plots_path, class: "text-link" %>
     </div>
     <div class="feature-grid">
       <article class="feature-card">
         <div class="feature-icon">A</div>
-        <h3>Shared library</h3>
-        <p>Reuse other creators' characters and props without losing attribution.</p>
+        <h3>共有ライブラリ</h3>
+        <p>他の作者が作ったキャラクターや小道具を、出典を保ったまま使えます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon">B</div>
-        <h3>Safe revisions</h3>
-        <p>Update your elements and keep your own plots synced automatically.</p>
+        <h3>安全な更新</h3>
+        <p>自分の要素を更新すると、自分のプロットは最新に保たれます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon">C</div>
-        <h3>Branch navigation</h3>
-        <p>Follow parent plots to keep continuity across forks and rewrites.</p>
+        <h3>分岐の文脈</h3>
+        <p>親プロットをたどり、分岐や書き換えの流れを把握できます。</p>
       </article>
       <article class="feature-card">
         <div class="feature-icon">D</div>
-        <h3>AI assist hooks</h3>
-        <p>Generate summaries and draft copy from within the editor.</p>
+        <h3>AI支援</h3>
+        <p>編集画面から要約や下書きを生成できます。</p>
       </article>
     </div>
   </section>
@@ -90,76 +90,76 @@
   <section class="landing-map">
     <div class="map-grid">
       <div>
-        <h2>Branch without losing context.</h2>
-        <p class="lede">PlotBuilder keeps parent plots in view, so readers always know where a branch came from and what came before.</p>
+        <h2>文脈を失わずに分岐する。</h2>
+        <p class="lede">PlotBuilder が親プロットを追跡し、分岐の起点と経路を見失いません。</p>
         <div class="hero-actions">
-          <%= link_to "Read a plot", plots_path, class: "btn ghost" %>
-          <%= link_to "Start building", new_element_path, class: "btn primary" %>
+          <%= link_to "プロットを読む", plots_path, class: "btn ghost" %>
+          <%= link_to "要素を作る", new_element_path, class: "btn primary" %>
         </div>
       </div>
       <div class="map-card">
         <div class="map-row">
-          <span class="map-pill">Plot A</span>
+          <span class="map-pill">プロットA</span>
           <span class="map-line"></span>
-          <span class="map-pill alt">Plot B</span>
+          <span class="map-pill alt">プロットB</span>
         </div>
         <div class="map-row">
-          <span class="map-pill">Scene 2</span>
+          <span class="map-pill">場面 2</span>
           <span class="map-line"></span>
-          <span class="map-pill alt">Scene 4</span>
+          <span class="map-pill alt">場面 4</span>
         </div>
         <div class="map-row">
-          <span class="map-pill">Parent link</span>
+          <span class="map-pill">親リンク</span>
           <span class="map-line"></span>
-          <span class="map-pill">Child link</span>
+          <span class="map-pill">子リンク</span>
         </div>
-        <p class="map-note">Readers can jump between branches and see the full lineage.</p>
+        <p class="map-note">分岐間を移動し、物語の系譜を追えます。</p>
       </div>
     </div>
   </section>
 
   <section class="grid">
     <div class="grid-header">
-      <h2>Latest plots</h2>
-      <%= link_to "All plots", plots_path, class: "text-link" %>
+      <h2>最新のプロット</h2>
+      <%= link_to "一覧を見る", plots_path, class: "text-link" %>
     </div>
     <% if @plots.any? %>
       <div class="cards">
         <% @plots.each do |plot| %>
           <article class="card">
             <h3><%= plot.title %></h3>
-            <p><%= plot.summary.presence || "No summary yet." %></p>
-            <%= link_to "Open", plot_path(plot), class: "text-link" %>
+            <p><%= plot.summary.presence || "まだ概要がありません。" %></p>
+            <%= link_to "開く", plot_path(plot), class: "text-link" %>
           </article>
         <% end %>
       </div>
     <% else %>
       <div class="empty-state">
-        <p>No plots yet. Be the first to build a storyline.</p>
-        <%= link_to "Create the first plot", new_plot_path, class: "text-link" %>
+        <p>プロットがまだありません。最初の物語を作りましょう。</p>
+        <%= link_to "最初のプロットを作る", new_plot_path, class: "text-link" %>
       </div>
     <% end %>
   </section>
 
   <section class="grid">
     <div class="grid-header">
-      <h2>Latest elements</h2>
-      <%= link_to "All elements", elements_path, class: "text-link" %>
+      <h2>最新の要素</h2>
+      <%= link_to "一覧を見る", elements_path, class: "text-link" %>
     </div>
     <% if @elements.any? %>
       <div class="cards">
         <% @elements.each do |element| %>
           <article class="card">
             <h3><%= element.name %></h3>
-            <p><%= element.element_type %></p>
-            <%= link_to "Open", element_path(element), class: "text-link" %>
+            <p><%= t("elements.types.#{element.element_type.downcase}") %></p>
+            <%= link_to "開く", element_path(element), class: "text-link" %>
           </article>
         <% end %>
       </div>
     <% else %>
       <div class="empty-state">
-        <p>No elements yet. Create the first character or prop.</p>
-        <%= link_to "Create an element", new_element_path, class: "text-link" %>
+        <p>要素がまだありません。最初のキャラクターや小道具を作りましょう。</p>
+        <%= link_to "要素を作る", new_element_path, class: "text-link" %>
       </div>
     <% end %>
   </section>
@@ -167,13 +167,13 @@
   <section class="landing-cta">
     <div class="cta-panel">
       <div>
-        <p class="eyebrow">Ready to begin?</p>
-        <h2>Start your universe in minutes.</h2>
-        <p class="lede">Create a user, write a scene, and branch into new storylines with ease.</p>
+        <p class="eyebrow">準備はできましたか？</p>
+        <h2>数分で世界を始めよう。</h2>
+        <p class="lede">ユーザー作成 → 物語を書く → 分岐へ。すぐに始められます。</p>
       </div>
       <div class="cta-actions">
-        <%= link_to "Create user", new_user_path, class: "btn primary" %>
-        <%= link_to "Explore plots", plots_path, class: "btn ghost" %>
+        <%= link_to "ユーザー作成", new_user_path, class: "btn primary" %>
+        <%= link_to "プロットを見る", plots_path, class: "btn ghost" %>
       </div>
     </div>
   </section>

@@ -1,29 +1,29 @@
 <main class="page">
   <section class="grid">
     <div class="grid-header">
-      <h1>Plots</h1>
-      <%= link_to "New plot", new_plot_path, class: "btn primary" %>
+      <h1>プロット</h1>
+      <%= link_to "プロット作成", new_plot_path, class: "btn primary" %>
     </div>
     <%= form_with url: plots_path, method: :get, class: "filter-bar" do |form| %>
       <div class="field">
-        <%= form.label :q, "Search" %>
-        <%= form.text_field :q, value: @query, placeholder: "Title or summary" %>
+        <%= form.label :q, "検索" %>
+        <%= form.text_field :q, value: @query, placeholder: "タイトル / 概要" %>
       </div>
       <div class="actions">
-        <%= form.submit "Filter", class: "btn ghost" %>
+        <%= form.submit "絞り込む", class: "btn ghost" %>
       </div>
     <% end %>
     <div class="cards">
       <% @plots.each do |plot| %>
         <article class="card">
           <h3><%= plot.title %></h3>
-          <p><%= plot.summary.presence || "No summary yet." %></p>
-          <div class="card-actions">
-            <%= link_to "Open", plot_path(plot), class: "text-link" %>
-            <% if plot.plot_scene_links.any? %>
-              <%= link_to "Read", reader_path(plot), class: "text-link" %>
-            <% end %>
-          </div>
+            <p><%= plot.summary.presence || "まだ概要がありません。" %></p>
+            <div class="card-actions">
+              <%= link_to "詳細", plot_path(plot), class: "text-link" %>
+              <% if plot.plot_scene_links.any? %>
+              <%= link_to "読む", reader_path(plot), class: "text-link" %>
+              <% end %>
+            </div>
         </article>
       <% end %>
     </div>

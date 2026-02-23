@@ -1,23 +1,24 @@
 <main class="page">
   <section class="form-card">
-    <h1>New plot</h1>
+    <h1>プロット作成</h1>
     <%= form_with model: @plot do |form| %>
       <div class="field">
         <%= form.label :title %>
         <%= form.text_field :title, required: true %>
       </div>
       <div class="field">
-        <%= form.label :summary %>
+        <%= form.label :summary, "概要" %>
         <%= form.text_area :summary, rows: 4 %>
-        <%= link_to "AI summary", ai_assists_plot_summary_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI要約", ai_assists_plot_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="field">
-        <%= form.label :scene_id, "Start scene" %>
-        <%= form.select :scene_id, @scenes.map { |scene| ["Scene #{scene.id}", scene.id] }, prompt: "Choose scene" %>
+        <%= form.label :scene_id, "最初の場面" %>
+        <%= form.select :scene_id, @scenes.map { |scene| ["場面 #{scene.id}", scene.id] }, prompt: "選択" %>
+        <p class="helper-text">※ Scene はプロットの内部で使われます。</p>
       </div>
       <div class="actions">
-        <%= form.submit "Create", class: "btn primary" %>
-        <%= link_to "Cancel", plots_path, class: "btn ghost" %>
+        <%= form.submit "作成", class: "btn primary" %>
+        <%= link_to "キャンセル", plots_path, class: "btn ghost" %>
       </div>
     <% end %>
   </section>

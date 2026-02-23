@@ -1,34 +1,34 @@
 <main class="page">
   <section class="form-card">
-    <h1>Edit element</h1>
+    <h1>要素編集</h1>
     <%= form_with model: @element do |form| %>
       <% if @owns_element %>
         <div class="field">
-          <%= form.label :element_type, "Type" %>
-          <%= form.select :element_type, Element::ELEMENT_TYPES %>
+          <%= form.label :element_type, "種別" %>
+          <%= form.select :element_type, Element::ELEMENT_TYPES.map { |type| [t("elements.types.#{type.downcase}"), type] } %>
         </div>
         <div class="field">
-          <%= form.label :name %>
+          <%= form.label :name, "名前" %>
           <%= form.text_field :name, required: true %>
         </div>
       <% else %>
         <div class="panel">
-          <p>You are creating a new revision for an element you do not own. The name and type cannot be changed.</p>
+          <p>他のユーザーの要素を改訂しています。名前と種別は変更できません。</p>
         </div>
       <% end %>
       <div class="field">
-        <%= label_tag "element_revision_summary", "Summary" %>
+        <%= label_tag "element_revision_summary", "概要" %>
         <%= text_area_tag "element_revision[summary]", @revision&.summary, rows: 3 %>
-        <%= link_to "AI summary", ai_assists_element_summary_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI要約", ai_assists_element_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="field">
-        <%= label_tag "element_revision_text", "Text" %>
+        <%= label_tag "element_revision_text", "本文" %>
         <%= text_area_tag "element_revision[text]", @revision&.text, rows: 6 %>
-        <%= link_to "AI draft", ai_assists_element_text_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI下書き", ai_assists_element_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
-        <%= form.submit @owns_element ? "Update" : "Create revision", class: "btn primary" %>
-        <%= link_to "Cancel", element_path(@element), class: "btn ghost" %>
+        <%= form.submit @owns_element ? "更新" : "改訂を作成", class: "btn primary" %>
+        <%= link_to "キャンセル", element_path(@element), class: "btn ghost" %>
       </div>
     <% end %>
   </section>

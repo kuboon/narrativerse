@@ -8,14 +8,14 @@ class SessionsController < ApplicationController
 
     if user
       session[:user_id] = user.id
-      redirect_to root_path, notice: "Logged in"
+      redirect_to root_path, notice: "ログインしました"
     else
-      redirect_to new_session_path, alert: "User not found"
+      redirect_to new_session_path, alert: "ユーザーが見つかりません"
     end
   end
 
   def destroy
     reset_session
-    redirect_to root_path, notice: "Logged out"
+    redirect_to root_path, notice: "ログアウトしました"
   end
 end

@@ -1,16 +1,16 @@
 <main class="page">
   <section class="form-card">
-    <h1>Add to story</h1>
-    <p class="lede">Scenes are created behind the scenes. Write the next part of the story here.</p>
+    <h1>ストーリーに追加</h1>
+    <p class="lede">Scene は内部で生成されます。次の物語をここに書いてください。</p>
     <%= form_with model: @scene, url: plot_plot_scene_links_path(@plot) do |form| %>
       <div class="field">
-        <%= form.label :text, "Next story segment" %>
+        <%= form.label :text, "次のストーリー" %>
         <%= form.text_area :text, rows: 8, required: true %>
-        <%= link_to "AI draft", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI下書き", ai_assists_scene_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
-        <%= form.submit "Add", class: "btn primary" %>
-        <%= link_to "Cancel", plot_path(@plot), class: "btn ghost" %>
+        <%= form.submit "追加", class: "btn primary" %>
+        <%= link_to "キャンセル", plot_path(@plot), class: "btn ghost" %>
       </div>
     <% end %>
   </section>

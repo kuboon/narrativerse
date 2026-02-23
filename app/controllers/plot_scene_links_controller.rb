@@ -3,14 +3,14 @@ class PlotSceneLinksController < ApplicationController
 
   def new
     @plot = Plot.find(params[:plot_id])
-    return render plain: "Forbidden", status: :forbidden unless @plot.user == current_user
+    return render plain: "権限がありません", status: :forbidden unless @plot.user == current_user
 
     @scene = Scene.new
   end
 
   def create
     @plot = Plot.find(params[:plot_id])
-    return render plain: "Forbidden", status: :forbidden unless @plot.user == current_user
+    return render plain: "権限がありません", status: :forbidden unless @plot.user == current_user
 
     @scene = Scene.new(scene_params)
     @scene.user = current_user
@@ -28,12 +28,12 @@ class PlotSceneLinksController < ApplicationController
   def fork
     source_plot = Plot.find(params[:plot_id])
     source_link = PlotSceneLink.find(params[:id])
-    return render plain: "Not found", status: :not_found unless source_link.plot_id == source_plot.id
-    return render plain: "Login required", status: :unauthorized unless current_user
+    return render plain: "見つかりません", status: :not_found unless source_link.plot_id == source_plot.id
+    return render plain: "ログインが必要です", status: :unauthorized unless current_user
 
     begin
       result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
-      redirect_to reader_link_path(result[:plot], result[:link]), notice: "Forked plot"
+      redirect_to reader_link_path(result[:plot], result[:link]), notice: "分岐プロットを作成しました"
     rescue ArgumentError => e
       redirect_to reader_link_path(source_plot, source_link), alert: e.message
     end

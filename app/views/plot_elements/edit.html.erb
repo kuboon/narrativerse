@@ -1,19 +1,19 @@
 <main class="page">
   <section class="form-card">
-    <h1>Edit plot element</h1>
-    <p class="badge"><%= @plot_element.element.name %> · <%= @plot_element.element.element_type %></p>
+    <h1>プロット要素の編集</h1>
+    <p class="badge"><%= @plot_element.element.name %> · <%= t("elements.types.#{@plot_element.element.element_type.downcase}") %></p>
     <%= form_with model: [@plot, @plot_element] do |form| %>
       <div class="field">
-        <%= form.label :summary, "Role in plot" %>
+        <%= form.label :summary, "プロット内の役割" %>
         <%= form.text_area :summary, rows: 3 %>
       </div>
       <div class="field">
-        <%= form.label :secrets, "Secrets" %>
+        <%= form.label :secrets, "秘密の設定" %>
         <%= form.text_area :secrets, rows: 3 %>
       </div>
       <div class="actions">
-        <%= form.submit "Update", class: "btn primary" %>
-        <%= link_to "Back", plot_path(@plot), class: "btn ghost" %>
+        <%= form.submit "更新", class: "btn primary" %>
+        <%= link_to "戻る", plot_path(@plot), class: "btn ghost" %>
       </div>
     <% end %>
   </section>

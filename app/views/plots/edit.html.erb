@@ -1,19 +1,19 @@
 <main class="page">
   <section class="form-card">
-    <h1>Edit plot</h1>
+    <h1>プロット編集</h1>
     <%= form_with model: @plot do |form| %>
       <div class="field">
         <%= form.label :title %>
         <%= form.text_field :title, required: true %>
       </div>
       <div class="field">
-        <%= form.label :summary %>
+        <%= form.label :summary, "概要" %>
         <%= form.text_area :summary, rows: 4 %>
-        <%= link_to "AI summary", ai_assists_plot_summary_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI要約", ai_assists_plot_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
-        <%= form.submit "Update", class: "btn primary" %>
-        <%= link_to "Cancel", plot_path(@plot), class: "btn ghost" %>
+        <%= form.submit "更新", class: "btn primary" %>
+        <%= link_to "キャンセル", plot_path(@plot), class: "btn ghost" %>
       </div>
     <% end %>
   </section>

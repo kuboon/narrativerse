@@ -15,6 +15,6 @@ class ApplicationController < ActionController::Base
   def require_login
     return if current_user
 
-    redirect_to new_session_path, alert: "Login required"
+    redirect_to new_session_path, alert: "ログインが必要です"
   end
 end

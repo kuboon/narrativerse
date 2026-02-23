@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
     if @user.save
       session[:user_id] = @user.id
-      redirect_to root_path, notice: "User created"
+      redirect_to root_path, notice: "ユーザーを作成しました"
     else
       render :new, status: :unprocessable_entity
     end

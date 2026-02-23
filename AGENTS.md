@@ -8,6 +8,7 @@
 - Reader is now `ReaderController` with story-flow rendering at `/reader/:plot_id(/:link_id)`.
 - Scene CRUD UI removed; scenes are created when writing plot story segments.
 - Plot show now renders story flow by stitching linked scenes.
+- UI strings are Japanese-first; locale default set to `:ja`.
 - Tests added for PlotBuilder, PlotForker, PlotSceneLinksController, ElementRevisionManager.
 
 ## Recent Commits
@@ -27,6 +28,7 @@
 - PlotSceneLinksController now only handles authoring (new/create/fork), reader is public.
 - PlotForker duplicates a plot from a specific scene and links to parent plot (self-fork guard).
 - ElementRevisionManager updates owned plot elements to latest revision and prunes unreferenced revisions.
+ - Locale config: `config.i18n.default_locale = :ja` in `config/application.rb`.
 
 ## TODO / Next Steps
 1. Reader migration cleanup

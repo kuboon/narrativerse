@@ -1,28 +1,28 @@
 <main class="page">
   <section class="form-card">
-    <h1>New element</h1>
+    <h1>要素作成</h1>
     <%= form_with model: @element do |form| %>
       <div class="field">
-        <%= form.label :element_type, "Type" %>
-        <%= form.select :element_type, Element::ELEMENT_TYPES, prompt: "Choose type" %>
+        <%= form.label :element_type, "種別" %>
+        <%= form.select :element_type, Element::ELEMENT_TYPES.map { |type| [t("elements.types.#{type.downcase}"), type] }, prompt: "選択" %>
       </div>
       <div class="field">
-        <%= form.label :name %>
+        <%= form.label :name, "名前" %>
         <%= form.text_field :name, required: true %>
       </div>
       <div class="field">
-        <%= label_tag "element_revision_summary", "Summary" %>
+        <%= label_tag "element_revision_summary", "概要" %>
         <%= text_area_tag "element_revision[summary]", nil, rows: 3 %>
-        <%= link_to "AI summary", ai_assists_element_summary_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI要約", ai_assists_element_summary_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="field">
-        <%= label_tag "element_revision_text", "Text" %>
+        <%= label_tag "element_revision_text", "本文" %>
         <%= text_area_tag "element_revision[text]", nil, rows: 6 %>
-        <%= link_to "AI draft", ai_assists_element_text_path, method: :post, class: "btn ghost inline-action" %>
+        <%= link_to "AI下書き", ai_assists_element_text_path, method: :post, class: "btn ghost inline-action" %>
       </div>
       <div class="actions">
-        <%= form.submit "Create", class: "btn primary" %>
-        <%= link_to "Cancel", elements_path, class: "btn ghost" %>
+        <%= form.submit "作成", class: "btn primary" %>
+        <%= link_to "キャンセル", elements_path, class: "btn ghost" %>
       </div>
     <% end %>
   </section>

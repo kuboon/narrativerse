@@ -4,25 +4,25 @@
       <h1><%= @element.name %></h1>
       <div class="detail-actions">
         <% if current_user %>
-          <%= link_to current_user == @element.user ? "Edit" : "Create revision", edit_element_path(@element), class: "btn ghost" %>
+          <%= link_to current_user == @element.user ? "編集" : "改訂を作成", edit_element_path(@element), class: "btn ghost" %>
         <% end %>
       </div>
     </div>
-    <p class="badge"><%= @element.element_type %></p>
-    <p><%= @latest_revision&.summary.presence || "No summary yet." %></p>
+    <p class="badge"><%= t("elements.types.#{@element.element_type.downcase}") %></p>
+    <p><%= @latest_revision&.summary.presence || "まだ概要がありません。" %></p>
     <div class="detail-meta">
       <div>
-        <span class="meta-label">Owner</span>
+        <span class="meta-label">作成者</span>
         <span><%= @element.user.name %></span>
       </div>
       <div>
-        <span class="meta-label">Revision</span>
+        <span class="meta-label">リビジョン</span>
         <span><%= @latest_revision&.revision || 0 %></span>
       </div>
     </div>
     <article class="panel">
-      <h3>Description</h3>
-      <p><%= @latest_revision&.text.presence || "No description yet." %></p>
+      <h3>説明</h3>
+      <p><%= @latest_revision&.text.presence || "まだ説明がありません。" %></p>
     </article>
   </section>
 </main>

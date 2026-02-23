@@ -4,46 +4,46 @@
       <h1><%= @plot.title %></h1>
       <div class="detail-actions">
         <% if @story_links.any? %>
-          <%= link_to "Read", reader_path(@plot), class: "btn primary" %>
+          <%= link_to "読む", reader_path(@plot), class: "btn primary" %>
         <% end %>
         <% if @owns_plot %>
-          <%= link_to "Add story segment", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
-          <%= link_to "Edit", edit_plot_path(@plot), class: "btn ghost" %>
+          <%= link_to "ストーリー追加", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
+          <%= link_to "編集", edit_plot_path(@plot), class: "btn ghost" %>
         <% end %>
       </div>
     </div>
-    <p><%= @plot.summary.presence || "No summary yet." %></p>
+    <p><%= @plot.summary.presence || "まだ概要がありません。" %></p>
 
     <div class="detail-meta">
       <div>
-        <span class="meta-label">Owner</span>
+        <span class="meta-label">作成者</span>
         <span><%= @plot.user.name %></span>
       </div>
       <div>
-        <span class="meta-label">Start</span>
-        <span>Story begins here</span>
+        <span class="meta-label">開始地点</span>
+        <span>ここから物語が始まります</span>
       </div>
       <div>
-        <span class="meta-label">Parents</span>
-        <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "None" %></span>
+        <span class="meta-label">親プロット</span>
+        <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "なし" %></span>
       </div>
     </div>
     <% if @owns_plot %>
       <div class="detail-actions">
-        <%= link_to "Add element", new_plot_plot_element_path(@plot), class: "btn ghost" %>
+        <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn ghost" %>
       </div>
     <% end %>
 
     <% if @story_links.any? %>
       <div class="grid">
         <div class="grid-header">
-          <h2>Story flow</h2>
-          <%= link_to "Read", reader_path(@plot), class: "text-link" %>
+          <h2>ストーリー</h2>
+          <%= link_to "読む", reader_path(@plot), class: "text-link" %>
         </div>
         <div class="story-flow">
           <% @story_links.each do |link| %>
             <article class="panel">
-              <p class="meta-label">Story segment</p>
+              <p class="meta-label">ストーリー断片</p>
               <p><%= link.scene.text %></p>
             </article>
           <% end %>
@@ -54,22 +54,22 @@
     <% if @plot.plot_elements.any? %>
       <div class="grid">
         <div class="grid-header">
-          <h2>Cast & props</h2>
+          <h2>登場要素</h2>
         </div>
         <div class="cards">
           <% @plot.plot_elements.includes(:element, :element_revision).each do |plot_element| %>
             <article class="card">
               <h3><%= plot_element.element.name %></h3>
-              <p class="badge"><%= plot_element.element.element_type %></p>
-              <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "No summary yet." %></p>
+              <p class="badge"><%= t("elements.types.#{plot_element.element.element_type.downcase}") %></p>
+              <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
               <div class="card-actions">
-                <%= link_to "Open", element_path(plot_element.element), class: "text-link" %>
+                <%= link_to "詳細", element_path(plot_element.element), class: "text-link" %>
                 <% if @owns_plot %>
-                  <%= link_to "Edit", edit_plot_plot_element_path(@plot, plot_element), class: "text-link" %>
+                  <%= link_to "編集", edit_plot_plot_element_path(@plot, plot_element), class: "text-link" %>
                   <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
-                    <%= button_to "Update revision", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn ghost" %>
+                    <%= button_to "更新する", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn ghost" %>
                   <% end %>
-                  <%= button_to "Remove", plot_plot_element_path(@plot, plot_element), method: :delete, class: "btn ghost" %>
+                  <%= button_to "削除", plot_plot_element_path(@plot, plot_element), method: :delete, class: "btn ghost" %>
                 <% end %>
               </div>
             </article>

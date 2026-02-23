@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Narrativerse" %></title>
+    <title><%= content_for(:title) || "ナラティバース" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -29,16 +29,16 @@
       <div class="container">
         <%= link_to "Narrativerse", root_path, class: "logo" %>
         <nav>
-          <%= link_to "Plots", plots_path, class: "nav-link" %>
-          <%= link_to "Elements", elements_path, class: "nav-link" %>
+          <%= link_to "プロット", plots_path, class: "nav-link" %>
+          <%= link_to "要素", elements_path, class: "nav-link" %>
         </nav>
         <div class="nav-actions">
           <% if current_user %>
-            <span class="user-pill">Signed in as <%= current_user.name %></span>
-            <%= button_to "Logout", session_path, method: :delete, class: "btn ghost" %>
+            <span class="user-pill"><%= current_user.name %> としてログイン中</span>
+            <%= button_to "ログアウト", session_path, method: :delete, class: "btn ghost" %>
           <% else %>
-            <%= link_to "Login", new_session_path, class: "btn ghost" %>
-            <%= link_to "Create user", new_user_path, class: "btn primary" %>
+            <%= link_to "ログイン", new_session_path, class: "btn ghost" %>
+            <%= link_to "ユーザー作成", new_user_path, class: "btn primary" %>
           <% end %>
         </div>
       </div>

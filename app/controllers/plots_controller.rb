@@ -29,7 +29,7 @@ class PlotsController < ApplicationController
 
     if @plot.save
       PlotSceneLink.create!(plot: @plot, scene_id: @plot.scene_id, next_scene_id: nil)
-      redirect_to @plot, notice: "Plot created"
+      redirect_to @plot, notice: "プロットを作成しました"
     else
       @scenes = current_user.scenes.order(created_at: :desc)
       render :new, status: :unprocessable_entity
@@ -44,7 +44,7 @@ class PlotsController < ApplicationController
     @plot = current_user.plots.find(params[:id])
 
     if @plot.update(plot_update_params)
-      redirect_to @plot, notice: "Plot updated"
+      redirect_to @plot, notice: "プロットを更新しました"
     else
       render :edit, status: :unprocessable_entity
     end
