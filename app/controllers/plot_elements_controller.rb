@@ -1,15 +1,16 @@
 class PlotElementsController < ApplicationController
   before_action :require_login
   before_action :set_plot
-  before_action :authorize_plot
   before_action :set_plot_element, only: [ :edit, :update, :destroy, :refresh_revision ]
 
   def new
+    authorize @plot, :manage_elements?
     @plot_element = @plot.plot_elements.new
     load_elements
   end
 
   def create
+    authorize @plot, :manage_elements?
     element = Element.find(plot_element_params[:element_id])
 
     if @plot.plot_elements.exists?(element_id: element.id)
@@ -46,9 +47,11 @@ class PlotElementsController < ApplicationController
   end
 
   def edit
+    authorize @plot, :manage_elements?
   end
 
   def update
+    authorize @plot, :manage_elements?
     if @plot_element.update(plot_element_update_params)
       redirect_to plot_path(@plot), notice: "要素を更新しました"
     else
@@ -57,11 +60,13 @@ class PlotElementsController < ApplicationController
   end
 
   def destroy
+    authorize @plot, :manage_elements?
     @plot_element.destroy
     redirect_to plot_path(@plot), notice: "要素を削除しました"
   end
 
   def refresh_revision
+    authorize @plot, :manage_elements?
     latest = @plot_element.element.latest_revision
     if latest && latest.id != @plot_element.element_revision_id
       @plot_element.update!(element_revision: latest)
@@ -75,12 +80,6 @@ class PlotElementsController < ApplicationController
 
   def set_plot
     @plot = Plot.find(params[:plot_id])
-  end
-
-  def authorize_plot
-    return if @plot.user == current_user
-
-    redirect_to plot_path(@plot), alert: "権限がありません"
   end
 
   def set_plot_element

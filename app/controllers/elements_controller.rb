@@ -13,16 +13,19 @@ class ElementsController < ApplicationController
   end
 
   def show
+    authorize @element
     @latest_revision = @element.latest_revision
   end
 
   def new
     @element = Element.new
+    authorize @element
   end
 
   def create
     @element = Element.new(element_params)
     @element.user = current_user
+    authorize @element
 
     if @element.save
       revision = ElementRevisionManager.new(
@@ -42,11 +45,13 @@ class ElementsController < ApplicationController
   end
 
   def edit
+    authorize @element
     @revision = @element.latest_revision
     @owns_element = @element.user == current_user
   end
 
   def update
+    authorize @element
     owns_element = @element.user == current_user
     element_updated = owns_element ? @element.update(element_params) : true
 

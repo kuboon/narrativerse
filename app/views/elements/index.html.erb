@@ -2,7 +2,9 @@
   <section class="grid">
     <div class="grid-header">
       <h1>要素</h1>
-      <%= link_to "要素作成", new_element_path, class: "btn primary" %>
+      <% if policy(Element).create? %>
+        <%= link_to "要素作成", new_element_path, class: "btn primary" %>
+      <% end %>
     </div>
     <%= form_with url: elements_path, method: :get, class: "filter-bar" do |form| %>
       <div class="field">

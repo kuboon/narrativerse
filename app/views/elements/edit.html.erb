@@ -1,6 +1,6 @@
 <main class="page">
   <section class="form-card">
-    <h1>要素編集</h1>
+    <h1><%= @owns_element ? "要素編集" : "要素の改訂" %></h1>
     <%= form_with model: @element do |form| %>
       <% if @owns_element %>
         <div class="field">

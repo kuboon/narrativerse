@@ -3,14 +3,14 @@ class PlotSceneLinksController < ApplicationController
 
   def new
     @plot = Plot.find(params[:plot_id])
-    return render plain: "権限がありません", status: :forbidden unless @plot.user == current_user
+    authorize @plot, :manage_story?
 
     @scene = Scene.new
   end
 
   def create
     @plot = Plot.find(params[:plot_id])
-    return render plain: "権限がありません", status: :forbidden unless @plot.user == current_user
+    authorize @plot, :manage_story?
 
     @scene = Scene.new(scene_params)
     @scene.user = current_user
@@ -29,7 +29,7 @@ class PlotSceneLinksController < ApplicationController
     source_plot = Plot.find(params[:plot_id])
     source_link = PlotSceneLink.find(params[:id])
     return render plain: "見つかりません", status: :not_found unless source_link.plot_id == source_plot.id
-    return render plain: "ログインが必要です", status: :unauthorized unless current_user
+    authorize source_plot, :fork?
 
     begin
       result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call

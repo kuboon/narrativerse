@@ -3,8 +3,8 @@
     <div class="detail-header">
       <h1><%= @element.name %></h1>
       <div class="detail-actions">
-        <% if current_user %>
-          <%= link_to current_user == @element.user ? "編集" : "改訂を作成", edit_element_path(@element), class: "btn ghost" %>
+        <% if policy(@element).update? %>
+          <%= link_to policy(@element).manage? ? "編集" : "改訂を作成", edit_element_path(@element), class: "btn ghost" %>
         <% end %>
       </div>
     </div>

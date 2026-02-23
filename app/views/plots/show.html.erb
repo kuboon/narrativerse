@@ -6,8 +6,10 @@
         <% if @story_links.any? %>
           <%= link_to "読む", reader_path(@plot), class: "btn primary" %>
         <% end %>
-        <% if @owns_plot %>
+        <% if policy(@plot).manage_story? %>
           <%= link_to "ストーリー追加", new_plot_plot_scene_link_path(@plot), class: "btn ghost" %>
+        <% end %>
+        <% if policy(@plot).update? %>
           <%= link_to "編集", edit_plot_path(@plot), class: "btn ghost" %>
         <% end %>
       </div>
@@ -28,7 +30,7 @@
         <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "なし" %></span>
       </div>
     </div>
-    <% if @owns_plot %>
+    <% if policy(@plot).manage_elements? %>
       <div class="detail-actions">
         <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn ghost" %>
       </div>
@@ -51,7 +53,7 @@
       </div>
     <% end %>
 
-    <% if @owns_plot %>
+    <% if policy(@plot).manage_story? %>
       <div class="grid">
         <div class="grid-header">
           <h2>ストーリーを追加</h2>
@@ -85,7 +87,7 @@
               <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
               <div class="card-actions">
                 <%= link_to "詳細", element_path(plot_element.element), class: "text-link" %>
-                <% if @owns_plot %>
+                <% if policy(@plot).manage_elements? %>
                   <%= link_to "編集", edit_plot_plot_element_path(@plot, plot_element), class: "text-link" %>
                   <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
                     <%= button_to "更新する", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn ghost" %>

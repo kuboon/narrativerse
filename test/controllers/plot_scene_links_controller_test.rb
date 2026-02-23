@@ -43,4 +43,14 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     _(new_plot.scene_id).must_equal scene2.id
     _(new_plot.plot_scene_links.count).must_equal 1
   end
+
+  it "rejects fork for own lineage" do
+    post session_path, params: { user_id: other_user.id }
+
+    assert_no_difference "Plot.count" do
+      post fork_plot_plot_scene_link_path(plot, link2)
+    end
+    assert_redirected_to root_path
+    _(flash[:alert]).must_equal "権限がありません"
+  end
 end

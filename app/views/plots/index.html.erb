@@ -2,7 +2,9 @@
   <section class="grid">
     <div class="grid-header">
       <h1>プロット</h1>
-      <%= link_to "プロット作成", new_plot_path, class: "btn primary" %>
+      <% if policy(Plot).create? %>
+        <%= link_to "プロット作成", new_plot_path, class: "btn primary" %>
+      <% end %>
     </div>
     <%= form_with url: plots_path, method: :get, class: "filter-bar" do |form| %>
       <div class="field">

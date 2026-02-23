@@ -40,7 +40,10 @@
 3. Reader UX polish
    - Smooth scroll anchors to focus link and add scroll progress. (done)
 4. Auth/permissions tightening
-   - Ensure edit/create actions are consistently restricted to owners.
+   - Ensure edit/create actions are consistently restricted to owners. (done)
+
+## Notes
+- Pundit導入済み（Plot/Elementポリシーで作成・編集・分岐を制御）。
 
 ## Files of Interest
 - Routes: `config/routes.rb`
