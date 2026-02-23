@@ -13,13 +13,13 @@ Rails.application.routes.draw do
 
   resources :elements, except: :destroy
   resources :plots, except: :destroy do
-    get "plot_scene_links/:link_id", to: "reader#show", as: :plot_scene_link
     resources :plot_elements, except: [ :index, :show ] do
       patch :refresh_revision, on: :member
     end
     resources :plot_scene_links, only: [ :new, :create ] do
       post :fork, on: :member
     end
+    get "plot_scene_links/:link_id", to: "reader#show", as: :plot_scene_link
   end
 
   get "reader/:plot_id", to: "reader#show", as: :reader
