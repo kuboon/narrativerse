@@ -31,7 +31,7 @@ class ElementsController < ApplicationController
         revision_params: revision_params
       ).create_initial
       if revision.persisted?
-        redirect_to @element, notice: "Element created"
+        redirect_to @element, notice: "要素を作成しました"
       else
         @element.destroy
         render :new, status: :unprocessable_entity
@@ -57,7 +57,7 @@ class ElementsController < ApplicationController
         revision_params: revision_params
       ).create_next
       if revision.persisted?
-        message = owns_element ? "Element updated" : "Revision created"
+        message = owns_element ? "要素を更新しました" : "改訂を作成しました"
         redirect_to @element, notice: message
       else
         @revision = @element.latest_revision
