@@ -53,4 +53,29 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_path
     _(flash[:alert]).must_equal "権限がありません"
   end
+
+  it "allows plot owner to update linked scene via plot_scene_path" do
+    # plot owned by user
+    post session_path, params: { user_id: user.id }
+
+    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
+    link = PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
+
+    patch plot_scene_path(link), params: { scene: { text: "Owner edit" } }
+
+    assert_redirected_to plot_path(own_plot)
+    _(link.reload.scene.text).must_equal "Owner edit"
+  end
+
+  it "forbids non-owner from updating via plot_scene_path" do
+    post session_path, params: { user_id: other_user.id }
+
+    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
+    link = PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
+
+    patch plot_scene_path(link), params: { scene: { text: "Bad edit" } }
+
+    assert_response :forbidden
+    _(link.reload.scene.text).wont_equal "Bad edit"
+  end
 end

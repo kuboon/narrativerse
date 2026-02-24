@@ -44,6 +44,35 @@ class PlotSceneLinksController < ApplicationController
     end
   end
 
+  # Allow updating the linked scene in the context of this plot/link.
+  # If the current user owns the plot, update the scene directly (no COW).
+  # Otherwise editing is forbidden here.
+  def update
+    @link = PlotSceneLink.find(params[:id])
+    @plot = @link.plot
+
+    unless @plot && @plot.user_id == current_user.id
+      p @plot.user_id, current_user.id
+      head :forbidden
+      return
+    end
+
+    new_text = scene_params[:text]
+
+    @link.scene.update!(text: new_text)
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.replace(
+          "link-#{@link.id}",
+          partial: "scenes/panel",
+          locals: { link: @link, plot: @plot }
+        )
+      end
+      format.html { redirect_to plot_path(@plot) }
+    end
+  end
+
   private
 
   def scene_params

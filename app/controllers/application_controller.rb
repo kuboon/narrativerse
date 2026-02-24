@@ -29,5 +29,4 @@ class ApplicationController < ActionController::Base
   def user_not_authorized
     redirect_to request.referer || root_path, alert: "権限がありません"
   end
-
 end
