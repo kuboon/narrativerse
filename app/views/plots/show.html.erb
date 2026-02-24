@@ -168,18 +168,5 @@
         e.target.style.height = e.target.scrollHeight + 'px';
       }
     });
-
-    // Intercept submit on inline scene forms to send via fetch (no navigation)
-    document.addEventListener('submit', (e) => {
-      const form = e.target;
-      if (!form.matches || !form.matches('.scene-form')) return;
-      e.preventDefault();
-      const submitBtn = form.querySelector('button[type="submit"], input[type="submit"]');
-      if (submitBtn) submitBtn.disabled = true;
-      submitFormWithFetch(form).catch(err => {
-        console.error(err);
-        if (submitBtn) submitBtn.disabled = false;
-      });
-    });
   })();
 </script>

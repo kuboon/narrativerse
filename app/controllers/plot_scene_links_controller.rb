@@ -52,7 +52,6 @@ class PlotSceneLinksController < ApplicationController
     @plot = @link.plot
 
     unless @plot && @plot.user_id == current_user.id
-      p @plot.user_id, current_user.id
       head :forbidden
       return
     end

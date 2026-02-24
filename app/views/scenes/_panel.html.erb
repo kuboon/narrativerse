@@ -1,5 +1,5 @@
 <article id="link-<%= link.id %>" class="panel scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
-  <% owner = link.plot.user_id == current_user.id %>
+  <% owner = link.plot.user_id == current_user&.id %>
   <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %> p-2 rounded">
     <%= simple_format(link.scene.text.presence || "（テキストを入力してください）") %>
   </div>
