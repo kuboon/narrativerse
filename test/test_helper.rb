@@ -2,6 +2,15 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/spec"
+require "capybara/cuprite"
+Capybara.javascript_driver = :cuprite
+Capybara.register_driver(:cuprite) do |app|
+  Capybara::Cuprite::Driver.new(app,
+    browser_options: { 'no-sandbox': nil },
+    dockerize: true,
+    window_size: [ 400, 800 ]
+  )
+end
 
 module ActiveSupport
   class TestCase
