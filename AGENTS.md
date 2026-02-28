@@ -12,7 +12,8 @@
 - Tests added for PlotBuilder, PlotForker, PlotSceneLinksController, ElementRevisionManager.
 - PlotSceneLinksController tests stay IntegrationTest-based with Spec DSL for request helpers.
 - RuboCop lint clean; seeds updated for trailing comma rules.
-- 未リリースなのでマイグレーションやモデルの大幅な変更が可能。 legacy や deprecated は残さずどんどん削除。
+- 未リリースなのでマイグレーションやモデルの大幅な変更が可能。 db migration file も都度新規作成せず、schema.rb を直接修正OK。その際は `db:setup` を実行すること。
+- legacy や deprecated は残さずどんどん削除。
 
 ## Recent Commits
 - (current) Reader migration and hidden scenes
