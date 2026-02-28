@@ -4,5 +4,8 @@
 		"dockerfile": "Dockerfile",
 		"context": ".."
 	},
+	"features": {
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": { "moby": false }
+	},
 	"postCreateCommand": "mise trust .; mise settings ruby.compile=false; mise install"
 }

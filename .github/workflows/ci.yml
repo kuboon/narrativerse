@@ -24,12 +24,19 @@ jobs:
         with:
           chrome-version: stable
       - run: ${{ steps.setup-chrome.outputs.chrome-path }} --version
-      - name: Fix GA Chrome Permissions
-        run: |
-          sudo chown root:root ${{ steps.setup-chrome.outputs.chrome-path }}
-          sudo chmod 4755 ${{ steps.setup-chrome.outputs.chrome-path }}
+      # - name: Fix GA Chrome Permissions
+      #   run: |
+      #     sudo chown root:root ${{ steps.setup-chrome.outputs.chrome-path }}
+      #     sudo chmod 4755 ${{ steps.setup-chrome.outputs.chrome-path }}
+      # - run: bundle exec ruby ferrum.rb
+      #   env:
+      #     BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
       
       - run: bin/rails test:system
+        env:
+          BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
+          FERRUM_PROCESS_TIMEOUT: 25
+          FERRUM_DEFAULT_TIMEOUT: 15
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
