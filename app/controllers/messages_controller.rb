@@ -1,4 +1,5 @@
 class MessagesController < ApplicationController
+  before_action :require_login
   before_action :set_chat
 
   def create
@@ -8,14 +9,14 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to @chat }
+      format.html { redirect_to chat_path }
     end
   end
 
   private
 
   def set_chat
-    @chat = Chat.find(params[:chat_id])
+    @chat = current_user.chats.first
   end
 
   def content

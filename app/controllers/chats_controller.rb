@@ -1,39 +1,42 @@
 class ChatsController < ApplicationController
+  before_action :require_login
   before_action :set_chat, only: [ :show ]
-
-  def index
-    @chats = Chat.order(created_at: :desc)
-  end
-
-  def new
-    @chat = Chat.new
-    @selected_model = params[:model]
-  end
 
   def create
     return unless prompt.present?
 
-    @chat = Chat.create!(model: model)
+    # Find or create a chat for the current user
+    @chat = current_user.chats.first
+    unless @chat
+      # Initialize with a known basic model. If the gem's default validations require a valid resolved model string for acts_as_chat:
+      @chat = current_user.chats.create!(model: "claude-3-5-haiku-20241022")
+    end
+
     ChatResponseJob.perform_later(@chat.id, prompt)
 
-    redirect_to @chat, notice: "Chat was successfully created."
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: turbo_stream.append("messages", partial: "messages/message", locals: { message: @chat.messages.build(role: "user", content: prompt) })
+      end
+      format.html { redirect_to chat_path, notice: "Chat was successfully created." }
+    end
   end
 
   def show
+    unless @chat
+      @chat = current_user.chats.create!(model: "claude-3-5-haiku-20241022")
+    end
     @message = @chat.messages.build
+    render layout: false
   end
 
   private
 
   def set_chat
-    @chat = Chat.find(params[:id])
-  end
-
-  def model
-    params[:chat][:model].presence
+    @chat = current_user.chats.first
   end
 
   def prompt
-    params[:chat][:prompt]
+    params.dig(:chat, :prompt)
   end
 end

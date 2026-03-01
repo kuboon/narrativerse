@@ -8,7 +8,7 @@ CI = ENV["CI"].present?
 
 browser_options = CI ? {
   'no-sandbox': nil,
-  'disable-setuid-sandbox': nil,
+  'disable-setuid-sandbox': nil
 } : {}
 
 Capybara.javascript_driver = :cuprite
@@ -27,3 +27,13 @@ module ActiveSupport
     # Add more helper methods to be used by all tests here...
   end
 end
+
+module CupriteDriverPatch
+  def save_screenshot(path, options = {})
+    super
+  rescue Ferrum::ProcessTimeoutError => e
+    puts e.output
+    raise
+  end
+end
+Capybara::Cuprite::Driver.prepend(CupriteDriverPatch)

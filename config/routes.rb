@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  resources :chats do
+  resource :chat, only: [ :show, :create ] do
     resources :messages, only: [ :create ]
   end
   resources :models, only: [ :index, :show ] do
