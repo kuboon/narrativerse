@@ -5,7 +5,7 @@ class ReaderController < ApplicationController
     story = PlotStory.new(@plot, focus_link_id: params[:link_id]).call
     @story_links = story[:story_links]
     @focus_link = story[:focus_link]
-    @branches = story[:branches]
+    @branches_by_link_id = story[:branches_by_link_id]
     @plot_elements = @plot.plot_elements.includes(:element, :element_revision)
   end
 end

@@ -23,6 +23,14 @@
           <article id="link-<%= link.id %>" data-link-id="<%= link.id %>" class="panel <%= "focus" if @focus_link && link.id == @focus_link.id %>">
             <%= link.scene.text %>
           </article>
+          <% branches = @branches_by_link_id[link.id] %>
+          <% if branches.present? %>
+            <div class="story-branch-links mt-2 mb-4 text-sm text-gray-500 text-center">
+              <% branches.each do |branch| %>
+                <%= link_to "分岐: #{branch.plot.title}", reader_link_path(branch.plot, branch.id), class: "text-link mx-1" %>
+              <% end %>
+            </div>
+          <% end %>
         <% end %>
     </div>
     <% else %>
@@ -32,28 +40,6 @@
     <% end %>
   </section>
 
-  <% if @branches.any? && @focus_link %>
-    <section class="grid">
-      <div class="grid-header">
-        <h2>この場面からの分岐</h2>
-      </div>
-      <div class="cards">
-        <% @branches.each do |branch| %>
-          <article class="card">
-            <h3><%= branch.plot.title %></h3>
-            <p><%= branch.plot.summary.presence || "まだ概要がありません。" %></p>
-            <div class="detail-meta">
-              <div>
-                <span class="meta-label">作成者</span>
-                <span><%= branch.plot.user.name %></span>
-              </div>
-            </div>
-            <%= link_to "移動", reader_link_path(branch.plot, branch.id), class: "text-link" %>
-          </article>
-        <% end %>
-      </div>
-    </section>
-  <% end %>
 </main>
 
 <script>
