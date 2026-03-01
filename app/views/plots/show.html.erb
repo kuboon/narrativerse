@@ -21,7 +21,13 @@
       </div>
       <div>
         <span class="meta-label">親プロット</span>
-        <span><%= @plot.parent_plots.map(&:title).join(", ").presence || "なし" %></span>
+        <span>
+          <% if @plot.parent_plots.any? %>
+            <%= safe_join(@plot.parent_plots.map { |parent| link_to(parent.title, plot_path(parent), class: "text-link") }, ", ") %>
+          <% else %>
+            なし
+          <% end %>
+        </span>
       </div>
     </div>
     <% if policy(@plot).manage_elements? %>

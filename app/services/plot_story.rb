@@ -13,7 +13,8 @@ class PlotStory
       plot: @plot,
       story_links: story_links,
       focus_link: focus_link,
-      branches: branches_for(focus_link)
+      branches: branches_for(focus_link),
+      branches_by_link_id: branches_by_link_id(story_links)
     }
   end
 
@@ -67,5 +68,17 @@ class PlotStory
       .where(scene_id: link.scene_id)
       .where.not(plot_id: @plot.id)
       .includes(plot: :user)
+  end
+
+  def branches_by_link_id(story_links)
+    scene_ids = story_links.map(&:scene_id)
+    all_branches = PlotSceneLink
+                     .where(scene_id: scene_ids)
+                     .where.not(plot_id: @plot.id)
+                     .includes(plot: :user)
+
+    all_branches.group_by do |branch|
+      story_links.find { |l| l.scene_id == branch.scene_id }&.id
+    end
   end
 end
