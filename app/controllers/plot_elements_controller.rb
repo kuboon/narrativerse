@@ -1,7 +1,6 @@
 class PlotElementsController < ApplicationController
   before_action :require_login
-  before_action :set_plot
-  before_action :set_plot_element, only: [ :edit, :update, :destroy, :refresh_revision ]
+  before_action :set_plot_element
 
   def new
     authorize @plot, :manage_elements?
@@ -78,12 +77,13 @@ class PlotElementsController < ApplicationController
 
   private
 
-  def set_plot
-    @plot = Plot.find(params[:plot_id])
-  end
-
   def set_plot_element
-    @plot_element = @plot.plot_elements.find(params[:id])
+    if params[:plot_id]
+      @plot = Plot.find(params[:plot_id])
+    else
+      @plot_element = PlotElement.find(params[:id])
+      @plot = @plot_element.plot
+    end
   end
 
   def load_elements

@@ -31,8 +31,8 @@ class PlotSceneLinksController < ApplicationController
   end
 
   def fork
-    source_plot = Plot.find(params[:plot_id])
     source_link = PlotSceneLink.find(params[:id])
+    source_plot = source_link.plot
     return render plain: "見つかりません", status: :not_found unless source_link.plot_id == source_plot.id
     authorize source_plot, :fork?
 

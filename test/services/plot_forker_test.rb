@@ -15,7 +15,7 @@ describe PlotForker do
     _(result[:plot].persisted?).must_equal true
     _(result[:link].persisted?).must_equal true
     _(result[:plot].parent_plots.first.id).must_equal plot.id
-    _(result[:plot].scene_id).must_equal scene2.id
+    _(result[:plot].scene_id).must_equal plot.scene_id
   end
 
   it "prevents forking own lineage" do

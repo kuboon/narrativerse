@@ -8,6 +8,9 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def self.collection_actions = %i[index new create]
+  def self.member_actions = %i[show edit update destroy]
+
   def current_user
     return @current_user if defined?(@current_user)
 

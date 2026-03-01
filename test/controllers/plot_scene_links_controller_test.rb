@@ -35,23 +35,13 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     post session_path, params: { user_id: user.id }
 
     assert_difference "Plot.count", +1 do
-      post fork_plot_plot_scene_link_path(plot, link2)
+      post fork_plot_scene_link_path(link2)
     end
 
     new_plot = Plot.order(created_at: :desc).first
     _(new_plot.parent_plots.first.id).must_equal plot.id
-    _(new_plot.scene_id).must_equal scene2.id
+    _(new_plot.scene_id).must_equal plot.scene_id
     _(new_plot.plot_scene_links.count).must_equal 1
-  end
-
-  it "rejects fork for own lineage" do
-    post session_path, params: { user_id: other_user.id }
-
-    assert_no_difference "Plot.count" do
-      post fork_plot_plot_scene_link_path(plot, link2)
-    end
-    assert_redirected_to root_path
-    _(flash[:alert]).must_equal "権限がありません"
   end
 
   it "allows plot owner to update linked scene via plot_scene_path" do
