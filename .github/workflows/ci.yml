@@ -19,14 +19,24 @@ jobs:
           ruby-version: .ruby-version
           bundler-cache: true
 
-      - name: Install Chromium & Chromedriver
+      - id: setup-chrome
+        uses: browser-actions/setup-chrome@4f8e94349a351df0f048634f25fec36c3c91eded
+        with:
+          chrome-version: stable
+      - run: ${{ steps.setup-chrome.outputs.chrome-path }} --version
+      - name: Fix GA Chrome Permissions
         run: |
-          sudo apt-get update
-          sudo apt-get install -y chromium chromium-driver
-        # Expose path variables in case system needs explicit bins
+          sudo chown root:root ${{ steps.setup-chrome.outputs.chrome-path }}
+          sudo chmod 4755 ${{ steps.setup-chrome.outputs.chrome-path }}
+      
+      - name: db:prepare
         env:
-          CHROME_BIN: /usr/bin/chromium
-          CHROMEDRIVER: /usr/bin/chromedriver
+          RAILS_ENV: test
+        run: bin/rails db:test:prepare db:seed
+
+      - run: bin/rails test:system
+        env:
+          BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
@@ -37,13 +47,10 @@ jobs:
         run: bin/rubocop -f github
 
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test test:system
+        run: bin/rails test
 
       - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: screenshots
