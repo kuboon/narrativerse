@@ -19,9 +19,9 @@ class PlotForker
       user: @user,
       title: "Fork of #{@plot.title}",
       summary: @plot.summary,
-      scene_id: @plot.scene_id
+      scene_id: @plot.scene_id,
+      parent_plot_ids: [ @plot.id ]
     )
-    PlotParentLink.create!(child_plot: new_plot, parent_plot: @plot)
     new_link = PlotSceneLink.create!(plot: new_plot, scene: @link.scene, next_scene: nil)
 
     @plot.plot_elements.each do |pe|

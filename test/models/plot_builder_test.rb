@@ -16,7 +16,7 @@ describe PlotBuilder do
     link1
     link2
     link3
-    PlotParentLink.create!(child_plot: plot_b, parent_plot: plot_a)
+    plot_b.update!(parent_plot_ids: [ plot_a.id ])
     link_b
   end
 

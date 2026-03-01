@@ -127,16 +127,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
     t.index ["plot_id"], name: "index_plot_elements_on_plot_id"
   end
 
-  create_table "plot_parent_links", force: :cascade do |t|
-    t.integer "child_plot_id", null: false
-    t.datetime "created_at", null: false
-    t.integer "parent_plot_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["child_plot_id", "parent_plot_id"], name: "index_plot_parents_on_child_and_parent", unique: true
-    t.index ["child_plot_id"], name: "index_plot_parent_links_on_child_plot_id"
-    t.index ["parent_plot_id"], name: "index_plot_parent_links_on_parent_plot_id"
-  end
-
   create_table "plot_scene_links", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "next_scene_id"
@@ -151,6 +141,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
 
   create_table "plots", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.json "parent_plot_ids", default: []
     t.integer "scene_id", null: false
     t.text "summary"
     t.string "title", null: false
@@ -202,8 +193,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
   add_foreign_key "plot_elements", "element_revisions"
   add_foreign_key "plot_elements", "elements"
   add_foreign_key "plot_elements", "plots"
-  add_foreign_key "plot_parent_links", "plots", column: "child_plot_id"
-  add_foreign_key "plot_parent_links", "plots", column: "parent_plot_id"
   add_foreign_key "plot_scene_links", "plots"
   add_foreign_key "plot_scene_links", "scenes"
   add_foreign_key "plot_scene_links", "scenes", column: "next_scene_id"
