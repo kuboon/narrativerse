@@ -5,6 +5,7 @@ require "minitest/spec"
 require "capybara/cuprite"
 
 CI = ENV["CI"].present?
+puts "Running in CI environment" if CI
 
 browser_options = CI ? {
   'no-sandbox': nil,
@@ -13,7 +14,7 @@ browser_options = CI ? {
 
 Capybara.javascript_driver = :cuprite
 Capybara.register_driver(:cuprite) do |app|
-  Capybara::Cuprite::Driver.new(app, browser_options:)
+  Capybara::Cuprite::Driver.new(app, { browser_options: })
 end
 
 module ActiveSupport

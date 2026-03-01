@@ -29,6 +29,11 @@ jobs:
           sudo chown root:root ${{ steps.setup-chrome.outputs.chrome-path }}
           sudo chmod 4755 ${{ steps.setup-chrome.outputs.chrome-path }}
       
+      - name: db:prepare
+        env:
+          RAILS_ENV: test
+        run: bin/rails db:test:prepare db:seed
+
       - run: bin/rails test:system
         env:
           BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
@@ -42,10 +47,7 @@ jobs:
         run: bin/rubocop -f github
 
       - name: Run tests
-        env:
-          RAILS_ENV: test
-          # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+        run: bin/rails test
 
       - name: Keep screenshots from failed system tests
         uses: actions/upload-artifact@v7

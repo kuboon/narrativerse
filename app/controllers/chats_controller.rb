@@ -9,7 +9,7 @@ class ChatsController < ApplicationController
     @chat = current_user.chats.first
     unless @chat
       # Initialize with a known basic model. If the gem's default validations require a valid resolved model string for acts_as_chat:
-      @chat = current_user.chats.create!(model: "claude-3-5-haiku-20241022")
+      @chat = current_user.chats.create!
     end
 
     ChatResponseJob.perform_later(@chat.id, prompt)
@@ -24,7 +24,7 @@ class ChatsController < ApplicationController
 
   def show
     unless @chat
-      @chat = current_user.chats.create!(model: "claude-3-5-haiku-20241022")
+      @chat = current_user.chats.create!
     end
     @message = @chat.messages.build
     render layout: false
