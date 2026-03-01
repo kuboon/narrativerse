@@ -3,13 +3,17 @@ require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/spec"
 require "capybara/cuprite"
+
+CI = ENV["CI"].present?
+
+browser_options = CI ? {
+  'no-sandbox': nil,
+  'disable-setuid-sandbox': nil,
+} : {}
+
 Capybara.javascript_driver = :cuprite
 Capybara.register_driver(:cuprite) do |app|
-  Capybara::Cuprite::Driver.new(app,
-    browser_options: { 'no-sandbox': nil },
-    dockerize: true,
-    window_size: [ 400, 800 ]
-  )
+  Capybara::Cuprite::Driver.new(app, browser_options:)
 end
 
 module ActiveSupport

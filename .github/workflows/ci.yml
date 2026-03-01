@@ -30,6 +30,8 @@ jobs:
           sudo chmod 4755 ${{ steps.setup-chrome.outputs.chrome-path }}
       
       - run: bin/rails test:system
+        env:
+          BROWSER_PATH: ${{ steps.setup-chrome.outputs.chrome-path }}
 
       - name: Scan for common Rails security vulnerabilities using static analysis
         run: bin/brakeman --no-pager
@@ -46,7 +48,7 @@ jobs:
         run: bin/rails db:test:prepare test
 
       - name: Keep screenshots from failed system tests
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         if: failure()
         with:
           name: screenshots
