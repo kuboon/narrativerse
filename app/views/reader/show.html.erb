@@ -4,14 +4,6 @@
       <div>
         <h1><%= @plot.title %></h1>
       </div>
-      <div class="detail-actions">
-        <% if policy(@plot).manage_story? %>
-          <%= link_to "ストーリー追加", plot_path(@plot), class: "btn ghost" %>
-        <% end %>
-        <% if policy(@plot).fork? && @focus_link %>
-          <%= button_to "ここから分岐", fork_plot_plot_scene_link_path(@plot, @focus_link), method: :post, class: "btn ghost" %>
-        <% end %>
-      </div>
     </div>
 
   <% if @story_links.any? %>
@@ -19,15 +11,16 @@
       <span class="reader-progress-fill" data-reader-progress-fill></span>
     </div>
     <div class="story-flow" data-reader-flow data-focus-link-id="<%= @focus_link&.id %>">
+      <% focus_scene_id = params[:scene_id] || @plot.scene_id %>
       <% @story_links.each do |link| %>
-          <article id="link-<%= link.id %>" data-link-id="<%= link.id %>" class="panel <%= "focus" if @focus_link && link.id == @focus_link.id %>">
+          <article id="scene-<%= link.scene_id %>" data-scene-id="<%= link.scene_id %>" class="scene <%= "focus" if link.scene_id == focus_scene_id %>">
             <%= link.scene.text %>
           </article>
-          <% branches = @branches_by_link_id[link.id] %>
+          <% branches = @branches_by_scene_id[link.scene_id] %>
           <% if branches.present? %>
             <div class="story-branch-links mt-2 mb-4 text-sm text-gray-500 text-center">
               <% branches.each do |branch| %>
-                <%= link_to "分岐: #{branch.plot.title}", reader_link_path(branch.plot, branch.id), class: "text-link mx-1" %>
+                <%= link_to "分岐: #{branch.plot.title}", reader_link_path(branch.plot_id, branch.scene_id), class: "text-link mx-1" %>
               <% end %>
             </div>
           <% end %>

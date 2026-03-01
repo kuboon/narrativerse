@@ -1,84 +1,51 @@
 class PlotStory
-  def initialize(plot, focus_link_id: nil)
+  def initialize(plot)
     @plot = plot.is_a?(Plot) ? plot : Plot.find(plot)
-    @focus_link_id = focus_link_id&.to_i
-    @navigation = PlotNavigation.new(@plot)
   end
 
   def call
     story_links = build_story_links
-    focus_link = resolve_focus_link(story_links)
 
     {
       plot: @plot,
       story_links: story_links,
-      focus_link: focus_link,
-      branches: branches_for(focus_link),
-      branches_by_link_id: branches_by_link_id(story_links)
+      branches_by_scene_id: build_branches_by_scene_id(story_links)
     }
   end
 
   private
 
   def build_story_links
-    links = []
-    seen_scene_ids = {}
-    current_scene_id = earliest_scene_id(@plot.scene_id)
-
-    while current_scene_id && !seen_scene_ids[current_scene_id]
-      link = @navigation.next_link_for(current_scene_id)
-      break unless link
-
-      links << link
-      seen_scene_ids[current_scene_id] = true
-      current_scene_id = link.next_scene_id
+    plots = [ @plot ] + @plot.parent_plots.to_a
+    links = PlotSceneLink.where(plot_id: plots.map(&:id)).includes(:scene, plot: :user).strict_loading.to_a
+    first_link = links.find { |l| l.scene_id == @plot.scene_id }
+    ordered_links = [ first_link ]
+    return ordered_links if links.size < 2
+    while (next_links = links.select { |l| l.scene_id == ordered_links.last.next_scene_id })
+      link = plots.each do |plot|
+        found = next_links.find do |link|
+          next unless link.plot_id == plot.id
+          next if ordered_links.any? { |l| l.scene_id == link.scene_id }
+          true
+        end
+        break found if found
+      end
+      raise "link not found for plot #{plot.id} and scene #{ordered_links.last.next_scene_id}" unless link
+      ordered_links << link
+      break if link.next_scene_id.nil?
     end
-
-    links
+    ordered_links
   end
 
-  def earliest_scene_id(scene_id)
-    current_scene_id = scene_id
-    seen_scene_ids = {}
-
-    loop do
-      previous_link = @navigation.previous_link_for(current_scene_id)
-      break unless previous_link
-      break if seen_scene_ids[previous_link.scene_id]
-
-      seen_scene_ids[previous_link.scene_id] = true
-      current_scene_id = previous_link.scene_id
-    end
-
-    current_scene_id
-  end
-
-  def resolve_focus_link(story_links)
-    if @focus_link_id
-      story_links.find { |link| link.id == @focus_link_id }
-    else
-      @navigation.next_link_for(@plot.scene_id)
-    end
-  end
-
-  def branches_for(link)
-    return [] unless link
-
-    PlotSceneLink
-      .where(scene_id: link.scene_id)
-      .where.not(plot_id: @plot.id)
-      .includes(plot: :user)
-  end
-
-  def branches_by_link_id(story_links)
+  def build_branches_by_scene_id(story_links)
     scene_ids = story_links.map(&:scene_id)
-    all_branches = PlotSceneLink
-                     .where(scene_id: scene_ids)
-                     .where.not(plot_id: @plot.id)
-                     .includes(plot: :user)
-
-    all_branches.group_by do |branch|
-      story_links.find { |l| l.scene_id == branch.scene_id }&.id
+    links = PlotSceneLink.where(scene_id: scene_ids).includes(:plot).strict_loading.to_a
+    branches_by_scene_id = {}
+    links.each do |link|
+      next if story_links.any? { |l| l.id == link.id }
+      branches_by_scene_id[link.scene_id] ||= []
+      branches_by_scene_id[link.scene_id] << link
     end
+    branches_by_scene_id
   end
 end

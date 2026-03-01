@@ -40,8 +40,8 @@ class SceneEditFlowTest < ApplicationSystemTestCase
     other = User.create!(name: "Other")
 
     scene = Scene.create!(user: owner, text: "Original")
-    plot = Plot.create!(user: owner, title: "Owner Plot", scene: scene)
-    link = PlotSceneLink.create!(plot: plot, scene: scene, next_scene_id: nil)
+    plot = Plot.create!(user: owner, title: "Owner Plot", scene:)
+    link = PlotSceneLink.create!(plot:, scene:)
 
     visit new_session_path
     # select by option value to avoid ambiguous text matches

@@ -6,14 +6,15 @@ RubyLLM.configure do |config|
   config.use_new_acts_as = true
 end
 module RubyLLM
-  Provider.register(:stub,
-    Class.new(RubyLLM::Provider) do
-      def chat(messages, options = {})
-        # Return a fixed response for testing purposes
-        "This is a stubbed response to: #{messages.last[:content]}"
-      end
-      def api_base = nil
-      def self.local? = true
+  class StubProvider < Provider
+    def chat(messages, options = {})
+      # Return a fixed response for testing purposes
+      "This is a stubbed response to: #{messages.last[:content]}"
     end
-  )
+
+    def api_base = nil
+    def list_models = []
+    def self.local? = true
+  end
+  Provider.register(:stub, StubProvider)
 end
