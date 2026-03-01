@@ -18,7 +18,7 @@
     <link rel="apple-touch-icon" href="/icon.png">
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
-    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
     <%= javascript_include_tag :application, "data-turbo-track": "reload", defer: true %>
     <%= javascript_importmap_tags %>
   </head>
@@ -53,5 +53,9 @@
       </div>
     <% end %>
     <%= yield %>
+
+    <div id="chatbot-container" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999;">
+      <a href="/chats" class="btn primary" style="border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 24px;">💬</a>
+    </div>
   </body>
 </html>

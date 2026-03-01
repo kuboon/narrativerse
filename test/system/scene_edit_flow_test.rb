@@ -2,6 +2,7 @@ require "application_system_test_case"
 
 class SceneEditFlowTest < ApplicationSystemTestCase
   test "owner edits inline without navigation" do
+
     owner = User.create!(name: "Owner")
     other = User.create!(name: "Other")
 
@@ -36,6 +37,7 @@ class SceneEditFlowTest < ApplicationSystemTestCase
   end
 
   test "non-owner cannot edit inline" do
+    p "current_url", current_url
     owner = User.create!(name: "Owner")
     other = User.create!(name: "Other")
 
@@ -44,6 +46,7 @@ class SceneEditFlowTest < ApplicationSystemTestCase
     link = PlotSceneLink.create!(plot: plot, scene: scene, next_scene_id: nil)
 
     visit new_session_path
+    p "current_url", current_url
     # select by option value to avoid ambiguous text matches
     find('select[name="user_id"]').find("option[value='#{other.id}']").select_option
     within "form" do
