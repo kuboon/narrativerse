@@ -1,4 +1,5 @@
-Model.create!(model_id: "gpt-5-nano", name: "GPT-5 nano", provider: "openai")
+Model.refresh!
+
 if Rails.env.development?
   users = User.create!([
     { name: 'Alice' },
