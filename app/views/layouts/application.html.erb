@@ -62,29 +62,6 @@
         <button id="chatbot-toggle" class="btn primary" style="border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 24px; cursor: pointer; padding: 0;">💬</button>
       </div>
 
-      <script>
-        document.addEventListener("turbo:load", function() {
-          const toggle = document.getElementById("chatbot-toggle");
-          const chatWindow = document.getElementById("chatbot-window");
-          
-          if (toggle && chatWindow) {
-            toggle.addEventListener("click", function() {
-              if (chatWindow.style.display === "none") {
-                chatWindow.style.display = "flex";
-              } else {
-                chatWindow.style.display = "none";
-              }
-            });
-          }
-
-          // Handle close button inside iframe via postMessage
-          window.addEventListener("message", function(event) {
-            if (event.data === "close-chat") {
-              if (chatWindow) chatWindow.style.display = "none";
-            }
-          });
-        });
-      </script>
     <% end %>
   </body>
 </html>

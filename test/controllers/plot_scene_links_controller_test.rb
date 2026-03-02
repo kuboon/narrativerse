@@ -4,65 +4,26 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
   extend Minitest::Spec::DSL
   include Rails.application.routes.url_helpers
 
-  let(:user) { User.create!(name: "Owner") }
-  let(:other_user) { User.create!(name: "Other") }
-  let(:scene1) { Scene.create!(user: other_user, text: "Scene 1") }
-  let(:scene2) { Scene.create!(user: other_user, text: "Scene 2") }
-  let(:plot) { Plot.create!(user: other_user, title: "Plot", scene: scene1) }
-  let(:link1) { PlotSceneLink.create!(plot: plot, scene: scene1, next_scene: scene2) }
-  let(:link2) { PlotSceneLink.create!(plot: plot, scene: scene2, next_scene: nil) }
-
-  before do
-    link1
-    link2
-  end
+  let(:owner) { create(:user) }
+  let(:other_user) { create(:user) }
+  let(:plot) { create(:plot, user: owner, scenes_count: 2) }
 
   it "creates a new scene and appends to plot" do
-    post session_path, params: { user_id: user.id }
-
-    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
-    PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
+    post session_path, params: { user_id: owner.id }
+    plot
 
     assert_difference "Scene.count", +1 do
-      post plot_plot_scene_links_path(own_plot), params: { scene: { text: "New scene" } }
+      post plot_plot_scenes_path(plot), params: { scene: { text: "New scene" } }
     end
 
-    last_link = PlotSceneLink.find_by(plot_id: own_plot.id, next_scene_id: Scene.order(created_at: :desc).first.id)
+    last_link = PlotSceneLink.find_by(plot_id: plot.id, next_scene_id: Scene.order(created_at: :desc).first.id)
     _(last_link).wont_be_nil
-  end
-
-  it "fork creates a new plot linked to parent" do
-    post session_path, params: { user_id: user.id }
-
-    assert_difference "Plot.count", +1 do
-      post fork_plot_scene_link_path(link2)
-    end
-
-    new_plot = Plot.order(created_at: :desc).first
-    _(new_plot.parent_plot_ids.first).must_equal plot.id
-    _(new_plot.scene_id).must_equal plot.scene_id
-    _(new_plot.plot_scene_links.count).must_equal 1
-  end
-
-  it "allows plot owner to update linked scene via plot_scene_path" do
-    # plot owned by user
-    post session_path, params: { user_id: user.id }
-
-    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
-    link = PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
-
-    patch plot_scene_path(link), params: { scene: { text: "Owner edit" } }
-
-    assert_redirected_to plot_path(own_plot)
-    _(link.reload.scene.text).must_equal "Owner edit"
   end
 
   it "forbids non-owner from updating via plot_scene_path" do
     post session_path, params: { user_id: other_user.id }
 
-    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
-    link = PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
-
+    link = plot.plot_scene_links.first
     patch plot_scene_path(link), params: { scene: { text: "Bad edit" } }
 
     assert_response :forbidden

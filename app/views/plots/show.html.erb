@@ -72,7 +72,7 @@
         </div>
         <% if policy(@plot).manage_story? %>
           <div class="actions mt-4">
-            <%= button_to "シーンを追加", plot_plot_scene_links_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn primary w-full text-center" %>
+            <%= button_to "シーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn primary w-full text-center" %>
           </div>
         <% end %>
       </div>
@@ -80,99 +80,3 @@
 
   </section>
 </main>
-
-<script>
-  (function() {
-    let currentEditor = null;
-
-    const startEditing = (container) => {
-      if (currentEditor && currentEditor !== container) {
-        stopEditing(currentEditor);
-      }
-      currentEditor = container;
-      const editor = container.querySelector(".scene-editor");
-      if (!editor) return; // non-owners have no editor — do nothing
-      container.querySelector(".scene-display").classList.add("hidden");
-      editor.classList.remove("hidden");
-      const textarea = editor.querySelector("textarea");
-      textarea.focus();
-      // Adjust height
-      textarea.style.height = 'auto';
-      textarea.style.height = textarea.scrollHeight + 'px';
-    };
-
-    const submitFormWithFetch = async (form) => {
-      const action = form.action;
-      const method = (form.method || 'post').toUpperCase();
-
-      const tokenMeta = document.querySelector('meta[name="csrf-token"]');
-      const csrfToken = tokenMeta ? tokenMeta.content : null;
-
-      const formData = new FormData(form);
-      const body = new URLSearchParams();
-      for (const pair of formData.entries()) { body.append(pair[0], pair[1]); }
-
-      const resp = await fetch(action, {
-        method: method === 'POST' ? 'POST' : method,
-        credentials: 'same-origin',
-        headers: Object.assign({ 'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' }, csrfToken ? { 'X-CSRF-Token': csrfToken } : {}),
-        body: body.toString()
-      });
-
-      const contentType = resp.headers.get('content-type') || '';
-      const text = await resp.text();
-
-      if (contentType.includes('text/vnd.turbo-stream')) {
-        if (window.Turbo && typeof Turbo.renderStreamMessage === 'function') {
-          Turbo.renderStreamMessage(text);
-        } else {
-          // Fallback: replace container with returned HTML
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(text, 'text/html');
-          const replacement = doc.body.firstElementChild;
-          const id = replacement && replacement.id;
-          if (id) {
-            const old = document.getElementById(id);
-            if (old && replacement) old.replaceWith(replacement);
-          }
-        }
-      } else if (resp.redirected) {
-        window.location = resp.url;
-      }
-    };
-
-    const stopEditing = (container) => {
-      if (!container) return;
-      const form = container.querySelector("form");
-      if (form) submitFormWithFetch(form).catch(err => { console.error(err); form.requestSubmit(); });
-      currentEditor = null;
-    };
-
-    document.addEventListener("click", (e) => {
-      const display = e.target.closest(".scene-display");
-      if (display) {
-        const container = display.closest(".scene-container");
-        if (container) startEditing(container);
-      }
-    });
-
-    document.addEventListener("focusout", (e) => {
-      if (currentEditor && currentEditor.contains(e.target)) {
-        // Check if new focus is still within the editor
-        setTimeout(() => {
-          if (!currentEditor.contains(document.activeElement)) {
-            stopEditing(currentEditor);
-          }
-        }, 0);
-      }
-    });
-
-    // Auto-resize textarea
-    document.addEventListener("input", (e) => {
-      if (e.target.matches(".scene-textarea")) {
-        e.target.style.height = 'auto';
-        e.target.style.height = e.target.scrollHeight + 'px';
-      }
-    });
-  })();
-</script>

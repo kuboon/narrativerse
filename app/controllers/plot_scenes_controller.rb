@@ -1,13 +1,5 @@
-class PlotSceneLinksController < ApplicationController
+class PlotScenesController < ApplicationController
   before_action :require_login
-
-  def new
-    @plot = Plot.find(params[:plot_id])
-    authorize @plot, :manage_story?
-
-    # This screen is deprecated — redirect to the plot show page.
-    redirect_to plot_path(@plot)
-  end
 
   def create
     @plot = Plot.find(params[:plot_id])
@@ -16,17 +8,17 @@ class PlotSceneLinksController < ApplicationController
     @scene = Scene.new(scene_params)
     @scene.user = current_user
 
-    if @scene.save
-      last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
-      last_link.update!(next_scene_id: @scene.id) if last_link
-      @link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
+    unless @scene.save
+      return render :new, status: :unprocessable_entity
+    end
 
-      respond_to do |format|
-        format.html { redirect_to reader_link_path(@plot, @link) }
-        format.turbo_stream
-      end
-    else
-      render :new, status: :unprocessable_entity
+    last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
+    last_link.update!(next_scene_id: @scene.id) if last_link
+    @link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
+
+    respond_to do |format|
+      format.html { redirect_to reader_scene_path(@plot, @scene.id) }
+      format.turbo_stream
     end
   end
 
@@ -34,19 +26,17 @@ class PlotSceneLinksController < ApplicationController
     source_link = PlotSceneLink.find(params[:id])
     source_plot = source_link.plot
     return render plain: "見つかりません", status: :not_found unless source_link.plot_id == source_plot.id
+
     authorize source_plot, :fork?
 
     begin
       result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
-      redirect_to reader_link_path(result[:plot], result[:link]), notice: "分岐プロットを作成しました"
+      redirect_to reader_scene_path(result[:plot], result[:link].scene_id), notice: "分岐プロットを作成しました"
     rescue ArgumentError => e
-      redirect_to reader_link_path(source_plot, source_link), alert: e.message
+      redirect_to reader_scene_path(source_plot, source_link.scene_id), alert: e.message
     end
   end
 
-  # Allow updating the linked scene in the context of this plot/link.
-  # If the current user owns the plot, update the scene directly (no COW).
-  # Otherwise editing is forbidden here.
   def update
     @link = PlotSceneLink.find(params[:id])
     @plot = @link.plot
@@ -56,9 +46,7 @@ class PlotSceneLinksController < ApplicationController
       return
     end
 
-    new_text = scene_params[:text]
-
-    @link.scene.update!(text: new_text)
+    @link.scene.update!(text: scene_params[:text])
 
     respond_to do |format|
       format.turbo_stream do
