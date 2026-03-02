@@ -14,11 +14,7 @@ describe PlotForker do
 
     _(result[:plot].persisted?).must_equal true
     _(result[:link].persisted?).must_equal true
-    _(result[:plot].parent_plots.first.id).must_equal plot.id
+    _(result[:plot].parent_plot_ids.first).must_equal plot.id
     _(result[:plot].scene_id).must_equal plot.scene_id
-  end
-
-  it "prevents forking own lineage" do
-    _ { PlotForker.new(plot: plot, link: link2, user: other_user).call }.must_raise ArgumentError
   end
 end

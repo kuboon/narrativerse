@@ -16,21 +16,22 @@ class PlotStory
   private
 
   def build_story_links
-    plots = [ @plot ] + @plot.parent_plots.to_a
-    links = PlotSceneLink.where(plot_id: plots.map(&:id)).includes(:scene, plot: :user).strict_loading.to_a
+    plot_ids = [ @plot.id ] + @plot.parent_plot_ids
+    links = PlotSceneLink.where(plot_id: plot_ids).includes(:scene, plot: :user).strict_loading.to_a
     first_link = links.find { |l| l.scene_id == @plot.scene_id }
+    raise "first link not found for plot #{@plot.id} and scene #{@plot.scene_id}" unless first_link
     ordered_links = [ first_link ]
     return ordered_links if links.size < 2
     while (next_links = links.select { |l| l.scene_id == ordered_links.last.next_scene_id })
-      link = plots.each do |plot|
+      link = plot_ids.each do |plot_id|
         found = next_links.find do |link|
-          next unless link.plot_id == plot.id
+          next unless link.plot_id == plot_id
           next if ordered_links.any? { |l| l.scene_id == link.scene_id }
           true
         end
         break found if found
       end
-      raise "link not found for plot #{plot.id} and scene #{ordered_links.last.next_scene_id}" unless link
+      raise "link not found for plot #{plot_id} and scene #{ordered_links.last.next_scene_id}" unless link
       ordered_links << link
       break if link.next_scene_id.nil?
     end

@@ -6,10 +6,11 @@ class Plot < ApplicationRecord
 
   attribute :parent_plot_ids, :json, default: []
 
-  def parent_plots
-    @parent_plots ||= Plot.where(id: parent_plot_ids)
-  end
-
   validates :title, presence: true
   validates :summary, length: { maximum: 200 }, allow_nil: true
+
+  def parent_plots
+    return [] if parent_plot_ids.empty?
+    Plot.where(id: parent_plot_ids)
+  end
 end

@@ -14,10 +14,7 @@ class PlotPolicy < ApplicationPolicy
   end
 
   def fork?
-    return false unless user.present?
-    return false if record.user_id == user.id
-
-    PlotNavigation.new(record).plot_chain.none? { |plot| plot.user_id == user.id }
+    create?
   end
 
   def manage_story?

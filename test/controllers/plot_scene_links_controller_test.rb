@@ -39,7 +39,7 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     end
 
     new_plot = Plot.order(created_at: :desc).first
-    _(new_plot.parent_plots.first.id).must_equal plot.id
+    _(new_plot.parent_plot_ids.first).must_equal plot.id
     _(new_plot.scene_id).must_equal plot.scene_id
     _(new_plot.plot_scene_links.count).must_equal 1
   end
