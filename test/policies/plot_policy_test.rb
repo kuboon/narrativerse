@@ -21,13 +21,6 @@ describe PlotPolicy do
     _(policy.create?).must_equal true
   end
 
-  it "prevents forking own lineage" do
-    link
-    policy = PlotPolicy.new(owner, plot)
-
-    _(policy.fork?).must_equal false
-  end
-
   it "allows fork when outside lineage" do
     link
     policy = PlotPolicy.new(other_user, plot)

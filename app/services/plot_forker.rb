@@ -8,20 +8,13 @@ class PlotForker
   def call
     raise ArgumentError, "invalid link" unless @link.plot_id == @plot.id
 
-    navigation = PlotNavigation.new(@plot)
-    parents = navigation.plot_chain
-
-    if parents.any? { |parent| parent.user_id == @user.id }
-      raise ArgumentError, "Cannot fork from your own plot lineage"
-    end
-
     new_plot = Plot.create!(
       user: @user,
       title: "Fork of #{@plot.title}",
       summary: @plot.summary,
-      scene_id: @plot.scene_id
+      scene_id: @plot.scene_id,
+      parent_plot_ids: [ *@plot.parent_plot_ids, @plot.id ]
     )
-    PlotParentLink.create!(child_plot: new_plot, parent_plot: @plot)
     new_link = PlotSceneLink.create!(plot: new_plot, scene: @link.scene, next_scene: nil)
 
     @plot.plot_elements.each do |pe|
