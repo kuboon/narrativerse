@@ -3,11 +3,9 @@ require "application_system_test_case"
 class SceneEditFlowTest < ApplicationSystemTestCase
   test "owner edits inline without navigation" do
     owner = create(:user)
-    other = create(:user)
 
-    scene = create(:scene, user: other)
-    plot = create(:plot, user: owner, scene:)
-    link = create(:plot_scene_link, plot:, scene:, next_scene_id: nil)
+    plot = create(:plot, user: owner)
+    link = plot.plot_scene_links.first
 
     visit new_session_path
     find('select[name="user_id"]').find("option[value='#{owner.id}']").select_option
@@ -36,9 +34,8 @@ class SceneEditFlowTest < ApplicationSystemTestCase
     owner = create(:user)
     other = create(:user)
 
-    scene = create(:scene, user: owner)
-    plot = create(:plot, user: owner, scene:)
-    link = create(:plot_scene_link, plot:, scene:)
+    plot = create(:plot, user: owner)
+    link = plot.plot_scene_links.first
 
     visit new_session_path
     find('select[name="user_id"]').find("option[value='#{other.id}']").select_option
@@ -59,11 +56,10 @@ class SceneEditFlowTest < ApplicationSystemTestCase
 
   test "switching to another scene auto-saves the first" do
     owner = create(:user)
-    scene1 = create(:scene, user: owner, text: "First scene")
-    scene2 = create(:scene, user: owner, text: "Second scene")
-    plot = create(:plot, user: owner, scene: scene1)
-    link1 = create(:plot_scene_link, plot:, scene: scene1, next_scene: scene2)
-    link2 = create(:plot_scene_link, plot:, scene: scene2, next_scene_id: nil)
+    plot = create(:plot, user: owner, scenes_count: 2)
+    links = plot.plot_scene_links.order(:created_at)
+    link1 = links.first
+    link2 = links.last
 
     visit new_session_path
     find('select[name="user_id"]').find("option[value='#{owner.id}']").select_option
