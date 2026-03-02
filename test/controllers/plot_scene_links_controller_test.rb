@@ -4,13 +4,13 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
   extend Minitest::Spec::DSL
   include Rails.application.routes.url_helpers
 
-  let(:user) { User.create!(name: "Owner") }
-  let(:other_user) { User.create!(name: "Other") }
-  let(:scene1) { Scene.create!(user: other_user, text: "Scene 1") }
-  let(:scene2) { Scene.create!(user: other_user, text: "Scene 2") }
-  let(:plot) { Plot.create!(user: other_user, title: "Plot", scene: scene1) }
-  let(:link1) { PlotSceneLink.create!(plot: plot, scene: scene1, next_scene: scene2) }
-  let(:link2) { PlotSceneLink.create!(plot: plot, scene: scene2, next_scene: nil) }
+  let(:user) { create(:user) }
+  let(:other_user) { create(:user) }
+  let(:scene1) { create(:scene, user: other_user) }
+  let(:scene2) { create(:scene, user: other_user) }
+  let(:plot) { create(:plot, user: other_user, scene: scene1) }
+  let(:link1) { create(:plot_scene_link, plot:, scene: scene1, next_scene: scene2) }
+  let(:link2) { create(:plot_scene_link, plot:, scene: scene2, next_scene: nil) }
 
   before do
     link1
@@ -20,8 +20,8 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
   it "creates a new scene and appends to plot" do
     post session_path, params: { user_id: user.id }
 
-    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
-    PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
+    own_plot = create(:plot, user:, scene: scene1)
+    create(:plot_scene_link, plot: own_plot, scene: scene1, next_scene: nil)
 
     assert_difference "Scene.count", +1 do
       post plot_plot_scene_links_path(own_plot), params: { scene: { text: "New scene" } }
@@ -48,8 +48,8 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     # plot owned by user
     post session_path, params: { user_id: user.id }
 
-    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
-    link = PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
+    own_plot = create(:plot, user:, scene: scene1)
+    link = create(:plot_scene_link, plot: own_plot, scene: scene1, next_scene: nil)
 
     patch plot_scene_path(link), params: { scene: { text: "Owner edit" } }
 
@@ -60,8 +60,8 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
   it "forbids non-owner from updating via plot_scene_path" do
     post session_path, params: { user_id: other_user.id }
 
-    own_plot = Plot.create!(user: user, title: "My Plot", scene: scene1)
-    link = PlotSceneLink.create!(plot: own_plot, scene: scene1, next_scene: nil)
+    own_plot = create(:plot, user:, scene: scene1)
+    link = create(:plot_scene_link, plot: own_plot, scene: scene1, next_scene: nil)
 
     patch plot_scene_path(link), params: { scene: { text: "Bad edit" } }
 
