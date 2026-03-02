@@ -1,24 +1,20 @@
-# README
+# Narrativerse
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+みんなで広げる、物語の世界。
 
-Things you may want to cover:
+## コンセプト
+Narrativerse は、他の人が書いた物語を途中から分岐して別の話を書いたり、登場人物や小道具を共有して物語を作ったりできる、物語のためのソーシャルプラットフォームです。
 
-* Ruby version
+## 主要機能
+### プロット
+物語の骨組みとなるプロットを作成できます。プロットは複数のシーンで構成されます。
+シーンのエディタが提供され、テキストにルビを振ることができます。
 
-* System dependencies
+あるシーンの次に新しいシーンを追加することでプロットを分岐させることができます。
 
-* Configuration
+### 要素
+キャラクター、小道具、場面などの要素を作成し、プロットに関連付けることができます。
+そのプロットの中でのそれらの要素の役割をあらかじめ書いておくことで、 AI が物語を書くヒントを提案してくれます。
 
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+## 技術スタック
+- Ruby on Rails 8

@@ -8,9 +8,6 @@
     <div class="scene-editor hidden">
       <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true } } do |f| %>
         <%= f.text_area :text, class: "w-full p-2 border rounded scene-textarea min-h-[100px]", rows: 5 %>
-        <div class="actions mt-2 text-right">
-          <%= f.submit "保存", class: "btn primary btn-sm" %>
-        </div>
       <% end %>
     </div>
   <% end %>

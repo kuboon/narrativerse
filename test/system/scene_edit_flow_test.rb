@@ -21,9 +21,8 @@ class SceneEditFlowTest < ApplicationSystemTestCase
       find(".scene-display", visible: true).click
       assert_selector ".scene-editor textarea", visible: true
       find(".scene-editor textarea").set("Owner edit")
-      click_on "保存"
-      assert_text "Owner edit"
     end
+    find("body").click # blur textarea to trigger save
 
     link.reload
     assert_equal "Owner edit", link.scene.text
@@ -83,9 +82,10 @@ class SceneEditFlowTest < ApplicationSystemTestCase
       assert_selector ".scene-editor textarea", visible: true
     end
 
-    # First editor should be hidden now
+    # First editor should be closed and show saved text
     within "#link-#{link1.id}" do
       assert_no_selector ".scene-editor textarea", visible: true
+      assert_text "Edited first"
     end
 
     link1.reload

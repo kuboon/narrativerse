@@ -1,46 +1,36 @@
 const submitFormWithFetch = async (form) => {
-  const action = form.action;
-  const method = (form.method || "post").toUpperCase();
-
-  const tokenMeta = document.querySelector('meta[name="csrf-token"]');
-  const csrfToken = tokenMeta ? tokenMeta.content : null;
-
-  const formData = new FormData(form);
-  const body = new URLSearchParams();
-  for (const pair of formData.entries()) { body.append(pair[0], pair[1]); }
-
-  const resp = await fetch(action, {
-    method: method === "POST" ? "POST" : method,
-    credentials: "same-origin",
-    headers: Object.assign({ "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8" }, csrfToken ? { "X-CSRF-Token": csrfToken } : {}),
-    body: body.toString()
-  });
-
-  const contentType = resp.headers.get("content-type") || "";
-  const text = await resp.text();
-
-  if (contentType.includes("text/vnd.turbo-stream")) {
-    if (window.Turbo && typeof Turbo.renderStreamMessage === "function") {
-      Turbo.renderStreamMessage(text);
-    } else {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(text, "text/html");
-      const replacement = doc.body.firstElementChild;
-      const id = replacement && replacement.id;
-      if (id) {
-        const old = document.getElementById(id);
-        if (old && replacement) old.replaceWith(replacement);
-      }
-    }
-  } else if (resp.redirected) {
-    window.location = resp.url;
+  // Turbo Drive submission: just call requestSubmit, Turbo will handle fetch and stream
+  if (!form) return;
+  if (window.Turbo && typeof form.requestSubmit === "function") {
+    form.requestSubmit();
+  } else {
+    form.submit();
   }
 };
 
-const stopEditing = (container) => {
+
+const setEditorState = (textarea, state) => {
+  // state: "editing" | "saving" | "saved"
+  if (!textarea) return;
+  textarea.classList.remove("border-editing", "border-saving", "border-saved");
+  if (state === "editing") {
+    textarea.classList.add("border-editing");
+  } else if (state === "saving") {
+    textarea.classList.add("border-saving");
+  } else if (state === "saved") {
+    textarea.classList.add("border-saved");
+  }
+};
+
+const stopEditing = async (container) => {
   if (!container) return;
   const form = container.querySelector("form");
-  if (form) submitFormWithFetch(form).catch(err => { console.error(err); form.requestSubmit(); });
+  const textarea = form?.querySelector(".scene-textarea");
+  if (form && textarea) {
+    setEditorState(textarea, "saving");
+    await submitFormWithFetch(form).catch(err => { console.error(err); form.requestSubmit(); });
+    setEditorState(textarea, "saved");
+  }
   container.querySelector(".scene-display").classList.remove("hidden");
   const editor = container.querySelector(".scene-editor");
   if (editor) editor.classList.add("hidden");
@@ -62,6 +52,7 @@ const startEditing = (container) => {
   container.querySelector(".scene-display").classList.add("hidden");
   editor.classList.remove("hidden");
   const textarea = editor.querySelector("textarea");
+  setEditorState(textarea, "editing");
   textarea.focus();
   textarea.style.height = "auto";
   textarea.style.height = textarea.scrollHeight + "px";
@@ -75,23 +66,21 @@ document.addEventListener("click", (e) => {
   }
 });
 
-document.addEventListener("focusout", (e) => {
-  const container = e.target.closest(".scene-container");
-  if (container) {
-    setTimeout(() => {
-      if (!container.contains(document.activeElement)) {
-        const editor = container.querySelector(".scene-editor");
-        if (editor && !editor.classList.contains("hidden")) {
-          stopEditing(container);
-        }
-      }
-    }, 0);
+document.addEventListener("blur", (e) => {
+  if (e.target === document) return;
+  const textarea = e.target.closest(".scene-textarea");
+  if (textarea) {
+    const container = textarea.closest(".scene-container");
+    if (container) {
+      stopEditing(container);
+    }
   }
-});
+}, true);
 
 document.addEventListener("input", (e) => {
   if (e.target.matches(".scene-textarea")) {
     e.target.style.height = "auto";
     e.target.style.height = e.target.scrollHeight + "px";
+    setEditorState(e.target, "editing");
   }
 });
