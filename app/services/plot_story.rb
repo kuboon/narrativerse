@@ -3,19 +3,9 @@ class PlotStory
     @plot = plot.is_a?(Plot) ? plot : Plot.find(plot)
   end
 
-  def call
-    story_links = build_story_links
+  def links
+    return @links if @links
 
-    {
-      plot: @plot,
-      story_links: story_links,
-      branches_by_scene_id: build_branches_by_scene_id(story_links)
-    }
-  end
-
-  private
-
-  def build_story_links
     plot_ids = [ @plot.id ] + @plot.parent_plot_ids
     links = PlotSceneLink.where(plot_id: plot_ids).includes(:scene, plot: :user).strict_loading.to_a
     first_link = links.find { |l| l.scene_id == @plot.scene_id }
@@ -35,18 +25,21 @@ class PlotStory
       ordered_links << link
       break if link.next_scene_id.nil?
     end
-    ordered_links
+    @links = ordered_links
   end
 
-  def build_branches_by_scene_id(story_links)
-    scene_ids = story_links.map(&:scene_id)
-    links = PlotSceneLink.where(scene_id: scene_ids).includes(:plot).strict_loading.to_a
+  def scene_ids
+    links.map(&:scene_id)
+  end
+
+  def branches
+    return @branches if @branches
+    related_links = PlotSceneLink.where(scene_id: scene_ids).includes(:plot).strict_loading.to_a
     branches_by_scene_id = {}
-    links.each do |link|
-      next if story_links.any? { |l| l.id == link.id }
+    related_links.each do |link|
       branches_by_scene_id[link.scene_id] ||= []
       branches_by_scene_id[link.scene_id] << link
     end
-    branches_by_scene_id
+    @branches = branches_by_scene_id
   end
 end

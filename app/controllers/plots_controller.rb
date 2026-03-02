@@ -14,7 +14,7 @@ class PlotsController < ApplicationController
 
   def show
     authorize @plot
-    @story_links = PlotStory.new(@plot).call[:story_links]
+    @story_links = PlotStory.new(@plot).links
   end
 
 

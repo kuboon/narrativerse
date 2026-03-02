@@ -20,21 +20,20 @@ Rails.application.routes.draw do
   root "home#index"
 
   resources :elements, except: :destroy
-  # scenes updates are now handled via plot-scoped route
   resources :plots, except: :destroy, shallow: true do
     resources :plot_elements, except: [ :index, :show ] do
       patch :refresh_revision, on: :member
     end
-    resources :plot_scene_links, only: [ :new, :create ] do
+    resources :plot_scenes, only: [ :create ] do
       post :fork, on: :member
     end
   end
 
   # Update a scene in the context of a plot/link (allows direct update when plot owner)
-  patch "plot_scenes/:id", to: "plot_scene_links#update", as: :plot_scene
+  patch "plot_scenes/:id", to: "plot_scenes#update", as: :plot_scene
 
   get "reader/:plot_id", to: "reader#show", as: :reader
-  get "reader/:plot_id/:scene_id", to: "reader#show", as: :reader_link
+  get "reader/:plot_id/:scene_id", to: "reader#show", as: :reader_scene
 
   resource :session, only: [ :new, :create, :destroy ]
   resources :users, only: [ :new, :create ]

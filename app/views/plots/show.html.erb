@@ -72,7 +72,7 @@
         </div>
         <% if policy(@plot).manage_story? %>
           <div class="actions mt-4">
-            <%= button_to "シーンを追加", plot_plot_scene_links_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn primary w-full text-center" %>
+            <%= button_to "シーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn primary w-full text-center" %>
           </div>
         <% end %>
       </div>

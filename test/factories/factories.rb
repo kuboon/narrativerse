@@ -18,7 +18,7 @@ FactoryBot.define do
     end
 
     after(:create) do |plot, evaluator|
-      scenes = [plot.scene]
+      scenes = [ plot.scene ]
       (evaluator.scenes_count - 1).times do
         scenes << create(:scene, user: plot.user)
       end

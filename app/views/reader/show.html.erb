@@ -20,7 +20,7 @@
           <% if branches.present? %>
             <div class="story-branch-links mt-2 mb-4 text-sm text-gray-500 text-center">
               <% branches.each do |branch| %>
-                <%= link_to "分岐: #{branch.plot.title}", reader_link_path(branch.plot_id, branch.scene_id), class: "text-link mx-1" %>
+                <%= link_to "分岐: #{branch.plot.title}", reader_scene_path(branch.plot_id, branch.scene_id), class: "text-link mx-1" %>
               <% end %>
             </div>
           <% end %>
