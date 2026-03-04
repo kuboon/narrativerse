@@ -51,11 +51,11 @@ const startEditing = (container) => {
   if (!editor) return;
   container.querySelector(".scene-display").classList.add("hidden");
   editor.classList.remove("hidden");
-  const textarea = editor.querySelector("textarea");
+  const textarea = editor.querySelector(".scene-textarea");
   setEditorState(textarea, "editing");
-  textarea.focus();
-  textarea.style.height = "auto";
-  textarea.style.height = textarea.scrollHeight + "px";
+
+  const tiptapEditorElement = editor.querySelector(".ProseMirror");
+  if (tiptapEditorElement) tiptapEditorElement.focus();
 };
 
 document.addEventListener("click", (e) => {
@@ -78,9 +78,11 @@ document.addEventListener("blur", (e) => {
 }, true);
 
 document.addEventListener("input", (e) => {
-  if (e.target.matches(".scene-textarea")) {
-    e.target.style.height = "auto";
-    e.target.style.height = e.target.scrollHeight + "px";
-    setEditorState(e.target, "editing");
+  const editor = e.target.closest(".tiptap-editor");
+  if (editor) {
+    const textarea = editor.previousElementSibling;
+    if (textarea && textarea.classList.contains("scene-textarea")) {
+      setEditorState(textarea, "editing");
+    }
   }
 });

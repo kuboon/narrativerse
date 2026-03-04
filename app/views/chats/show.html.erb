@@ -5,8 +5,7 @@
   <%= csrf_meta_tags %>
   <%= csp_meta_tag %>
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
-  <%= javascript_include_tag :application, "data-turbo-track": "reload", defer: true %>
-  <%= javascript_importmap_tags %>
+  <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   <style>
     body { background: transparent; min-height: 100vh; display: flex; flex-direction: column; margin: 0; }
     .chat-header {

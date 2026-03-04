@@ -5,7 +5,16 @@
     <%= form_with model: @scene, url: plot_plot_scenes_path(@plot) do |form| %>
       <div class="field">
         <%= form.label :text, "次のストーリー" %>
-        <%= form.text_area :text, rows: 8, required: true %>
+        <div class="tiptap-editor-container" data-controller="tiptap">
+          <div class="tiptap-toolbar mb-2 flex gap-2" data-tiptap-target="toolbar">
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleHeading" data-command="heading" data-level="1">H1</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleHeading" data-command="heading" data-level="2">H2</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleBold" data-command="bold">太字</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#setRuby" data-command="ruby">ルビ</button>
+          </div>
+          <%= form.hidden_field :text, class: "tiptap-hidden-input scene-textarea" %>
+          <div class="tiptap-editor w-full p-2 border rounded min-h-[100px]" data-tiptap-target="editor"></div>
+        </div>
       </div>
       <div class="actions">
         <%= form.submit "追加", class: "btn primary" %>

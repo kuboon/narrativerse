@@ -1,13 +1,26 @@
 <article id="link-<%= link.id %>" class="panel scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
   <% owner = link.plot.user_id == current_user&.id %>
   <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %> p-2 rounded">
-    <%= simple_format(link.scene.text.presence || "（テキストを入力してください）") %>
+    <% if link.scene.text.present? %>
+      <%= sanitize(link.scene.text, tags: %w[p strong h1 h2 ruby rt]) %>
+    <% else %>
+      （テキストを入力してください）
+    <% end %>
   </div>
 
   <% if owner %>
     <div class="scene-editor hidden">
       <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true } } do |f| %>
-        <%= f.text_area :text, class: "w-full p-2 border rounded scene-textarea min-h-[100px]", rows: 5 %>
+        <div class="tiptap-editor-container" data-controller="tiptap">
+          <div class="tiptap-toolbar mb-2 flex gap-2" data-tiptap-target="toolbar">
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleHeading" data-command="heading" data-level="1">H1</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleHeading" data-command="heading" data-level="2">H2</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleBold" data-command="bold">太字</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#setRuby" data-command="ruby">ルビ</button>
+          </div>
+          <%= f.hidden_field :text, class: "tiptap-hidden-input scene-textarea" %>
+          <div class="tiptap-editor w-full p-2 border rounded min-h-[100px]" data-tiptap-target="editor"></div>
+        </div>
       <% end %>
     </div>
   <% end %>
