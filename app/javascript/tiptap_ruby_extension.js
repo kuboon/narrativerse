@@ -2,15 +2,22 @@ import { Mark, mergeAttributes } from '@tiptap/core'
 
 export const Ruby = Mark.create({
   name: 'ruby',
+  inclusive: false,
 
   addAttributes() {
     return {
-      text: {
+      reading: {
         default: null,
         parseHTML: element => {
+          const fromDataAttribute = element.getAttribute('data-ruby')
+          if (fromDataAttribute) return fromDataAttribute
+
           const rt = element.querySelector('rt')
-          return rt ? rt.innerText : null
+          return rt ? rt.textContent : null
         },
+        renderHTML: attributes => ({
+          'data-ruby': attributes.reading,
+        }),
       },
     }
   },
@@ -24,26 +31,31 @@ export const Ruby = Mark.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    const { text, ...rest } = HTMLAttributes
+    const { reading, ...rest } = HTMLAttributes
+
+    const children = [0]
+    if (reading) {
+      children.push(['rt', {}, reading])
+    }
+
     return [
       'ruby',
       mergeAttributes(rest),
-      0, // The text content goes here
-      ['rt', {}, text],
+      ...children,
     ]
   },
 
   addCommands() {
     return {
       setRuby:
-        (text) =>
+        (reading) =>
         ({ commands }) => {
-          return commands.setMark(this.name, { text })
+          return commands.setMark(this.name, { reading })
         },
       toggleRuby:
-        (text) =>
+        (reading) =>
         ({ commands }) => {
-          return commands.toggleMark(this.name, { text })
+          return commands.toggleMark(this.name, { reading })
         },
       unsetRuby:
         () =>

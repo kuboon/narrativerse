@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import { Editor } from "@tiptap/core"
 import StarterKit from "@tiptap/starter-kit"
-import { Ruby } from "tiptap_ruby_extension"
+import { Ruby } from "../tiptap_ruby_extension"
 
 // Connects to data-controller="tiptap"
 export default class extends Controller {
@@ -65,12 +65,24 @@ export default class extends Controller {
 
   setRuby(event) {
     event.preventDefault()
+
+    const { from, to, empty } = this.editor.state.selection
+
     if (this.editor.isActive('ruby')) {
       this.editor.chain().focus().unsetRuby().run()
     } else {
+      if (empty) return
+
       const reading = prompt("ふりがな（ルビ）を入力してください:")
-      if (reading) {
-        this.editor.chain().focus().setRuby(reading).run()
+      const normalizedReading = reading?.trim()
+
+      if (normalizedReading) {
+        this.editor
+          .chain()
+          .focus()
+          .setTextSelection({ from, to })
+          .setRuby(normalizedReading)
+          .run()
       }
     }
   }
