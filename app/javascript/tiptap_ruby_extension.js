@@ -15,9 +15,13 @@ export const Ruby = Mark.create({
           const rt = element.querySelector('rt')
           return rt ? rt.textContent : null
         },
-        renderHTML: attributes => ({
-          'data-ruby': attributes.reading,
-        }),
+        renderHTML: attributes => {
+          if (!attributes.reading) return {}
+
+          return {
+            'data-ruby': attributes.reading,
+          }
+        },
       },
     }
   },
@@ -26,22 +30,35 @@ export const Ruby = Mark.create({
     return [
       {
         tag: 'ruby',
+        contentElement: element => {
+          const rb = element.querySelector('rb')
+          if (rb) return rb
+
+          const fallback = element.ownerDocument.createElement('span')
+          element.childNodes.forEach((childNode) => {
+            if (childNode.nodeType === 1 && childNode.nodeName.toLowerCase() === 'rt') return
+            fallback.appendChild(childNode.cloneNode(true))
+          })
+
+          return fallback
+        },
       },
     ]
   },
 
   renderHTML({ HTMLAttributes }) {
-    const { reading, ...rest } = HTMLAttributes
+    const reading = HTMLAttributes.reading ?? HTMLAttributes['data-ruby']
+    const { reading: _reading, ...rest } = HTMLAttributes
 
-    const children = [0]
+    const rubyChildren = [['rb', {}, 0]]
     if (reading) {
-      children.push(['rt', {}, reading])
+      rubyChildren.push(['rt', {}, reading])
     }
 
     return [
       'ruby',
       mergeAttributes(rest),
-      ...children,
+      ...rubyChildren,
     ]
   },
 
