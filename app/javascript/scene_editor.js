@@ -54,8 +54,8 @@ const startEditing = (container) => {
   const textarea = editor.querySelector(".scene-textarea");
   setEditorState(textarea, "editing");
 
-  const tiptapEditorElement = editor.querySelector(".ProseMirror");
-  if (tiptapEditorElement) tiptapEditorElement.focus();
+  const prosemirrorEditorElement = editor.querySelector(".ProseMirror");
+  if (prosemirrorEditorElement) prosemirrorEditorElement.focus();
 };
 
 document.addEventListener("click", (e) => {
@@ -78,7 +78,7 @@ document.addEventListener("blur", (e) => {
 }, true);
 
 document.addEventListener("input", (e) => {
-  const editor = e.target.closest(".tiptap-editor");
+  const editor = e.target.closest(".prosemirror-editor");
   if (editor) {
     const textarea = editor.previousElementSibling;
     if (textarea && textarea.classList.contains("scene-textarea")) {

@@ -29,4 +29,14 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     assert_response :forbidden
     _(link.reload.scene.text).wont_equal "Bad edit"
   end
+
+  it "rerenders scene form with a single scene text input when create fails" do
+    post session_path, params: { user_id: owner.id }
+    plot
+
+    post plot_plot_scenes_path(plot), params: { scene: { text: "" } }
+
+    assert_response :unprocessable_entity
+    assert_select "input[name='scene[text]']", count: 1
+  end
 end
