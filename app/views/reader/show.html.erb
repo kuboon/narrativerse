@@ -16,17 +16,25 @@
     <% if @story_links.any? %>
       <div class="story-flow" data-reader-flow data-focus-scene-id="<%= @focus_scene_id %>">
         <% @story_links.each do |link| %>
-          <article id="scene-<%= link.scene_id %>" data-scene-id="<%= link.scene_id %>" class="scene <%= "focus" if link.scene_id == @focus_scene_id %>">
-            <%= sanitize(link.scene.text, tags: %w[p strong h1 h2 ruby rt]) %>
-          </article>
           <% branches = @branches_by_scene_id[link.scene_id] %>
-          <% if branches.present? %>
-            <div class="story-branch-links mt-2 mb-4 text-sm text-gray-500 text-center">
-              <% branches.each do |branch| %>
-                <%= link_to "分岐: #{branch.plot.title}", reader_scene_path(branch.plot_id, branch.next_scene_id), class: "text-link mx-1" %>
-              <% end %>
-            </div>
-          <% end %>
+          <% show_branch_menu = branches.present? || (current_user.present? && link.scene_id == @focus_scene_id) %>
+          <article id="scene-<%= link.scene_id %>" data-scene-id="<%= link.scene_id %>" data-focus-url="<%= reader_scene_path(@plot, link.scene_id) %>" class="scene <%= "focus" if link.scene_id == @focus_scene_id %>">
+            <%= sanitize(link.scene.text, tags: %w[p strong h1 h2 ruby rt]) %>
+            <% if show_branch_menu %>
+              <details class="scene-branch-menu" data-scene-branch-menu>
+                <summary class="scene-branch-menu-toggle" aria-label="シーンメニューを開く">
+                </summary>
+                <div class="scene-branch-menu-popover">
+                  <% branches.each do |branch| %>
+                    <%= link_to "分岐: #{branch.plot.title}", reader_scene_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" %>
+                  <% end %>
+                  <% if current_user.present? %>
+                    <%= link_to "分岐を追加", fork_plot_scene_path(link), data: { turbo_method: :post }, class: "scene-branch-menu-item" %>
+                  <% end %>
+                </div>
+              </details>
+            <% end %>
+          </article>
         <% end %>
       </div>
     <% else %>
@@ -67,6 +75,18 @@
       updateProgress();
       window.addEventListener("scroll", updateProgress, { passive: true });
       window.addEventListener("resize", updateProgress);
+
+      flow.addEventListener("click", event => {
+        if (event.target.closest("a, button, summary, input, textarea, select, label")) return;
+
+        const scene = event.target.closest("article.scene[data-focus-url]");
+        if (!scene || !flow.contains(scene)) return;
+
+        const focusUrl = scene.dataset.focusUrl;
+        if (!focusUrl) return;
+
+        window.location.assign(focusUrl);
+      });
 
       if (focusSceneId) {
         const focusPanel = document.getElementById(`scene-${focusSceneId}`);

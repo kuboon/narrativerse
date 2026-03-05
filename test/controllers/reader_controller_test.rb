@@ -40,4 +40,47 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
     assert_select "[data-reader-flow][data-focus-scene-id='#{first_scene_id}']", count: 1
     assert_select "article.scene.focus#scene-#{first_scene_id}", count: 1
   end
+
+  it "shows branch menu at branch scene and no legacy branch links" do
+    source_scene_id = ordered_scene_ids.second
+    source_scene = Scene.find(source_scene_id)
+    branch_plot = create_branch_from(source_scene: source_scene, user: owner)
+
+    get reader_scene_path(plot, source_scene_id)
+
+    assert_response :success
+    assert_select ".story-branch-links", count: 0
+    assert_select "article.scene .scene-branch-menu", count: 1
+    assert_select "#scene-#{source_scene_id} a.scene-branch-menu-item", text: "分岐: #{branch_plot.title}", count: 1
+    assert_select "a.scene-branch-menu-item", text: "分岐を追加", count: 0
+  end
+
+  it "shows add-branch in all popups while logged in" do
+    branch_scene_id = ordered_scene_ids.first
+    focused_scene_id = ordered_scene_ids.second
+    branch_scene = Scene.find(branch_scene_id)
+    create_branch_from(source_scene: branch_scene, user: owner)
+    viewer = create(:user)
+
+    post session_path, params: { user_id: viewer.id }
+    get reader_scene_path(plot, focused_scene_id)
+
+    assert_response :success
+    assert_select "article.scene .scene-branch-menu", count: 2
+    assert_select "#scene-#{focused_scene_id} .scene-branch-menu", count: 1
+    assert_select ".scene-branch-menu a.scene-branch-menu-item", text: "分岐を追加", count: 2
+  end
+
+  private
+
+  def create_branch_from(source_scene:, user:)
+    branch_plot = create(:plot, user:, scene: source_scene, scenes_count: 1)
+    next_scene = create(:scene, user:)
+
+    branch_link = branch_plot.plot_scene_links.find_by!(scene_id: source_scene.id)
+    branch_link.update!(next_scene:)
+    create(:plot_scene_link, plot: branch_plot, scene: next_scene, next_scene: nil)
+
+    branch_plot
+  end
 end
