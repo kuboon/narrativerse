@@ -1,11 +1,12 @@
 import { Controller } from "@hotwired/stimulus"
-import { Schema } from "prosemirror-model"
+import { DOMParser, DOMSerializer, Schema } from "prosemirror-model"
 import { schema as basicSchema } from "prosemirror-schema-basic"
 import { EditorState } from "prosemirror-state"
 import { EditorView } from "prosemirror-view"
 import { history, undo, redo } from "prosemirror-history"
 import { keymap } from "prosemirror-keymap"
 import { toggleMark, baseKeymap } from "prosemirror-commands"
+import { MenuItem, menuBar } from "prosemirror-menu"
 import { rubyMark } from "../prosemirror_ruby_mark"
 
 // Build schema: paragraph + text + bold mark + ruby mark
@@ -15,6 +16,69 @@ const schema = new Schema({
 })
 
 const boldMark = schema.marks.strong
+const rubyMarkType = schema.marks.ruby
+const boldCommand = toggleMark(boldMark)
+
+function markIsActive(state, markType) {
+  const { from, to, empty, $from } = state.selection
+  if (empty) {
+    return !!markType.isInSet(state.storedMarks || $from.marks())
+  }
+  return state.doc.rangeHasMark(from, to, markType)
+}
+
+function toggleRubyMark(state, dispatch, view) {
+  const { from, to, empty } = state.selection
+  if (empty) return false
+
+  if (state.doc.rangeHasMark(from, to, rubyMarkType)) {
+    if (dispatch) {
+      dispatch(state.tr.removeMark(from, to, rubyMarkType).scrollIntoView())
+    }
+    if (view) view.focus()
+    return true
+  }
+
+  const reading = window.prompt("ふりがな（ルビ）を入力してください:")
+  const normalizedReading = reading?.trim()
+  if (!normalizedReading) return false
+
+  if (dispatch) {
+    dispatch(
+      state.tr
+        .addMark(from, to, rubyMarkType.create({ reading: normalizedReading }))
+        .scrollIntoView()
+    )
+  }
+  if (view) view.focus()
+  return true
+}
+
+function buildMenuContent() {
+  return [
+    [
+      new MenuItem({
+        label: "太字",
+        title: "太字 (Ctrl/Cmd-B)",
+        class: "pm-menu-button",
+        run: (state, dispatch, view) => {
+          const executed = boldCommand(state, dispatch)
+          if (executed && view) view.focus()
+          return executed
+        },
+        active: (state) => markIsActive(state, boldMark),
+      }),
+      new MenuItem({
+        label: "ルビ",
+        title: "ルビを付与/解除",
+        class: "pm-menu-button",
+        run: toggleRubyMark,
+        enable: (state) => !state.selection.empty,
+        active: (state) => markIsActive(state, rubyMarkType),
+      }),
+    ],
+  ]
+}
 
 function buildKeymap() {
   return keymap({
@@ -22,22 +86,10 @@ function buildKeymap() {
     "Mod-z": undo,
     "Mod-y": redo,
     "Mod-Shift-z": redo,
-    "Mod-b": toggleMark(boldMark),
-    "Mod-B": toggleMark(boldMark),
+    "Mod-b": boldCommand,
+    "Mod-B": boldCommand,
   })
 }
-
-// Converts a DOM node produced by the server (HTML string in hidden input) into a ProseMirror doc
-function htmlToDoc(html) {
-  const div = document.createElement("div")
-  div.innerHTML = html
-  return schema.parseDOM
-    ? DOMParser.fromSchema(schema).parse(div)
-    : schema.nodes.doc.createAndFill()
-}
-
-// Lazy import for DOMParser from prosemirror
-import { DOMParser, DOMSerializer } from "prosemirror-model"
 
 function docToHTML(doc) {
   const div = document.createElement("div")
@@ -48,7 +100,7 @@ function docToHTML(doc) {
 
 // Connects to data-controller="prosemirror"
 export default class extends Controller {
-  static targets = ["editor", "toolbar"]
+  static targets = ["editor"]
 
   connect() {
     this.hiddenInput =
@@ -67,7 +119,11 @@ export default class extends Controller {
 
     const state = EditorState.create({
       doc: initialDoc,
-      plugins: [history(), buildKeymap()],
+      plugins: [
+        history(),
+        buildKeymap(),
+        menuBar({ content: buildMenuContent(), floating: false }),
+      ],
     })
 
     this.view = new EditorView(editorElement, {
@@ -79,59 +135,8 @@ export default class extends Controller {
           this.hiddenInput.value = docToHTML(newState.doc)
           editorElement.dispatchEvent(new Event("input", { bubbles: true }))
         }
-        this.updateActiveStates(newState)
       },
     })
-  }
-
-  updateActiveStates(state) {
-    if (!this.hasToolbarTarget) return
-    const { from, $from, to, empty } = state.selection
-    const buttons = this.toolbarTarget.querySelectorAll("button[data-mark]")
-    buttons.forEach((button) => {
-      const markName = button.dataset.mark
-      const mark = schema.marks[markName]
-      if (!mark) return
-      const active = empty
-        ? !!mark.isInSet(state.storedMarks || $from.marks())
-        : state.doc.rangeHasMark(from, to, mark)
-      button.classList.toggle("bg-gray-200", active)
-    })
-  }
-
-  toggleBold(event) {
-    event.preventDefault()
-    toggleMark(boldMark)(this.view.state, this.view.dispatch)
-    this.view.focus()
-  }
-
-  setRuby(event) {
-    event.preventDefault()
-    const rubyMarkType = schema.marks.ruby
-    const { from, to, empty } = this.view.state.selection
-
-    if (empty) return
-
-    // Check if selection already has ruby mark
-    const hasRuby = this.view.state.doc.rangeHasMark(from, to, rubyMarkType)
-    if (hasRuby) {
-      const tr = this.view.state.tr.removeMark(from, to, rubyMarkType)
-      this.view.dispatch(tr)
-      this.view.focus()
-      return
-    }
-
-    const reading = prompt("ふりがな（ルビ）を入力してください:")
-    const normalizedReading = reading?.trim()
-    if (!normalizedReading) return
-
-    const tr = this.view.state.tr.addMark(
-      from,
-      to,
-      rubyMarkType.create({ reading: normalizedReading })
-    )
-    this.view.dispatch(tr)
-    this.view.focus()
   }
 
   disconnect() {

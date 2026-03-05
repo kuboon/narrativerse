@@ -12,10 +12,6 @@
     <div class="scene-editor hidden">
       <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true } } do |f| %>
         <div class="prosemirror-editor-container" data-controller="prosemirror">
-          <div class="prosemirror-toolbar mb-2 flex gap-2" data-prosemirror-target="toolbar">
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->prosemirror#toggleBold" data-mark="strong">太字</button>
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->prosemirror#setRuby" data-mark="ruby">ルビ</button>
-          </div>
           <%= f.hidden_field :text, class: "prosemirror-hidden-input scene-textarea" %>
           <div class="prosemirror-editor w-full p-2 border rounded min-h-[100px]" data-prosemirror-target="editor"></div>
         </div>

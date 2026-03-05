@@ -13,10 +13,6 @@
       <div class="field">
         <%= form.label :scene_text, "最初の場面の本文" %>
         <div class="prosemirror-editor-container" data-controller="prosemirror">
-          <div class="prosemirror-toolbar mb-2 flex gap-2" data-prosemirror-target="toolbar">
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->prosemirror#toggleBold" data-mark="strong">太字</button>
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->prosemirror#setRuby" data-mark="ruby">ルビ</button>
-          </div>
           <%= form.hidden_field :scene_text, class: "prosemirror-hidden-input scene-textarea" %>
           <div class="prosemirror-editor w-full p-2 border rounded min-h-[100px]" data-prosemirror-target="editor"></div>
         </div>

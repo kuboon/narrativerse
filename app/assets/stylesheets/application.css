@@ -774,6 +774,39 @@ textarea {
   border-color: var(--border);
 }
 
+.ProseMirror-menubar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.pm-menu-button {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: white;
+  color: var(--ink);
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  line-height: 1;
+  padding: 7px 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.pm-menu-button:hover {
+  background: var(--surface);
+}
+
+.pm-menu-button.ProseMirror-menu-active {
+  background: var(--surface-strong);
+}
+
+.pm-menu-button.ProseMirror-menu-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 
 .scene-textarea {
   width: 100%;
