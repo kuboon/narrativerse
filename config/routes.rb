@@ -33,7 +33,7 @@ Rails.application.routes.draw do
   patch "plot_scenes/:id", to: "plot_scenes#update", as: :plot_scene
 
   get "reader/:plot_id", to: "reader#show", as: :reader
-  get "reader/:plot_id/:scene_id", to: "reader#show", as: :reader_scene
+  get "reader/:plot_id(/:scene_id)", to: "reader#show", as: :reader_scene
 
   resource :session, only: [ :new, :create, :destroy ]
   resources :users, only: [ :new, :create ]

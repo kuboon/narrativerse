@@ -41,17 +41,20 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
     assert_select "article.scene.focus#scene-#{first_scene_id}", count: 1
   end
 
-  it "shows branch menu at branch scene and no legacy branch links" do
+  it "shows branch menu at next scene and no legacy branch links" do
     source_scene_id = ordered_scene_ids.second
     source_scene = Scene.find(source_scene_id)
     branch_plot = create_branch_from(source_scene: source_scene, user: owner)
+    main_source_link = plot.plot_scene_links.find_by!(scene_id: source_scene_id)
+    target_scene_id = main_source_link.next_scene_id
 
     get reader_scene_path(plot, source_scene_id)
 
     assert_response :success
     assert_select ".story-branch-links", count: 0
     assert_select "article.scene .scene-branch-menu", count: 1
-    assert_select "#scene-#{source_scene_id} a.scene-branch-menu-item", text: "分岐: #{branch_plot.title}", count: 1
+    assert_select "#scene-#{source_scene_id} .scene-branch-menu", count: 0
+    assert_select "#scene-#{target_scene_id} a.scene-branch-menu-item", text: "分岐: #{branch_plot.title}", count: 1
     assert_select "a.scene-branch-menu-item", text: "分岐を追加", count: 0
   end
 
@@ -66,9 +69,10 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
     get reader_scene_path(plot, focused_scene_id)
 
     assert_response :success
-    assert_select "article.scene .scene-branch-menu", count: 2
+    assert_select "article.scene .scene-branch-menu", count: 3
+    assert_select "article.scene .scene-branch-menu.focus-only-menu", count: 2
     assert_select "#scene-#{focused_scene_id} .scene-branch-menu", count: 1
-    assert_select ".scene-branch-menu a.scene-branch-menu-item", text: "分岐を追加", count: 2
+    assert_select ".scene-branch-menu a.scene-branch-menu-item", text: "分岐を追加", count: 3
   end
 
   private

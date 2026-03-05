@@ -35,14 +35,14 @@ class PlotStory
   def branches
     return @branches if @branches
     related_links = PlotSceneLink.where(scene_id: scene_ids).includes(:plot).strict_loading.to_a
-    branches_by_scene_id = {}
+    branches_by_scene_id = { links.first.scene_id => [] }
     links.each do |link|
       branches = related_links.select do |x|
         next if x.plot_id == link.plot_id
         next if x.scene_id != link.scene_id
         true
       end
-      branches_by_scene_id[link.scene_id] = branches
+      branches_by_scene_id[link.next_scene_id || "END"] = branches
     end
     @branches = branches_by_scene_id
   end
