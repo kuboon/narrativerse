@@ -39,4 +39,16 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     assert_response :unprocessable_entity
     assert_select "input[name='scene[text]']", count: 1
   end
+
+  it "redirects to forked plot page after adding branch" do
+    post session_path, params: { user_id: other_user.id }
+    source_link = plot.plot_scene_links.first
+
+    assert_difference "Plot.count", +1 do
+      post fork_plot_scene_path(source_link)
+    end
+
+    forked_plot = Plot.order(:id).last
+    assert_redirected_to plot_path(forked_plot)
+  end
 end

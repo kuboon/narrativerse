@@ -31,7 +31,7 @@ class PlotScenesController < ApplicationController
 
     begin
       result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
-      redirect_to reader_scene_path(result[:plot], result[:link].scene_id), notice: "分岐プロットを作成しました"
+      redirect_to plot_path(result[:plot]), notice: "分岐プロットを作成しました"
     rescue ArgumentError => e
       redirect_to reader_scene_path(source_plot, source_link.scene_id), alert: e.message
     end
