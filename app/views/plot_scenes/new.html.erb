@@ -5,13 +5,14 @@
     <%= form_with model: @scene, url: plot_plot_scenes_path(@plot) do |form| %>
       <div class="field">
         <%= form.label :text, "次のストーリー" %>
-        <div class="tiptap-editor-container" data-controller="tiptap">
-          <div class="tiptap-toolbar mb-2 flex gap-2" data-tiptap-target="toolbar">
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleHeading" data-command="heading" data-level="1">H1</button>
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleHeading" data-command="heading" data-level="2">H2</button>
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#toggleBold" data-command="bold">太字</button>
-            <button type="button" class="px-2 py-1 border rounded" data-action="click->tiptap#setRuby" data-command="ruby">ルビ</button>
+        <div class="prosemirror-editor-container" data-controller="prosemirror">
+          <div class="prosemirror-toolbar mb-2 flex gap-2" data-prosemirror-target="toolbar">
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->prosemirror#toggleBold" data-mark="strong">太字</button>
+            <button type="button" class="px-2 py-1 border rounded" data-action="click->prosemirror#setRuby" data-mark="ruby">ルビ</button>
           </div>
+          <%= form.hidden_field :text, class: "prosemirror-hidden-input scene-textarea" %>
+          <div class="prosemirror-editor w-full p-2 border rounded min-h-[100px]" data-prosemirror-target="editor"></div>
+        </div>
           <%= form.hidden_field :text, class: "tiptap-hidden-input scene-textarea" %>
           <div class="tiptap-editor w-full p-2 border rounded min-h-[100px]" data-tiptap-target="editor"></div>
         </div>
