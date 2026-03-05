@@ -1,5 +1,5 @@
-- プロット編集画面の chatbot を機能させる。
-  - 以下の tool を実装する。
+- [ ] プロット編集画面の chatbot を機能させる。
+  - RubyLLM を使い、以下の tool を実装する。
     - 現在の plot_element のリスト取得
     - 要素の追加
     - 要素の更新
@@ -15,4 +15,10 @@
     - plot_element が揃ったら、シーンの追加を促し、提案する。
     - 既にシーンがあれば、その続きを提案する。
   
-- トップページは完全に作り直す。
+- [x] cssbundling-rails を導入する
+  - Tailwind CSS を導入し、さらに daisyUI を導入する。
+  - https://daisyui.com/llms.txt を参考に、全画面を daisyui 準拠に書き直す。
+
+- [x] トップページは完全に作り直す。
+  - README を参考に、サイトへの参加を呼びかけるようなニュアンスで。
+  

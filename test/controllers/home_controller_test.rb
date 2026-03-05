@@ -1,0 +1,37 @@
+require "test_helper"
+
+class HomeControllerTest < ActionDispatch::IntegrationTest
+  extend Minitest::Spec::DSL
+
+  it "shows a participation-focused landing page with latest 12 plots and elements" do
+    author = create(:user)
+
+    13.times do |i|
+      create(:plot, user: author, title: "プロット#{i}", summary: "概要#{i}")
+      Element.create!(user: author, element_type: "Character", name: "要素#{i}")
+    end
+
+    get root_path
+
+    assert_response :success
+    assert_select "main.landing-home", count: 1
+    assert_select "h1", text: /みんなで広げる、/
+    assert_select "a", text: "参加する (ユーザー作成)", count: 1
+    assert_select ".stat-chip .stat-value", text: Plot.count.to_s, count: 1
+    assert_select ".stat-chip .stat-value", text: Element.count.to_s, count: 1
+    assert_select "section.grid .cards .card", count: 24
+    assert_select "section.grid .cards .card h3", text: "プロット0", count: 0
+    assert_select "section.grid .cards .card h3", text: "要素0", count: 0
+  end
+
+  it "switches hero call-to-action for logged-in users" do
+    user = create(:user)
+
+    post session_path, params: { user_id: user.id }
+    get root_path
+
+    assert_response :success
+    assert_select "a", text: "新しいプロットを書く", count: 1
+    assert_select "a", text: "参加する (ユーザー作成)", count: 0
+  end
+end

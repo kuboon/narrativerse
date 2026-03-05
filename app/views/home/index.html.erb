@@ -1,116 +1,91 @@
-<main class="page landing">
-  <section class="landing-hero">
-    <div class="hero-orb orb-one"></div>
-    <div class="hero-orb orb-two"></div>
-    <div class="hero-grid">
-      <div class="hero-copy">
+<main class="page landing landing-home">
+  <section class="home-hero">
+    <div class="home-hero-glow glow-left"></div>
+    <div class="home-hero-glow glow-right"></div>
+    <div class="home-hero-grid">
+      <div class="home-hero-copy">
         <p class="eyebrow">Narrativerse</p>
-        <h1>登場人物・小道具・場面から分岐する物語をつくる。</h1>
-        <p class="lede">共有された要素を起点に、場面をつなげてプロットを作成。いつでも分岐して、文脈を保ったまま新しい物語に広げられます。</p>
+        <h1>みんなで広げる、<br>物語の世界。</h1>
+        <p class="lede">誰かが生んだキャラクターや小道具を受け取り、あなたの展開を書き足す。ここは、読むだけでは終わらない物語のソーシャルプラットフォームです。</p>
         <div class="hero-actions">
-          <%= link_to "ユーザー作成", new_user_path, class: "btn primary" %>
-          <%= link_to "プロットを始める", new_plot_path, class: "btn ghost" %>
-          <%= link_to "要素を見る", elements_path, class: "btn ghost" %>
+          <% if current_user %>
+            <%= link_to "新しいプロットを書く", new_plot_path, class: "btn btn-primary" %>
+            <%= link_to "要素を追加する", new_element_path, class: "btn btn-ghost" %>
+          <% else %>
+            <%= link_to "参加する (ユーザー作成)", new_user_path, class: "btn btn-primary" %>
+            <%= link_to "ログイン", new_session_path, class: "btn btn-ghost" %>
+          <% end %>
+          <%= link_to "今ある物語を読む", plots_path, class: "btn btn-ghost" %>
         </div>
-        <div class="hero-meta">
-          <span class="meta-pill">安全なリビジョン</span>
-          <span class="meta-pill">共有ライブラリ</span>
-          <span class="meta-pill">分岐プロット</span>
-        </div>
-      </div>
-      <div class="hero-panel">
-        <div class="panel-header">ストーリーマップ</div>
-        <div class="story-map">
-          <div class="map-node">場面 1</div>
-          <div class="map-branch">
-            <div class="map-node">場面 2</div>
-            <div class="map-node alt">場面 2B</div>
+        <div class="home-stats" aria-label="コミュニティ統計">
+          <div class="stat-chip">
+            <span class="stat-value"><%= @plot_count %></span>
+            <span class="stat-label">公開プロット</span>
           </div>
-          <div class="map-node">場面 3</div>
-        </div>
-        <div class="panel-footer">どこからでも分岐できます。</div>
-      </div>
-    </div>
-  </section>
-
-  <section class="landing-steps">
-    <div class="grid-header">
-      <h2>使い方</h2>
-      <%= link_to "プロットを始める", new_plot_path, class: "text-link" %>
-    </div>
-    <div class="step-grid">
-      <article class="step-card">
-        <span class="step-number">01</span>
-        <h3>要素を作る</h3>
-        <p>登場人物・小道具・場面を作り、再利用できる土台にします。</p>
-      </article>
-      <article class="step-card">
-        <span class="step-number">02</span>
-        <h3>ストーリーを書く</h3>
-        <p>場面を積み重ねて、プロットとして物語をつなげます。</p>
-      </article>
-      <article class="step-card">
-        <span class="step-number">03</span>
-        <h3>分岐させる</h3>
-        <p>読者は分岐を選び、新しい物語の流れへ移動できます。</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="landing-features">
-    <div class="grid-header">
-      <h2>共同制作のために</h2>
-      <%= link_to "プロットを見る", plots_path, class: "text-link" %>
-    </div>
-    <div class="feature-grid">
-      <article class="feature-card">
-        <div class="feature-icon">A</div>
-        <h3>共有ライブラリ</h3>
-        <p>他の作者が作ったキャラクターや小道具を、出典を保ったまま使えます。</p>
-      </article>
-      <article class="feature-card">
-        <div class="feature-icon">B</div>
-        <h3>安全な更新</h3>
-        <p>自分の要素を更新すると、自分のプロットは最新に保たれます。</p>
-      </article>
-      <article class="feature-card">
-        <div class="feature-icon">C</div>
-        <h3>分岐の文脈</h3>
-        <p>親プロットをたどり、分岐や書き換えの流れを把握できます。</p>
-      </article>
-      <article class="feature-card">
-        <div class="feature-icon">D</div>
-      </article>
-    </div>
-  </section>
-
-  <section class="landing-map">
-    <div class="map-grid">
-      <div>
-        <h2>文脈を失わずに分岐する。</h2>
-        <p class="lede">PlotBuilder が親プロットを追跡し、分岐の起点と経路を見失いません。</p>
-        <div class="hero-actions">
-          <%= link_to "プロットを読む", plots_path, class: "btn ghost" %>
-          <%= link_to "要素を作る", new_element_path, class: "btn primary" %>
+          <div class="stat-chip">
+            <span class="stat-value"><%= @element_count %></span>
+            <span class="stat-label">共有要素</span>
+          </div>
+          <div class="stat-chip">
+            <span class="stat-value"><%= @plots.size %></span>
+            <span class="stat-label">新着表示中</span>
+          </div>
         </div>
       </div>
-      <div class="map-card">
-        <div class="map-row">
-          <span class="map-pill">プロットA</span>
-          <span class="map-line"></span>
-          <span class="map-pill alt">プロットB</span>
-        </div>
-        <div class="map-row">
-          <span class="map-pill">場面 2</span>
-          <span class="map-line"></span>
-          <span class="map-pill alt">場面 4</span>
-        </div>
-        <div class="map-row">
-          <span class="map-pill">親リンク</span>
-          <span class="map-line"></span>
-          <span class="map-pill">子リンク</span>
-        </div>
-        <p class="map-note">分岐間を移動し、物語の系譜を追えます。</p>
+      <aside class="home-hero-panel" aria-label="参加フロー">
+        <p class="panel-title">はじめての 3 ステップ</p>
+        <ol>
+          <li>登場人物・小道具・場面をつくる</li>
+          <li>シーンをつないで最初のプロットを公開する</li>
+          <li>他の物語から分岐して、自分の展開を書く</li>
+        </ol>
+        <p class="panel-note">あなたの 1 シーンが、次の作者の起点になります。</p>
+      </aside>
+    </div>
+  </section>
+
+  <section class="home-pillars" aria-label="参加の魅力">
+    <article class="pillar-card">
+      <p class="pillar-tag">COLLABORATE</p>
+      <h2>要素を持ち寄って世界観を育てる</h2>
+      <p>キャラクター、小道具、場面を共有し、物語の土台をコミュニティで増やしていけます。</p>
+    </article>
+    <article class="pillar-card">
+      <p class="pillar-tag">CREATE</p>
+      <h2>AI の提案をヒントに書き進める</h2>
+      <p>プロット内の役割が整理された要素をもとに、次のシーン案を受け取りながら執筆できます。</p>
+    </article>
+    <article class="pillar-card">
+      <p class="pillar-tag">BRANCH</p>
+      <h2>別解を思いついたら、その場で分岐</h2>
+      <p>読書中のシーンから新しい流れを派生させ、文脈を引き継いだまま別世界線を公開できます。</p>
+    </article>
+  </section>
+
+  <section class="home-journey" aria-label="参加の流れ">
+    <div class="home-journey-copy">
+      <p class="eyebrow">JOIN THE STORY</p>
+      <h2>読むだけで終わらせない。</h2>
+      <p class="lede">「気になる物語を読む」から「自分の展開を投稿する」まで、最短で参加できる導線を用意しています。</p>
+      <div class="hero-actions">
+        <%= link_to "要素一覧をみる", elements_path, class: "btn btn-ghost" %>
+        <%= link_to "最初の要素を作る", new_element_path, class: "btn btn-primary" %>
+      </div>
+    </div>
+    <div class="journey-rail" aria-hidden="true">
+      <div class="rail-node">
+        <span>1</span>
+        <p>要素を発見</p>
+      </div>
+      <div class="rail-line"></div>
+      <div class="rail-node">
+        <span>2</span>
+        <p>プロットを書く</p>
+      </div>
+      <div class="rail-line"></div>
+      <div class="rail-node">
+        <span>3</span>
+        <p>分岐を公開</p>
       </div>
     </div>
   </section>
@@ -161,16 +136,20 @@
     <% end %>
   </section>
 
-  <section class="landing-cta">
+  <section class="home-final-cta">
     <div class="cta-panel">
       <div>
-        <p class="eyebrow">準備はできましたか？</p>
-        <h2>数分で世界を始めよう。</h2>
-        <p class="lede">ユーザー作成 → 物語を書く → 分岐へ。すぐに始められます。</p>
+        <p class="eyebrow">YOUR TURN</p>
+        <h2>次の分岐は、あなたの一行から。</h2>
+        <p class="lede">新規参加でも、既存作品への合流でも大丈夫。今いる場所から物語に加わってください。</p>
       </div>
       <div class="cta-actions">
-        <%= link_to "ユーザー作成", new_user_path, class: "btn primary" %>
-        <%= link_to "プロットを見る", plots_path, class: "btn ghost" %>
+        <% if current_user %>
+          <%= link_to "プロットを始める", new_plot_path, class: "btn btn-primary" %>
+        <% else %>
+          <%= link_to "ユーザー作成", new_user_path, class: "btn btn-primary" %>
+        <% end %>
+        <%= link_to "分岐できる作品を見る", plots_path, class: "btn btn-ghost" %>
       </div>
     </div>
   </section>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html data-theme="autumn">
   <head>
     <title><%= content_for(:title) || "ナラティバース" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -33,35 +33,37 @@
         <div class="nav-actions">
           <% if current_user %>
             <span class="user-pill"><%= current_user.name %> としてログイン中</span>
-            <%= button_to "ログアウト", session_path, method: :delete, class: "btn ghost" %>
+            <%= button_to "ログアウト", session_path, method: :delete, class: "btn btn-ghost btn-sm" %>
           <% else %>
-            <%= link_to "ログイン", new_session_path, class: "btn ghost" %>
-            <%= link_to "ユーザー作成", new_user_path, class: "btn primary" %>
+            <%= link_to "ログイン", new_session_path, class: "btn btn-ghost btn-sm" %>
+            <%= link_to "ユーザー作成", new_user_path, class: "btn btn-primary btn-sm" %>
           <% end %>
         </div>
       </div>
       <%= yield :site_header_extra %>
     </header>
+
     <% if flash[:notice].present? %>
       <div class="flash">
         <p><%= flash[:notice] %></p>
       </div>
     <% end %>
+
     <% if flash[:alert].present? %>
       <div class="flash error">
         <p><%= flash[:alert] %></p>
       </div>
     <% end %>
+
     <%= yield %>
 
     <% if current_user && controller_name != "reader" %>
-      <div id="chatbot-wrapper" style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: flex; flex-direction: column; align-items: flex-end;">
-        <div id="chatbot-window" style="display: none; width: 350px; height: 500px; max-height: calc(100vh - 100px); background: #fdf8f1; border: 1px solid var(--border); border-radius: 12px; box-shadow: 0 10px 30px var(--shadow); margin-bottom: 16px; overflow: hidden; flex-direction: column;">
-          <iframe src="/chat" id="chat-frame" style="width: 100%; height: 100%; border: none;"></iframe>
+      <div id="chatbot-wrapper" class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+        <div id="chatbot-window" class="mb-4 hidden h-[500px] max-h-[calc(100vh-100px)] w-[350px] overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-2xl">
+          <iframe src="/chat" id="chat-frame" class="h-full w-full border-0"></iframe>
         </div>
-        <button id="chatbot-toggle" class="btn primary" style="border-radius: 50%; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-size: 24px; cursor: pointer; padding: 0;">💬</button>
+        <button id="chatbot-toggle" class="btn btn-primary btn-circle h-14 w-14 text-xl shadow-lg" aria-label="AIアシスタントを開く">AI</button>
       </div>
-
     <% end %>
   </body>
 </html>
