@@ -4,12 +4,13 @@ class PlotStory
   end
 
   def links
-    return @links if @links
+    return @links if defined?(@links)
+    return @links = [] if @plot.scene_id.blank?
 
     plot_ids = [ @plot.id ] + @plot.parent_plot_ids
     links = PlotSceneLink.where(plot_id: plot_ids).includes(:scene, plot: :user).strict_loading.to_a
     first_link = links.find { |l| l.scene_id == @plot.scene_id }
-    raise "first link not found for plot #{@plot.id} and scene #{@plot.scene_id}" unless first_link
+    return @links = [] unless first_link
     ordered_links = [ first_link ]
     return ordered_links if links.size < 2
     while (next_links = links.select { |l| l.scene_id == ordered_links.last.next_scene_id })
@@ -34,6 +35,8 @@ class PlotStory
 
   def branches
     return @branches if @branches
+    return @branches = {} if links.empty?
+
     related_links = PlotSceneLink.where(scene_id: scene_ids).includes(:plot).strict_loading.to_a
     branches_by_scene_id = { links.first.scene_id => [] }
     links.each do |link|

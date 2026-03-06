@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "json"
+
+ROOT = File.expand_path("..", __dir__)
+LATEST_FEEDBACK_PATH = File.join(ROOT, "tmp", "ui_feedbacks", "latest.json")
+
+unless File.exist?(LATEST_FEEDBACK_PATH)
+  warn "UIフィードバックが見つかりません: #{LATEST_FEEDBACK_PATH}"
+  warn "development 環境のブラウザで Alt+Click し、要望を保存してから再実行してください。"
+  exit 1
+end
+
+feedback = JSON.parse(File.read(LATEST_FEEDBACK_PATH))
+prompt = feedback.fetch("prompt", "").to_s.strip
+
+if prompt.empty?
+  prompt = <<~PROMPT
+    UI修正要望です。以下の要素を修正してください。
+    要望: #{feedback["request"]}
+    URL: #{feedback["url"]}
+    controller: #{feedback["page_controller"].presence || "(不明)"}
+    action: #{feedback["page_action"].presence || "(不明)"}
+    selector: #{feedback["selector"]}
+    tag: #{feedback["tag_name"]}
+    text: #{feedback["text"]}
+  PROMPT
+end
+
+if ARGV.include?("--print")
+  puts prompt
+  exit 0
+end
+
+unless system("command -v gh >/dev/null 2>&1")
+  warn "gh コマンドが見つかりません。GitHub CLI をインストールしてください。"
+  exit 1
+end
+
+warn "Copilot CLIへ送信します (gh copilot -p <prompt>)"
+exec("gh", "copilot", "-p", prompt)

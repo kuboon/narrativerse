@@ -54,10 +54,18 @@ function toggleRubyMark(state, dispatch, view) {
   return true
 }
 
+function renderMenuButton(label) {
+  const button = document.createElement("button")
+  button.type = "button"
+  button.textContent = label
+  return button
+}
+
 function buildMenuContent() {
   return [
     [
       new MenuItem({
+        render: () => renderMenuButton("太字"),
         label: "太字",
         title: "太字 (Ctrl/Cmd-B)",
         class: "pm-menu-button",
@@ -69,6 +77,7 @@ function buildMenuContent() {
         active: (state) => markIsActive(state, boldMark),
       }),
       new MenuItem({
+        render: () => renderMenuButton("ルビ"),
         label: "ルビ",
         title: "ルビを付与/解除",
         class: "pm-menu-button",

@@ -6,19 +6,18 @@ export const rubyMark = {
     {
       tag: "ruby",
       getAttrs(dom) {
-        // data-ruby attribute
-        const fromData = dom.getAttribute("data-ruby")
-        if (fromData) return { reading: fromData }
-        // <rt> child
         const rt = dom.querySelector("rt")
-        return { reading: rt ? rt.textContent : null }
+        return { reading: rt?.textContent }
       },
+      contentElement(dom) {
+        return dom.querySelector("span") || dom
+      }
     },
   ],
   toDOM(mark) {
     const reading = mark.attrs.reading
     if (reading) {
-      return ["ruby", { "data-ruby": reading }, ["rb", 0], ["rt", reading]]
+      return ["ruby", ["span", 0], ["rt", reading]]
     }
     return ["ruby", 0]
   },

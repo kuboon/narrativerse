@@ -14,53 +14,48 @@ class PlotsController < ApplicationController
 
   def show
     authorize @plot
-    @story_links = PlotStory.new(@plot).links
+    @story_links = build_story_links(@plot)
   end
 
 
   def new
-    @plot = Plot.new
-    authorize @plot
-  end
+    authorize Plot
 
-  def create
-    @plot = Plot.new(plot_params)
-    @plot.user = current_user
-    authorize @plot
-
-    # If a scene text was provided on the new form, create the first Scene
-    scene_text = params.dig(:plot, :scene_text).to_s.strip
-    if scene_text.present?
-      scene = current_user.scenes.build(text: scene_text)
-      unless scene.save
-        scene.errors.full_messages.each { |m| @plot.errors.add(:base, m) }
-        render :new, status: :unprocessable_entity and return
-      end
-      @plot.scene = scene
-    elsif params.dig(:plot, :scene_id).present?
-      # Backwards-compatible: allow selecting an existing scene if provided
-      @plot.scene_id = params.dig(:plot, :scene_id)
-    end
-
-    if @plot.save
-      PlotSceneLink.create!(plot: @plot, scene_id: @plot.scene_id, next_scene_id: nil)
-      redirect_to @plot, notice: "プロットを作成しました"
-    else
-      render :new, status: :unprocessable_entity
-    end
+    @plot = current_user.plots.create!
+    redirect_to plot_path(@plot), notice: "プロット下書きを作成しました"
   end
 
   def edit
     authorize @plot
+    redirect_to plot_path(@plot)
   end
 
   def update
     authorize @plot
+    @story_links = build_story_links(@plot)
 
     if @plot.update(plot_update_params)
-      redirect_to @plot, notice: "プロットを更新しました"
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            plot_overview_dom_id(@plot),
+            partial: "plots/overview",
+            locals: { plot: @plot, story_links: @story_links, open_editor: false }
+          )
+        end
+        format.html { redirect_to @plot, notice: "プロットを更新しました" }
+      end
     else
-      render :edit, status: :unprocessable_entity
+      respond_to do |format|
+        format.turbo_stream do
+          render turbo_stream: turbo_stream.replace(
+            plot_overview_dom_id(@plot),
+            partial: "plots/overview",
+            locals: { plot: @plot, story_links: @story_links, open_editor: true }
+          ), status: :unprocessable_entity
+        end
+        format.html { render :show, status: :unprocessable_entity }
+      end
     end
   end
 
@@ -70,11 +65,17 @@ class PlotsController < ApplicationController
     @plot = Plot.includes(plot_elements: [ :element, :element_revision ]).find(params[:id])
   end
 
-  def plot_params
+  def plot_update_params
     params.require(:plot).permit(:title, :summary)
   end
 
-  def plot_update_params
-    params.require(:plot).permit(:title, :summary)
+  def plot_overview_dom_id(plot)
+    "plot-overview-#{plot.id}"
+  end
+
+  def build_story_links(plot)
+    return [] unless plot.persisted?
+
+    PlotStory.new(plot).links
   end
 end

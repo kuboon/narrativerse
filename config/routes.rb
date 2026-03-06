@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   root "home#index"
 
   resources :elements, except: :destroy
-  resources :plots, except: :destroy, shallow: true do
+  resources :plots, except: [ :destroy, :create ], shallow: true do
     resources :plot_elements, except: [ :index, :show ] do
       patch :refresh_revision, on: :member
     end
@@ -34,6 +34,12 @@ Rails.application.routes.draw do
 
   get "reader/:plot_id", to: "reader#show", as: :reader
   get "reader/:plot_id(/:scene_id)", to: "reader#show", as: :reader_scene
+
+  if Rails.env.development? || Rails.env.test?
+    namespace :dev do
+      resources :ui_feedbacks, only: [ :create ]
+    end
+  end
 
   resource :session, only: [ :new, :create, :destroy ]
   resource :mypage, only: [ :show ], controller: :users

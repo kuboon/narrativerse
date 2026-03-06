@@ -14,6 +14,9 @@ class PlotScenesController < ApplicationController
 
     last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
     last_link.update!(next_scene_id: @scene.id) if last_link
+
+    @plot.update!(scene: @scene) if @plot.scene_id.blank?
+
     @link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
 
     respond_to do |format|

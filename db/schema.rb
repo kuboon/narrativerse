@@ -142,9 +142,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
   create_table "plots", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.json "parent_plot_ids", default: []
-    t.integer "scene_id", null: false
+    t.integer "scene_id"
     t.text "summary"
-    t.string "title", null: false
+    t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
     t.index ["scene_id"], name: "index_plots_on_scene_id"

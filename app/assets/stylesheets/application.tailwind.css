@@ -131,6 +131,14 @@ nav {
 	@apply text-sm leading-relaxed text-base-content/80;
 }
 
+.card-summary {
+	@apply text-sm leading-relaxed text-base-content/80;
+}
+
+.card-summary p {
+	@apply m-0;
+}
+
 .card-actions {
 	@apply mt-4 flex flex-wrap items-center gap-2;
 }
@@ -214,11 +222,11 @@ nav {
 	@apply flex flex-wrap gap-2;
 }
 
-label.checkbox {
+.checkbox-chip {
 	@apply inline-flex items-center gap-2 rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-sm;
 }
 
-label.checkbox input[type="checkbox"] {
+.checkbox-chip input[type="checkbox"] {
 	@apply h-4 w-4 rounded border border-base-300 accent-primary;
 }
 
@@ -444,11 +452,31 @@ label.checkbox input[type="checkbox"] {
 }
 
 .scene-display {
-	@apply rounded-xl border border-base-300 bg-base-100 p-3 transition;
+	@apply transition;
 }
 
-.scene-display:hover {
-	@apply border-base-content/20;
+.plot-container {
+	@apply w-full;
+}
+
+.plot-display {
+	@apply transition;
+}
+
+.plot-title {
+	@apply text-3xl font-semibold;
+}
+
+.plot-summary {
+	@apply mt-4 text-base-content/80;
+}
+
+.plot-summary p {
+	@apply mb-2;
+}
+
+.plot-summary p:last-child {
+	@apply mb-0;
 }
 
 .chat-header {
@@ -500,6 +528,18 @@ label.checkbox input[type="checkbox"] {
 }
 
 .scene-textarea.border-saved {
+	border-color: #10b981;
+}
+
+.plot-textarea.border-editing {
+	border-color: #f59e0b;
+}
+
+.plot-textarea.border-saving {
+	border-color: #ef4444;
+}
+
+.plot-textarea.border-saved {
 	border-color: #10b981;
 }
 

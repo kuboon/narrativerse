@@ -1,6 +1,6 @@
 <main class="page">
   <section class="form-card">
-    <h1><%= @plot.title %> に要素を追加</h1>
+    <h1><%= render_plot_title(@plot.title) %> に要素を追加</h1>
     <%= form_with url: plot_plot_elements_path(@plot), method: :get, class: "filter-bar" do |form| %>
       <div class="field">
         <%= form.label :q, "キーワード" %>
@@ -10,7 +10,7 @@
         <span>種別</span>
         <div class="checkbox-row">
           <% @element_types.each do |type| %>
-            <label class="checkbox">
+            <label class="checkbox-chip">
               <%= check_box_tag "types[]", type, @selected_types.include?(type) %>
               <span><%= t("elements.types.#{type.downcase}") %></span>
             </label>

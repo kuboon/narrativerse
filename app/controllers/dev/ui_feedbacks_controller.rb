@@ -1,0 +1,65 @@
+class Dev::UiFeedbacksController < ApplicationController
+  before_action :require_development_or_test!
+  before_action :require_local_request!
+
+  def create
+    payload = feedback_params.to_h
+    payload["captured_at"] ||= Time.current.iso8601
+
+    FileUtils.mkdir_p(feedback_dir)
+    File.write(latest_path, JSON.pretty_generate(payload))
+    File.open(history_path, "a") { |file| file.puts(payload.to_json) }
+
+    render json: { status: "ok", saved_to: latest_path.relative_path_from(Rails.root).to_s }
+  rescue JSON::GeneratorError, Errno::EACCES => error
+    render json: { status: "error", message: error.message }, status: :unprocessable_entity
+  end
+
+  private
+
+  def require_development_or_test!
+    return if Rails.env.development? || Rails.env.test?
+
+    head :not_found
+  end
+
+  def require_local_request!
+    return if request.local?
+
+    head :forbidden
+  end
+
+  def feedback_params
+    source = params[:ui_feedback].is_a?(ActionController::Parameters) ? params.require(:ui_feedback) : params
+
+    source.permit(
+      :captured_at,
+      :request,
+      :url,
+      :path,
+      :page_controller,
+      :page_action,
+      :selector,
+      :tag_name,
+      :element_id,
+      :text,
+      :prompt,
+      classes: [],
+      styles: {},
+      viewport: {},
+      box: {}
+    )
+  end
+
+  def feedback_dir
+    Rails.root.join("tmp", "ui_feedbacks")
+  end
+
+  def latest_path
+    feedback_dir.join("latest.json")
+  end
+
+  def history_path
+    feedback_dir.join("history.ndjson")
+  end
+end

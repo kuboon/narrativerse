@@ -1,3 +1,5 @@
+<%= turbo_stream.remove "story-flow-empty" %>
+
 <%= turbo_stream.append "story-flow" do %>
   <%= render "scenes/panel", link: @link, plot: @plot %>
 <% end %>

@@ -1,7 +1,7 @@
 <% content_for :site_header_extra do %>
   <div class="reader-site-header">
     <div class="container reader-site-header-content">
-      <h1 class="reader-title"><%= @plot.title %></h1>
+      <h1 class="reader-title"><%= render_plot_title(@plot.title) %></h1>
       <% if @story_links.any? %>
         <div class="reader-progress" data-reader-progress>
           <span class="reader-progress-fill" data-reader-progress-fill></span>
@@ -30,7 +30,9 @@
                 </summary>
                 <div class="scene-branch-menu-popover">
                   <% branches.each do |branch| %>
-                    <%= link_to "分岐: #{branch.plot.title}", reader_scene_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" %>
+                    <%= link_to reader_scene_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" do %>
+                      <%= safe_join([ "分岐: ", render_plot_title(branch.plot.title) ]) %>
+                    <% end %>
                   <% end %>
                   <% if current_user.present? %>
                     <%= link_to "分岐を追加", fork_plot_scene_path(link), data: { turbo_method: :post }, class: "scene-branch-menu-item" %>

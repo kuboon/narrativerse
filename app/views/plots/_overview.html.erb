@@ -1,0 +1,42 @@
+<div id="plot-overview-<%= plot.id %>" class="plot-container">
+  <% editable = policy(plot).update? %>
+  <% open_editor = local_assigns.fetch(:open_editor, false) %>
+  <% display_classes = ["plot-display"] %>
+  <% display_classes << "cursor-pointer hover:bg-gray-50" if editable %>
+  <% display_classes << "hidden" if open_editor %>
+  <% editor_classes = ["plot-editor"] %>
+  <% editor_classes << "hidden" unless open_editor %>
+
+  <div class="<%= display_classes.join(" ") %>">
+    <div class="detail-header">
+      <div class="plot-title"><%= render_plot_title(plot.title) %></div>
+      <div class="detail-actions">
+        <% if story_links.any? %>
+          <%= link_to "読む", reader_path(plot), class: "btn btn-primary" %>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="plot-summary">
+      <%= render_plot_summary(plot.summary) %>
+    </div>
+
+    <% if editable %>
+      <p class="helper-text mt-3">タイトルまたは概要をクリックすると、その場で編集できます。</p>
+    <% end %>
+  </div>
+
+  <% if editable %>
+    <div class="<%= editor_classes.join(" ") %>">
+      <%= form_with model: plot, method: :patch, class: "plot-form w-full", html: { data: { turbo: true } } do |form| %>
+        <% if plot.errors.any? %>
+          <div class="flash error">
+            <p><%= plot.errors.full_messages.to_sentence %></p>
+          </div>
+        <% end %>
+        <%= render "rich_text_fields", form: %>
+        <p class="helper-text">編集中の内容は外側をクリックすると保存されます。</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

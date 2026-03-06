@@ -1,18 +1,6 @@
 <main class="page">
   <section class="detail">
-    <div class="detail-header">
-      <h1><%= @plot.title %></h1>
-      <div class="detail-actions">
-        <% if @story_links.any? %>
-          <%= link_to "読む", reader_path(@plot), class: "btn btn-primary" %>
-        <% end %>
-        <%# Story-add button removed per new flow (manage via plots#show content) %>
-        <% if policy(@plot).update? %>
-          <%= link_to "編集", edit_plot_path(@plot), class: "btn btn-ghost" %>
-        <% end %>
-      </div>
-    </div>
-    <p><%= @plot.summary.presence || "まだ概要がありません。" %></p>
+    <%= render "overview", plot: @plot, story_links: @story_links %>
 
     <div class="detail-meta">
       <div>
@@ -23,13 +11,14 @@
         <span class="meta-label">親プロット</span>
         <span>
           <% if @plot.parent_plots.any? %>
-            <%= safe_join(@plot.parent_plots.map { |parent| link_to(parent.title, plot_path(parent), class: "text-link") }, ", ") %>
+            <%= safe_join(@plot.parent_plots.map { |parent| link_to(render_plot_title(parent.title), plot_path(parent), class: "text-link") }, ", ") %>
           <% else %>
             なし
           <% end %>
         </span>
       </div>
     </div>
+
     <% if policy(@plot).manage_elements? %>
       <div class="detail-actions">
         <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn btn-ghost" %>
@@ -63,20 +52,26 @@
       </div>
     <% end %>
 
-    <% if @story_links.any? %>
-      <div class="grid">
-        <div class="story-flow" id="story-flow">
+    <div class="grid">
+      <div class="grid-header">
+        <h2>シーン</h2>
+      </div>
+      <div class="story-flow" id="story-flow">
+        <% if @story_links.any? %>
           <% @story_links.each do |link| %>
             <%= render "scenes/panel", link: %>
           <% end %>
-        </div>
-        <% if policy(@plot).manage_story? %>
-          <div class="actions mt-4">
-            <%= button_to "シーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
+        <% else %>
+          <div id="story-flow-empty" class="empty-state">
+            <p>まだシーンがありません。最初のシーンを追加しましょう。</p>
           </div>
         <% end %>
       </div>
-    <% end %>
-
+      <% if policy(@plot).manage_story? %>
+        <div class="actions mt-4">
+          <%= button_to @story_links.any? ? "シーンを追加" : "最初のシーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
+        </div>
+      <% end %>
+    </div>
   </section>
 </main>

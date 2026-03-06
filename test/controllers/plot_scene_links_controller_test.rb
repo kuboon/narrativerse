@@ -20,6 +20,17 @@ class PlotSceneLinksControllerTest < ActionDispatch::IntegrationTest
     _(last_link).wont_be_nil
   end
 
+  it "sets plot.scene_id when first scene is created for a draft plot" do
+    post session_path, params: { user_id: owner.id }
+    draft_plot = Plot.create!(user: owner)
+
+    assert_difference [ "Scene.count", "PlotSceneLink.count" ], +1 do
+      post plot_plot_scenes_path(draft_plot), params: { scene: { text: "最初のシーン" } }
+    end
+
+    assert_equal Scene.order(:id).last.id, draft_plot.reload.scene_id
+  end
+
   it "forbids non-owner from updating via plot_scene_path" do
     post session_path, params: { user_id: other_user.id }
 

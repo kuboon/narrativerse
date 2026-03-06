@@ -1,6 +1,6 @@
 <article id="link-<%= link.id %>" class="panel scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
   <% owner = link.plot.user_id == current_user&.id %>
-  <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %> p-2 rounded">
+  <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %>">
     <% if link.scene.text.present? %>
       <%= sanitize(link.scene.text, tags: %w[p strong h1 h2 ruby rt]) %>
     <% else %>
