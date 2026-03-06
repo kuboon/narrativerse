@@ -44,4 +44,25 @@ class MessageTest < ActiveSupport::TestCase
 
     _(tool_call_message.reload.thinking_message?).must_equal true
   end
+
+  it "parses choice payload from assistant json" do
+    user = create(:user)
+    chat = create(:chat, user:)
+
+    message = chat.messages.create!(
+      role: "assistant",
+      content: {
+        type: "choices",
+        prompt: "何から始めましょうか？",
+        choices: [ "A", "B", "A", "" ]
+      }.to_json
+    )
+
+    payload = message.choice_payload
+
+    _(message.choice_message?).must_equal true
+    _(message.thinking_message?).must_equal false
+    _(payload["prompt"]).must_equal "何から始めましょうか？"
+    _(payload["choices"]).must_equal [ "A", "B" ]
+  end
 end

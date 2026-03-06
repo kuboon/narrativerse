@@ -1,11 +1,16 @@
 document.addEventListener("turbo:load", () => {
   const toggle = document.getElementById("chatbot-toggle");
   const chatWindow = document.getElementById("chatbot-window");
+  const wrapper = document.getElementById("chatbot-wrapper");
 
   if (toggle && chatWindow) {
     toggle.addEventListener("click", () => {
       chatWindow.classList.toggle("hidden");
     });
+  }
+
+  if (chatWindow && wrapper?.dataset.autoOpen === "true") {
+    chatWindow.classList.remove("hidden");
   }
 
   window.addEventListener("message", (event) => {

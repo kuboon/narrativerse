@@ -13,16 +13,19 @@ class Message < ApplicationRecord
   end
 
   def choice_message?
-    tool_result? && parent_tool_call&.name == CHOICE_TOOL_NAME
+    choice_payload.present?
   end
 
   def choice_payload
-    return unless choice_message?
     return if content.blank?
 
     payload = JSON.parse(content)
     return unless payload.is_a?(Hash)
     return unless payload["type"] == "choices"
+
+    if tool_result? && parent_tool_call&.name != CHOICE_TOOL_NAME
+      return
+    end
 
     choices = Array(payload["choices"])
               .map { |choice| choice.to_s.strip }
@@ -40,7 +43,7 @@ class Message < ApplicationRecord
   end
 
   def thinking_message?
-    return false if choice_message?
+    return false if choice_payload.present?
 
     role.to_s == "system" || tool_call? || tool_result?
   end

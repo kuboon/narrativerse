@@ -15,6 +15,7 @@ class PlotsController < ApplicationController
   def show
     authorize @plot
     @story_links = build_story_links(@plot)
+    @auto_start_chatbot = auto_start_chatbot?
   end
 
 
@@ -77,5 +78,9 @@ class PlotsController < ApplicationController
     return [] unless plot.persisted?
 
     PlotStory.new(plot).links
+  end
+
+  def auto_start_chatbot?
+    current_user.present? && @plot.user_id == current_user.id && @plot.title.blank?
   end
 end

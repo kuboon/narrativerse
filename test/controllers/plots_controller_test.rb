@@ -75,4 +75,26 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     assert_select "span.meta-label", text: "親プロット", count: 1
     assert_select "a[href='#{plot_path(parent_plot)}']", text: ActionController::Base.helpers.strip_tags(parent_plot.title), count: 1
   end
+
+  it "auto opens chatbot for an untitled owned plot" do
+    untitled_plot = create(:plot, user: owner, title: nil)
+    post session_path, params: { user_id: owner.id }
+
+    get plot_path(untitled_plot)
+
+    assert_response :success
+    assert_select "#chatbot-wrapper[data-auto-open='true']", count: 1
+    assert_select "iframe#chat-frame[src*='plot_id=#{untitled_plot.id}']", count: 1
+    assert_select "iframe#chat-frame[src*='autostart=1']", count: 1
+  end
+
+  it "does not auto open chatbot for titled plot" do
+    post session_path, params: { user_id: owner.id }
+
+    get plot_path(plot)
+
+    assert_response :success
+    assert_select "#chatbot-wrapper[data-auto-open='false']", count: 1
+    assert_select "iframe#chat-frame[src*='autostart=1']", count: 0
+  end
 end
