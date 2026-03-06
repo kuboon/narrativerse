@@ -32,8 +32,18 @@
         </nav>
         <div class="nav-actions">
           <% if current_user %>
-            <span class="user-pill"><%= current_user.name %> としてログイン中</span>
-            <%= button_to "ログアウト", session_path, method: :delete, class: "btn btn-ghost btn-sm" %>
+            <div class="dropdown dropdown-end">
+              <button tabindex="0" type="button" class="btn btn-ghost btn-sm normal-case user-menu-trigger" aria-label="ユーザーメニュー">
+                <span class="max-w-36 truncate"><%= current_user.name %></span>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                </svg>
+              </button>
+              <ul tabindex="0" class="menu dropdown-content user-menu-dropdown z-40 mt-2 w-48 rounded-box border border-base-300 bg-base-100 p-2 shadow-xl">
+                <li><%= link_to "マイページ", mypage_path %></li>
+                <li><%= link_to "ログアウト", session_path, data: { turbo_method: :delete } %></li>
+              </ul>
+            </div>
           <% else %>
             <%= link_to "ログイン", new_session_path, class: "btn btn-ghost btn-sm" %>
             <%= link_to "ユーザー作成", new_user_path, class: "btn btn-primary btn-sm" %>

@@ -66,6 +66,14 @@ nav {
 	@apply inline-flex items-center gap-1 rounded-full border border-base-300 px-3 py-1 text-xs text-base-content/75;
 }
 
+.user-menu-trigger {
+	@apply gap-1.5;
+}
+
+.user-menu-dropdown {
+	@apply text-sm;
+}
+
 .flash {
 	@apply mx-auto mt-4 w-[calc(100%-2rem)] max-w-6xl rounded-xl border border-base-300 bg-base-100 px-4 py-3 text-sm shadow-md;
 }

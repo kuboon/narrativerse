@@ -1,0 +1,89 @@
+<main class="page">
+  <section class="detail">
+    <div class="detail-header">
+      <div>
+        <h1><%= @user.name %>のマイページ</h1>
+        <p class="lede"><%= @user.bio.presence || "自己紹介はまだありません。" %></p>
+      </div>
+      <div class="detail-actions">
+        <% if policy(Plot).create? %>
+          <%= link_to "プロット作成", new_plot_path, class: "btn btn-primary btn-sm" %>
+        <% end %>
+        <% if policy(Element).create? %>
+          <%= link_to "要素作成", new_element_path, class: "btn btn-ghost btn-sm" %>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <section id="mypage-plots" class="grid">
+    <div class="grid-header">
+      <h2>作成したプロット</h2>
+      <span><%= @plots.size %>件</span>
+    </div>
+    <%= form_with url: mypage_path, method: :get, class: "filter-bar" do |form| %>
+      <%= form.hidden_field :element_q, value: @element_query %>
+      <div class="field">
+        <%= form.label :plot_q, "プロット検索" %>
+        <%= form.text_field :plot_q, value: @plot_query, placeholder: "タイトル / 概要" %>
+      </div>
+      <div class="actions">
+        <%= form.submit "絞り込む", class: "btn btn-ghost" %>
+      </div>
+    <% end %>
+
+    <% if @plots.any? %>
+      <div class="cards">
+        <% @plots.each do |plot| %>
+          <article class="card">
+            <h3><%= plot.title %></h3>
+            <p><%= plot.summary.presence || "まだ概要がありません。" %></p>
+            <div class="card-actions">
+              <%= link_to "詳細", plot_path(plot), class: "text-link" %>
+              <% if plot.plot_scene_links.any? %>
+                <%= link_to "読む", reader_path(plot), class: "text-link" %>
+              <% end %>
+            </div>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>条件に一致するプロットがありません。</p>
+      </div>
+    <% end %>
+  </section>
+
+  <section id="mypage-elements" class="grid">
+    <div class="grid-header">
+      <h2>作成した要素</h2>
+      <span><%= @elements.size %>件</span>
+    </div>
+    <%= form_with url: mypage_path, method: :get, class: "filter-bar" do |form| %>
+      <%= form.hidden_field :plot_q, value: @plot_query %>
+      <div class="field">
+        <%= form.label :element_q, "要素検索" %>
+        <%= form.text_field :element_q, value: @element_query, placeholder: "名前 / 種別" %>
+      </div>
+      <div class="actions">
+        <%= form.submit "絞り込む", class: "btn btn-ghost" %>
+      </div>
+    <% end %>
+
+    <% if @elements.any? %>
+      <div class="cards">
+        <% @elements.each do |element| %>
+          <article class="card">
+            <h3><%= element.name %></h3>
+            <p><%= t("elements.types.#{element.element_type.downcase}") %></p>
+            <%= link_to "詳細", element_path(element), class: "text-link" %>
+          </article>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="empty-state">
+        <p>条件に一致する要素がありません。</p>
+      </div>
+    <% end %>
+  </section>
+</main>

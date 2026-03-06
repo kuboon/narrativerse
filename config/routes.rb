@@ -36,6 +36,7 @@ Rails.application.routes.draw do
   get "reader/:plot_id(/:scene_id)", to: "reader#show", as: :reader_scene
 
   resource :session, only: [ :new, :create, :destroy ]
+  resource :mypage, only: [ :show ], controller: :users
   resources :users, only: [ :new, :create ]
 
   # post "ai_assists/element_summary", to: "ai_assists#element_summary"

@@ -37,6 +37,8 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     get root_path
 
     assert_response :success
+    assert_select ".user-menu-trigger", text: user.name
+    assert_select "a[href='#{mypage_path}']", text: "マイページ", count: 1
     assert_select "a", text: "新しいプロットを書く", count: 1
     assert_select "a", text: "参加する (ユーザー作成)", count: 0
   end

@@ -18,7 +18,7 @@ class SceneEditFlowTest < ApplicationSystemTestCase
       click_on "ログイン"
     end
 
-    assert_selector ".user-pill", text: "#{other.name} としてログイン中"
+    assert_selector ".user-menu-trigger", text: other.name
 
     visit plot_path(plot)
 
