@@ -4,11 +4,11 @@
       <h1><%= @plot.title %></h1>
       <div class="detail-actions">
         <% if @story_links.any? %>
-          <%= link_to "読む", reader_path(@plot), class: "btn primary" %>
+          <%= link_to "読む", reader_path(@plot), class: "btn btn-primary" %>
         <% end %>
         <%# Story-add button removed per new flow (manage via plots#show content) %>
         <% if policy(@plot).update? %>
-          <%= link_to "編集", edit_plot_path(@plot), class: "btn ghost" %>
+          <%= link_to "編集", edit_plot_path(@plot), class: "btn btn-ghost" %>
         <% end %>
       </div>
     </div>
@@ -32,7 +32,7 @@
     </div>
     <% if policy(@plot).manage_elements? %>
       <div class="detail-actions">
-        <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn ghost" %>
+        <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn btn-ghost" %>
       </div>
     <% end %>
 
@@ -52,9 +52,9 @@
                 <% if policy(@plot).manage_elements? %>
                   <%= link_to "編集", edit_plot_element_path(plot_element), class: "text-link" %>
                   <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
-                    <%= button_to "更新する", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn ghost" %>
+                    <%= button_to "更新する", refresh_revision_plot_plot_element_path(@plot, plot_element), method: :patch, class: "btn btn-ghost" %>
                   <% end %>
-                  <%= button_to "削除", plot_element_path(plot_element), method: :delete, class: "btn ghost" %>
+                  <%= button_to "削除", plot_element_path(plot_element), method: :delete, class: "btn btn-ghost" %>
                 <% end %>
               </div>
             </article>
@@ -72,7 +72,7 @@
         </div>
         <% if policy(@plot).manage_story? %>
           <div class="actions mt-4">
-            <%= button_to "シーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn primary w-full text-center" %>
+            <%= button_to "シーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
           </div>
         <% end %>
       </div>

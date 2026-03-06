@@ -26,6 +26,8 @@ class ChatsController < ApplicationController
     unless @chat
       @chat = current_user.chats.create!
     end
+    @plot_id = context_plot_id
+    @scene_id = context_scene_id
     @message = @chat.messages.build
     render layout: false
   end
@@ -38,5 +40,13 @@ class ChatsController < ApplicationController
 
   def prompt
     params.dig(:chat, :prompt)
+  end
+
+  def context_plot_id
+    params[:plot_id].presence
+  end
+
+  def context_scene_id
+    params[:scene_id].presence
   end
 end

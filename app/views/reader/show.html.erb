@@ -25,6 +25,8 @@
             <% if show_branch_menu %>
               <details class="<%= menu_classes.join(" ") %>" data-scene-branch-menu>
                 <summary class="scene-branch-menu-toggle" aria-label="シーンメニューを開く">
+                  <span class="scene-branch-menu-icon" aria-hidden="true">⋮</span>
+                  <span class="sr-only">メニュー</span>
                 </summary>
                 <div class="scene-branch-menu-popover">
                   <% branches.each do |branch| %>

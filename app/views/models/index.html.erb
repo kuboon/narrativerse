@@ -1,28 +1,29 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Models" %>
 
-<h1>Models</h1>
+<main class="page">
+  <section class="grid">
+    <div class="grid-header">
+      <h1>Models</h1>
+      <%= button_to "Refresh Models", refresh_models_path, method: :post, class: "btn btn-primary" %>
+    </div>
 
-<p>
-  <%= button_to "Refresh Models", refresh_models_path, method: :post %>
-</p>
+    <div id="models" class="overflow-x-auto rounded-2xl border border-base-300 bg-base-100 shadow">
+      <table class="table table-zebra">
+        <thead>
+          <tr>
+            <th>Provider</th>
+            <th>Model</th>
+            <th>Context Window</th>
+            <th>$/1M tokens (In/Out)</th>
+            <th colspan="2"></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= render @models %>
+        </tbody>
+      </table>
+    </div>
 
-<div id="models">
-  <table>
-    <thead>
-      <tr>
-        <th>Provider</th>
-        <th>Model</th>
-        <th>Context Window</th>
-        <th>$/1M tokens (In/Out)</th>
-        <th colspan="2"></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= render @models %>
-    </tbody>
-  </table>
-</div>
-
-<%= link_to "Back to chats", chats_path %>
+    <%= link_to "Back to chats", chats_path, class: "text-link" %>
+  </section>
+</main>

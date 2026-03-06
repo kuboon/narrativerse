@@ -25,8 +25,8 @@
         <%= text_area_tag "element_revision[text]", @revision&.text, rows: 6 %>
       </div>
       <div class="actions">
-        <%= form.submit @owns_element ? "更新" : "改訂を作成", class: "btn primary" %>
-        <%= link_to "キャンセル", element_path(@element), class: "btn ghost" %>
+        <%= form.submit @owns_element ? "更新" : "改訂を作成", class: "btn btn-primary" %>
+        <%= link_to "キャンセル", element_path(@element), class: "btn btn-ghost" %>
       </div>
     <% end %>
   </section>

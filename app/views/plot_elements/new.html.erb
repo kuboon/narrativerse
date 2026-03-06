@@ -18,8 +18,8 @@
         </div>
       </div>
       <div class="actions">
-        <%= form.submit "絞り込む", class: "btn ghost" %>
-        <%= link_to "要素作成", new_element_path, class: "btn primary" %>
+        <%= form.submit "絞り込む", class: "btn btn-ghost" %>
+        <%= link_to "要素作成", new_element_path, class: "btn btn-primary" %>
       </div>
     <% end %>
 
@@ -45,7 +45,7 @@
               <%= form.label :secrets, "秘密の設定" %>
               <%= form.text_area :secrets, rows: 2 %>
             </div>
-            <%= form.submit "追加", class: "btn primary" %>
+            <%= form.submit "追加", class: "btn btn-primary" %>
           <% end %>
         </article>
       <% end %>

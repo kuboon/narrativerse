@@ -1,0 +1,514 @@
+@import "tailwindcss";
+@plugin "daisyui" {
+	themes: autumn --default, corporate;
+}
+
+@source "../../views/**/*";
+@source "../../javascript/**/*";
+
+:root {
+	--border: #d4c5b3;
+	--shadow: rgba(43, 33, 20, 0.14);
+	--surface-strong: #f1e3d0;
+	--surface-card: #fffdf8;
+	--muted: #6b5a47;
+	--text-main: #2f261d;
+	--brand: #8f4b35;
+	--accent: #b07647;
+	--brand-soft: #f2e2d7;
+	--bg-layer-1: #f6ede2;
+	--bg-layer-2: #eddfce;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	min-height: 100vh;
+	color: var(--text-main);
+	background:
+		radial-gradient(circle at 15% 20%, color-mix(in oklab, var(--brand) 22%, transparent) 0%, transparent 45%),
+		radial-gradient(circle at 90% 0%, color-mix(in oklab, var(--accent) 18%, transparent) 0%, transparent 50%),
+		linear-gradient(180deg, var(--bg-layer-1) 0%, var(--bg-layer-2) 100%);
+	font-family: "Avenir Next", "Hiragino Sans", "Yu Gothic", sans-serif;
+}
+
+.site-header {
+	@apply sticky top-0 z-30 border-b border-base-300/70 bg-base-100/85 backdrop-blur;
+}
+
+.container {
+	@apply mx-auto w-full max-w-6xl px-4 md:px-6;
+}
+
+.site-header .container {
+	@apply flex flex-wrap items-center justify-between gap-3 py-3;
+}
+
+.logo {
+	@apply text-lg font-black uppercase tracking-[0.2em] text-primary;
+}
+
+nav {
+	@apply flex flex-wrap items-center gap-2;
+}
+
+.nav-link {
+	@apply inline-flex items-center rounded-full px-3 py-1.5 text-sm font-medium text-base-content/75 transition hover:bg-base-200;
+}
+
+.nav-actions {
+	@apply flex flex-wrap items-center gap-2;
+}
+
+.user-pill {
+	@apply inline-flex items-center gap-1 rounded-full border border-base-300 px-3 py-1 text-xs text-base-content/75;
+}
+
+.flash {
+	@apply mx-auto mt-4 w-[calc(100%-2rem)] max-w-6xl rounded-xl border border-base-300 bg-base-100 px-4 py-3 text-sm shadow-md;
+}
+
+.flash.error {
+	@apply border-red-300 bg-red-50 text-red-700;
+}
+
+.page {
+	@apply mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-8;
+	animation: page-fade-in 0.45s ease;
+}
+
+.landing {
+	@apply pt-8;
+}
+
+.plot-edit-page {
+	@apply px-4 md:px-8;
+}
+
+.grid {
+	@apply mt-10 space-y-4;
+}
+
+.grid-header {
+	@apply flex flex-wrap items-center justify-between gap-3;
+}
+
+.cards {
+	@apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
+}
+
+.card {
+	@apply block rounded-2xl border border-base-300 bg-base-100 p-5 shadow-md transition duration-200;
+}
+
+.card:hover {
+	@apply -translate-y-0.5 shadow-lg;
+}
+
+.card-link {
+	@apply no-underline text-inherit;
+}
+
+.card-link:focus-visible {
+	@apply outline-none ring-2 ring-primary ring-offset-2;
+}
+
+.card h3 {
+	@apply mb-2 text-lg font-semibold;
+}
+
+.card p {
+	@apply text-sm leading-relaxed text-base-content/80;
+}
+
+.card-actions {
+	@apply mt-4 flex flex-wrap items-center gap-2;
+}
+
+.text-link {
+	@apply link link-primary text-sm font-semibold;
+}
+
+.empty-state {
+	@apply rounded-2xl border border-dashed border-base-300 bg-base-100/70 p-6 text-base-content/70;
+}
+
+.detail {
+	@apply rounded-3xl border border-base-300 bg-base-100 p-6 shadow-lg md:p-8;
+}
+
+.detail-header {
+	@apply flex flex-wrap items-start justify-between gap-4;
+}
+
+.detail-actions {
+	@apply flex flex-wrap items-center gap-2;
+}
+
+.detail-meta {
+	@apply mt-5 grid gap-4 md:grid-cols-2;
+}
+
+.meta-label {
+	@apply mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-base-content/60;
+}
+
+.badge {
+	@apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
+	border-color: color-mix(in oklab, var(--brand) 45%, white);
+	color: var(--brand);
+	background: color-mix(in oklab, var(--brand) 8%, white);
+}
+
+.panel {
+	@apply mt-5 rounded-2xl border border-base-300 bg-base-200/60 p-4;
+}
+
+.form-card {
+	@apply mx-auto max-w-3xl rounded-3xl border border-base-300 bg-base-100 p-6 shadow-xl md:p-8;
+}
+
+.field {
+	@apply mb-4 space-y-2;
+}
+
+.field label,
+.field > span {
+	@apply text-sm font-semibold text-base-content/80;
+}
+
+.field input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+.field select {
+	@apply w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-sm shadow-sm;
+}
+
+.field textarea {
+	@apply w-full rounded-xl border border-base-300 bg-base-100 px-3 py-2 text-sm shadow-sm;
+}
+
+.helper-text,
+.lede,
+.panel-note {
+	@apply text-sm leading-relaxed text-base-content/70;
+}
+
+.actions {
+	@apply flex flex-wrap items-center gap-2;
+}
+
+.filter-bar {
+	@apply rounded-2xl border border-dashed border-base-300 bg-base-200/50 p-4;
+}
+
+.checkbox-row {
+	@apply flex flex-wrap gap-2;
+}
+
+label.checkbox {
+	@apply inline-flex items-center gap-2 rounded-full border border-base-300 bg-base-100 px-3 py-1.5 text-sm;
+}
+
+label.checkbox input[type="checkbox"] {
+	@apply h-4 w-4 rounded border border-base-300 accent-primary;
+}
+
+.inline-form {
+	@apply mt-3 space-y-2;
+}
+
+.home-hero {
+	@apply relative overflow-hidden rounded-3xl border border-base-300 bg-base-100 p-6 shadow-xl md:p-10;
+}
+
+.home-hero-glow {
+	@apply pointer-events-none absolute rounded-full blur-3xl;
+}
+
+.glow-left {
+	@apply -left-20 top-10 h-56 w-56;
+	background: color-mix(in oklab, var(--brand) 34%, transparent);
+}
+
+.glow-right {
+	@apply -right-14 -top-16 h-64 w-64;
+	background: color-mix(in oklab, var(--accent) 28%, transparent);
+}
+
+.home-hero-grid {
+	@apply relative z-10 grid gap-8 lg:grid-cols-[1.2fr_0.8fr];
+}
+
+.home-hero-copy h1 {
+	@apply text-4xl font-black leading-tight md:text-6xl;
+}
+
+.eyebrow {
+	@apply text-xs font-bold uppercase tracking-[0.28em] text-primary;
+}
+
+.hero-actions,
+.cta-actions {
+	@apply mt-4 flex flex-wrap items-center gap-2;
+}
+
+.home-stats {
+	@apply mt-6 grid gap-2 sm:grid-cols-3;
+}
+
+.stat-chip {
+	@apply rounded-2xl border border-base-300 bg-base-200/60 p-3;
+}
+
+.stat-value {
+	@apply block text-2xl font-bold;
+}
+
+.stat-label {
+	@apply text-xs text-base-content/70;
+}
+
+.home-hero-panel {
+	@apply rounded-2xl border border-base-300 bg-base-200/70 p-5 shadow;
+}
+
+.panel-title {
+	@apply text-xs font-semibold uppercase tracking-[0.2em] text-base-content/60;
+}
+
+.home-hero-panel ol {
+	@apply mt-3 list-decimal space-y-2 pl-5 text-sm;
+}
+
+.home-pillars {
+	@apply mt-10 grid gap-4 md:grid-cols-3;
+}
+
+.pillar-card {
+	@apply rounded-2xl border border-base-300 bg-base-100 p-5 shadow;
+}
+
+.pillar-tag {
+	@apply mb-2 text-xs font-bold uppercase tracking-[0.2em] text-secondary;
+}
+
+.home-journey {
+	@apply mt-10 grid gap-5 rounded-3xl border border-base-300 bg-base-100 p-6 shadow-lg lg:grid-cols-[1fr_auto];
+}
+
+.journey-rail {
+	@apply flex items-center justify-between gap-2 lg:flex-col lg:justify-center;
+}
+
+.rail-node {
+	@apply flex min-w-24 flex-col items-center gap-2 text-center text-xs text-base-content/70;
+}
+
+.rail-node span {
+	@apply flex h-8 w-8 items-center justify-center rounded-full bg-primary font-bold text-primary-content;
+}
+
+.rail-line {
+	@apply h-0.5 w-16 bg-base-300 lg:h-12 lg:w-0.5;
+}
+
+.home-final-cta {
+	@apply mt-10;
+}
+
+.cta-panel {
+	@apply flex flex-wrap items-center justify-between gap-6 rounded-3xl border border-base-300 bg-gradient-to-r from-base-100 to-base-200 p-6 shadow-lg;
+}
+
+.story-flow {
+	@apply grid gap-3;
+}
+
+.scene {
+	@apply relative rounded-2xl border border-base-300 bg-base-100 p-4 leading-relaxed shadow-sm;
+}
+
+.scene.focus {
+	@apply shadow-md;
+	border-color: color-mix(in oklab, var(--brand) 35%, white);
+	background: color-mix(in oklab, var(--brand) 8%, white);
+}
+
+.reader-page .detail {
+	@apply border-0 bg-transparent p-0 shadow-none;
+}
+
+.reader-page .story-flow {
+	@apply gap-0;
+}
+
+.reader-page .scene {
+	@apply rounded-lg border-0 bg-transparent px-1 py-1 shadow-none transition-colors;
+}
+
+.reader-page .scene.focus {
+	@apply shadow-none;
+	border-color: transparent;
+	background: color-mix(in oklab, var(--brand) 12%, transparent);
+}
+
+.reader-page .scene-branch-menu {
+	@apply static mt-2 flex min-h-8 justify-end;
+}
+
+.reader-page .scene-branch-menu.focus-only-menu {
+	display: flex;
+	visibility: hidden;
+	pointer-events: none;
+}
+
+.reader-page .scene.focus .scene-branch-menu.focus-only-menu {
+	visibility: visible;
+	pointer-events: auto;
+}
+
+.reader-page .scene-branch-menu-popover {
+	@apply bottom-auto right-0 top-full mb-0 mt-1;
+}
+
+.reader-site-header {
+	@apply border-t border-base-300;
+}
+
+.reader-site-header-content {
+	@apply py-3;
+}
+
+.reader-title {
+	@apply text-2xl font-semibold;
+}
+
+.reader-progress {
+	@apply mt-3 h-2 overflow-hidden rounded-full bg-base-300;
+}
+
+.reader-progress-fill {
+	@apply block h-full bg-gradient-to-r from-secondary to-primary transition-all duration-200;
+	width: 0;
+}
+
+.scene-branch-menu {
+	@apply absolute bottom-2 right-2;
+}
+
+.scene-branch-menu.focus-only-menu {
+	display: none;
+}
+
+.scene.focus .scene-branch-menu.focus-only-menu {
+	display: flex;
+}
+
+.scene-branch-menu-toggle {
+	@apply inline-flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-base-300 bg-base-100 p-0 text-xs;
+	list-style: none;
+}
+
+.scene-branch-menu-icon {
+	@apply text-base leading-none text-base-content/70;
+}
+
+.scene-branch-menu-toggle::-webkit-details-marker {
+	display: none;
+}
+
+.scene-branch-menu-popover {
+	@apply absolute bottom-full right-0 z-20 mb-2 min-w-44 rounded-xl border border-base-300 bg-base-100 p-2 shadow-xl;
+}
+
+.scene-branch-menu-item {
+	@apply block rounded-lg px-2 py-1.5 text-sm font-medium transition;
+	color: var(--brand);
+}
+
+.scene-branch-menu-item:hover {
+	background: color-mix(in oklab, var(--brand) 10%, white);
+}
+
+.scene-container {
+	@apply w-full;
+}
+
+.scene-display {
+	@apply rounded-xl border border-base-300 bg-base-100 p-3 transition;
+}
+
+.scene-display:hover {
+	@apply border-base-content/20;
+}
+
+.chat-header {
+	@apply flex items-center justify-between border-b border-base-300 bg-base-200 px-4 py-3;
+}
+
+.message {
+	@apply rounded-xl border border-base-300 bg-base-100 p-3;
+}
+
+.message--user {
+	@apply border-l-4;
+	border-left-color: var(--brand);
+}
+
+.message--assistant {
+	@apply border-l-4;
+	border-left-color: var(--accent);
+}
+
+.hidden {
+	display: none !important;
+}
+
+.ProseMirror-menubar {
+	@apply mb-2 flex flex-wrap gap-2;
+}
+
+.pm-menu-button {
+	@apply inline-flex cursor-pointer items-center rounded-lg border border-base-300 bg-base-100 px-2 py-1 text-xs;
+}
+
+.pm-menu-button.ProseMirror-menu-active {
+	border-color: color-mix(in oklab, var(--brand) 40%, white);
+	color: var(--brand);
+	background: color-mix(in oklab, var(--brand) 10%, white);
+}
+
+.pm-menu-button.ProseMirror-menu-disabled {
+	@apply pointer-events-none opacity-40;
+}
+
+.scene-textarea.border-editing {
+	border-color: #f59e0b;
+}
+
+.scene-textarea.border-saving {
+	border-color: #ef4444;
+}
+
+.scene-textarea.border-saved {
+	border-color: #10b981;
+}
+
+@keyframes page-fade-in {
+	from {
+		opacity: 0;
+		transform: translateY(6px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@media (max-width: 720px) {
+	.actions {
+		@apply flex-col items-stretch;
+	}
+}

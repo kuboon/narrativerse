@@ -7,5 +7,12 @@
 	"features": {
 		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": { "moby": false }
 	},
-	"postCreateCommand": "mise trust .; mise settings ruby.compile=false; mise install"
+	"postCreateCommand": "mise trust .; mise settings ruby.compile=false; mise install",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"bradlc.vscode-tailwindcss"
+			]
+		}
+	}
 }

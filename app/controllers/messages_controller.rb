@@ -5,7 +5,10 @@ class MessagesController < ApplicationController
   def create
     return unless content.present?
 
-    ChatResponseJob.perform_later(@chat.id, content)
+    @plot_id = context_plot_id
+    @scene_id = context_scene_id
+
+    ChatResponseJob.perform_later(@chat.id, content, @plot_id, @scene_id)
 
     respond_to do |format|
       format.turbo_stream
@@ -21,5 +24,13 @@ class MessagesController < ApplicationController
 
   def content
     params[:message][:content]
+  end
+
+  def context_plot_id
+    params.dig(:message, :plot_id).presence
+  end
+
+  def context_scene_id
+    params.dig(:message, :scene_id).presence
   end
 end

@@ -98,11 +98,10 @@
     <% if @plots.any? %>
       <div class="cards">
         <% @plots.each do |plot| %>
-          <article class="card">
+          <%= link_to reader_path(plot), class: "card card-link" do %>
             <h3><%= plot.title %></h3>
             <p><%= plot.summary.presence || "まだ概要がありません。" %></p>
-            <%= link_to "開く", plot_path(plot), class: "text-link" %>
-          </article>
+          <% end %>
         <% end %>
       </div>
     <% else %>
@@ -121,11 +120,10 @@
     <% if @elements.any? %>
       <div class="cards">
         <% @elements.each do |element| %>
-          <article class="card">
+          <%= link_to element_path(element), class: "card card-link" do %>
             <h3><%= element.name %></h3>
             <p><%= t("elements.types.#{element.element_type.downcase}") %></p>
-            <%= link_to "開く", element_path(element), class: "text-link" %>
-          </article>
+          <% end %>
         <% end %>
       </div>
     <% else %>

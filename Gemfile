@@ -10,6 +10,8 @@ gem "sqlite3", ">= 2.1"
 gem "puma", ">= 5.0"
 # Bundle JavaScript with esbuild/rollup/webpack [https://github.com/rails/jsbundling-rails]
 gem "jsbundling-rails"
+# Bundle CSS with Tailwind/PostCSS/Sass [https://github.com/rails/cssbundling-rails]
+gem "cssbundling-rails"
 # Hotwire's SPA-like page accelerator [https://turbo.hotwired.dev]
 gem "turbo-rails"
 # Hotwire's modest JavaScript framework [https://stimulus.hotwired.dev]
