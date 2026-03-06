@@ -1,22 +1,24 @@
-<div id="message_<%= message.id %>" class="message <%= message.role == "user" ? "message--user" : "message--assistant" %>">
-  <% if message.thinking_message? %>
-    <details>
-      <summary class="cursor-pointer text-xs font-semibold text-base-content/70">考え中・・・</summary>
-      <div class="mt-2">
-        <div id="message_<%= message.id %>_content" class="whitespace-pre-wrap text-xs leading-relaxed text-base-content/70"><%= message.content %></div>
-        <% if message.tool_call? %>
-          <%= render "messages/tool_calls", message: message %>
-        <% end %>
-      </div>
-    </details>
-  <% elsif (choice_payload = message.choice_payload) %>
-    <div class="mb-1 text-xs font-bold tracking-widest text-base-content/70">AI</div>
-    <%= render "messages/choice_buttons", payload: choice_payload %>
-  <% else %>
-    <div class="mb-1 text-xs font-bold tracking-widest text-base-content/70"><%= message.role == "user" ? "あなた" : "AI" %></div>
-    <div id="message_<%= message.id %>_content" class="whitespace-pre-wrap text-sm leading-relaxed"><%= message.content %></div>
-  <% end %>
-  <div class="mt-2 text-xs text-base-content/50">
-    <%= message.created_at&.strftime("%I:%M %p") %>
+<% speaker_name = message.role == "user" ? "あなた" : "AI" %>
+<% placement = message.role == "user" ? "chat-end" : "chat-start" %>
+<% bubble_color = message.role == "user" ? "chat-bubble-primary" : "chat-bubble-neutral" %>
+<% message_kind = message.thinking_message? ? "thinking" : "default" %>
+
+<div id="message_<%= message.id %>" class="chat <%= placement %>" data-message-kind="<%= message_kind %>">
+  <div class="chat-header text-xs font-semibold text-base-content/70">
+    <%= speaker_name %>
+    <time class="ml-2 text-[11px] font-normal text-base-content/50"><%= message.created_at&.strftime("%I:%M %p") %></time>
   </div>
+
+  <% if message.thinking_message? %>
+    <div class="chat-bubble chat-bubble-neutral max-w-[85%] flex items-center gap-2 text-xs text-base-content/70">
+      <span class="loading loading-dots loading-xs" aria-hidden="true"></span>
+      <span>考え中・・・</span>
+    </div>
+  <% elsif (choice_payload = message.choice_payload) %>
+    <div class="chat-bubble chat-bubble-neutral max-w-[85%]">
+      <%= render "messages/choice_buttons", payload: choice_payload %>
+    </div>
+  <% else %>
+    <div id="message_<%= message.id %>_content" class="chat-bubble <%= bubble_color %> max-w-[85%] whitespace-pre-wrap text-sm leading-relaxed"><%= message.content %></div>
+  <% end %>
 </div>

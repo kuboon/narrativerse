@@ -10,7 +10,7 @@
 <body class="m-0 flex min-h-screen flex-col bg-base-100">
   <%= turbo_stream_from "chat_#{@chat.id}" %>
 
-  <div class="chat-header">
+  <div class="chatbox-header">
     <h3 class="m-0 text-sm font-semibold">AI アシスタント</h3>
     <button id="close-chat-btn" class="btn btn-ghost btn-xs btn-circle" aria-label="閉じる">✕</button>
   </div>
