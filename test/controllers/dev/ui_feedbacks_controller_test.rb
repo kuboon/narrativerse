@@ -3,7 +3,8 @@ require "test_helper"
 class Dev::UiFeedbacksControllerTest < ActionDispatch::IntegrationTest
   extend Minitest::Spec::DSL
 
-  let(:feedback_dir) { Rails.root.join("tmp", "ui_feedbacks") }
+  let(:worker_suffix) { ENV.fetch("TEST_ENV_NUMBER", "").presence || "1" }
+  let(:feedback_dir) { Rails.root.join("tmp", "ui_feedbacks", "worker_#{worker_suffix}") }
   let(:latest_path) { feedback_dir.join("latest.json") }
   let(:history_path) { feedback_dir.join("history.ndjson") }
 
@@ -35,7 +36,7 @@ class Dev::UiFeedbacksControllerTest < ActionDispatch::IntegrationTest
 
     response_body = JSON.parse(response.body)
     assert_equal "ok", response_body.fetch("status")
-    assert_equal "tmp/ui_feedbacks/latest.json", response_body.fetch("saved_to")
+    assert_equal latest_path.relative_path_from(Rails.root).to_s, response_body.fetch("saved_to")
 
     assert File.exist?(latest_path)
     assert File.exist?(history_path)

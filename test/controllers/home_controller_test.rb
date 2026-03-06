@@ -20,8 +20,9 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     assert_select "main.landing-home", count: 1
     assert_select "h1", text: /みんなで広げる、/
     assert_select "a", text: "参加する (ユーザー作成)", count: 1
-    assert_select ".stat-chip .stat-value", text: Plot.count.to_s, count: 1
-    assert_select ".stat-chip .stat-value", text: Element.count.to_s, count: 1
+    assert_select ".stat-chip", text: /#{Regexp.escape(Plot.count.to_s)}\s*公開プロット/, count: 1
+    assert_select ".stat-chip", text: /#{Regexp.escape(Element.count.to_s)}\s*共有要素/, count: 1
+    assert_select ".stat-chip", text: /12\s*新着表示中/, count: 1
     assert_select "section.grid .cards .card", count: 24
     assert_select "section.grid .cards .card h3", text: "プロット0", count: 0
     assert_select "section.grid .cards .card h3", text: "要素0", count: 0
