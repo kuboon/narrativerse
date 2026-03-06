@@ -281,6 +281,7 @@ async function handleAltClick(event) {
 
 function handleMouseMove(event) {
   if (!state.enabled) return;
+  if (!event.altKey) return teardown();
 
   const target = closestInspectableTarget(event.target);
   state.activeTarget = target;

@@ -1,4 +1,4 @@
-<article id="link-<%= link.id %>" class="panel scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
+<article id="link-<%= link.id %>" class="scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
   <% owner = link.plot.user_id == current_user&.id %>
   <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %>">
     <% if link.scene.text.present? %>
@@ -13,7 +13,7 @@
       <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true } } do |f| %>
         <div class="prosemirror-editor-container" data-controller="prosemirror">
           <%= f.hidden_field :text, class: "prosemirror-hidden-input scene-textarea" %>
-          <div class="prosemirror-editor w-full p-2 border rounded min-h-[100px]" data-prosemirror-target="editor"></div>
+          <div class="prosemirror-editor w-full p-2 border rounded min-h-25" data-prosemirror-target="editor"></div>
         </div>
       <% end %>
     </div>

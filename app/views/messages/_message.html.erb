@@ -1,6 +1,6 @@
 <% speaker_name = message.role == "user" ? "あなた" : "AI" %>
 <% placement = message.role == "user" ? "chat-end" : "chat-start" %>
-<% bubble_color = message.role == "user" ? "chat-bubble-primary" : "chat-bubble-neutral" %>
+<% bubble_color = message.role == "user" ? "" : "chat-bubble-neutral" %>
 <% message_kind = message.thinking_message? ? "thinking" : "default" %>
 
 <div id="message_<%= message.id %>" class="chat <%= placement %>" data-message-kind="<%= message_kind %>">
@@ -11,8 +11,8 @@
 
   <% if message.thinking_message? %>
     <div class="chat-bubble chat-bubble-neutral max-w-[85%] flex items-center gap-2 text-xs text-base-content/70">
-      <span class="loading loading-dots loading-xs" aria-hidden="true"></span>
       <span>考え中・・・</span>
+      <span class="loading loading-dots loading-xs" aria-hidden="true"></span>
     </div>
   <% elsif (choice_payload = message.choice_payload) %>
     <div class="chat-bubble chat-bubble-neutral max-w-[85%]">

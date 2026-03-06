@@ -452,7 +452,7 @@ label.checkbox input[type="checkbox"] {
 }
 
 .chat-header {
-	@apply flex items-center justify-between border-b border-base-300 bg-base-200 px-4 py-3;
+	@apply flex items-center justify-between;
 }
 
 .chatbox-header {
