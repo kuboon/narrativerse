@@ -56,4 +56,23 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     updated_plot = plot.reload
     assert_equal "更新タイトル", ActionController::Base.helpers.strip_tags(updated_plot.title).squish
   end
+
+  it "does not show parent plot row when there is no parent" do
+    get plot_path(plot)
+
+    assert_response :success
+    assert_select "span.meta-label", text: "親プロット", count: 0
+    assert_select "span", text: "なし", count: 0
+  end
+
+  it "shows parent plot links when there are parents" do
+    parent_plot = Plot.create!(user: owner, title: "親プロット")
+    child_plot = Plot.create!(user: owner, title: "子プロット", parent_plot_ids: [ parent_plot.id ])
+
+    get plot_path(child_plot)
+
+    assert_response :success
+    assert_select "span.meta-label", text: "親プロット", count: 1
+    assert_select "a[href='#{plot_path(parent_plot)}']", text: ActionController::Base.helpers.strip_tags(parent_plot.title), count: 1
+  end
 end

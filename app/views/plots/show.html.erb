@@ -7,16 +7,15 @@
         <span class="meta-label">作成者</span>
         <span><%= @plot.user.name %></span>
       </div>
-      <div>
-        <span class="meta-label">親プロット</span>
-        <span>
-          <% if @plot.parent_plots.any? %>
-            <%= safe_join(@plot.parent_plots.map { |parent| link_to(render_plot_title(parent.title), plot_path(parent), class: "text-link") }, ", ") %>
-          <% else %>
-            なし
-          <% end %>
-        </span>
-      </div>
+      <% parent_plots = @plot.parent_plots %>
+      <% if parent_plots.any? %>
+        <div>
+          <span class="meta-label">親プロット</span>
+          <span>
+            <%= safe_join(parent_plots.map { |parent| link_to(render_plot_title(parent.title), plot_path(parent), class: "text-link") }, ", ") %>
+          </span>
+        </div>
+      <% end %>
     </div>
 
     <% if policy(@plot).manage_elements? %>
