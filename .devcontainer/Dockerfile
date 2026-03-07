@@ -1,5 +1,5 @@
 # Use a base image
-FROM mcr.microsoft.com/devcontainers/base:trixie
+FROM mcr.microsoft.com/devcontainers/base:debian
 
 # Install system dependencies needed by mise and the tools it manages (like Node.js, Python, etc.)
 # The exact dependencies may vary based on the tools you plan to use

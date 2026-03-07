@@ -326,7 +326,7 @@ label.checkbox input[type="checkbox"] {
 }
 
 .cta-panel {
-	@apply flex flex-wrap items-center justify-between gap-6 rounded-3xl border border-base-300 bg-gradient-to-r from-base-100 to-base-200 p-6 shadow-lg;
+	@apply flex flex-wrap items-center justify-between gap-6 rounded-3xl border border-base-300 bg-linear-to-r from-base-100 to-base-200 p-6 shadow-lg;
 }
 
 .story-flow {
@@ -397,7 +397,7 @@ label.checkbox input[type="checkbox"] {
 }
 
 .reader-progress-fill {
-	@apply block h-full bg-gradient-to-r from-secondary to-primary transition-all duration-200;
+	@apply block h-full bg-linear-to-r from-secondary to-primary transition-all duration-200;
 	width: 0;
 }
 
@@ -460,11 +460,15 @@ label.checkbox input[type="checkbox"] {
 }
 
 #messages .thinking-continuation {
-	display: none;
+	@apply -mt-1 opacity-80;
 }
 
 #messages .thinking-continuation .chat-header {
-	display: none;
+	@apply hidden;
+}
+
+#messages .thinking-continuation .chat-bubble {
+	@apply rounded-t-none border-t border-t-base-content/5;
 }
 
 .message {

@@ -1,0 +1,10 @@
+{
+  "tools": {
+    "allowed": [
+      "run_shell_command(ls)",
+      "run_shell_command(git status)",
+      "run_shell_command(git log)",
+      "run_shell_command(git show)"
+    ]
+  }
+}

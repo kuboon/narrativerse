@@ -6,7 +6,7 @@
     <% if local_assigns[:scene_id].present? %>
       <%= form.hidden_field :scene_id, value: local_assigns[:scene_id] %>
     <% end %>
-    <%= form.text_field :content, class: "input input-bordered flex-1", placeholder: "Type a message...", autocomplete: "off" %>
+    <%= form.text_field :content, class: "input input-bordered flex-1", placeholder: "Type a message...", autocomplete: "off", data: { chatbot_target: "input" } %>
     <%= form.submit "Send", class: "btn btn-primary" %>
   </div>
 <% end %>

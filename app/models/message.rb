@@ -52,7 +52,7 @@ class Message < ApplicationRecord
   def thinking_message?
     return false if choice_payload.present?
 
-    role.to_s == "system" || tool_call? || tool_result?
+    role.to_s == "system" || tool_call? || tool_result? || thinking_text.present?
   end
 
   private

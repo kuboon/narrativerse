@@ -10,10 +10,50 @@
   </div>
 
   <% if message.thinking_message? %>
-    <div class="chat-bubble chat-bubble-neutral max-w-[85%] flex items-center gap-2 text-xs text-base-content/70">
-      <span>考え中・・・</span>
-      <span class="loading loading-dots loading-xs" aria-hidden="true"></span>
+    <div class="chat-bubble chat-bubble-neutral max-w-[85%] p-0 overflow-hidden text-xs text-base-content/70">
+      <details class="group">
+        <summary class="flex items-center gap-2 p-2 px-3 cursor-pointer list-none hover:bg-base-content/5 transition-colors">
+          <span class="font-medium">考え中・・・</span>
+          <span class="loading loading-dots loading-xs group-open:hidden" aria-hidden="true"></span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-auto transition-transform group-open:rotate-180 opacity-50" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+          </svg>
+        </summary>
+        <div class="px-3 pb-3 pt-1 space-y-3 border-t border-base-content/5 bg-base-100/20">
+          <% if message.thinking_text.present? %>
+            <div class="whitespace-pre-wrap font-serif italic opacity-80 leading-relaxed"><%= message.thinking_text %></div>
+          <% end %>
+
+          <% if message.tool_calls.any? %>
+            <div class="space-y-2">
+              <% message.tool_calls.each do |tool_call| %>
+                <div class="p-2 rounded bg-base-300/40 font-mono text-[10px] border border-base-content/5">
+                  <div class="font-bold text-primary/70">Tool: <%= tool_call.name %></div>
+                  <div class="mt-1 opacity-70 break-all overflow-x-auto"><%= tool_call.arguments.to_json %></div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if message.tool_result? %>
+             <div class="p-2 rounded bg-base-300/40 font-mono text-[10px] border border-base-content/5">
+               <div class="font-bold text-secondary/70">Result:</div>
+               <div class="mt-1 opacity-70 break-all overflow-x-auto"><%= message.content %></div>
+             </div>
+          <% end %>
+
+          <% if message.role == "system" %>
+             <div class="p-2 rounded bg-base-300/40 font-mono text-[10px] border border-base-content/5">
+               <div class="font-bold text-base-content/40">System Context:</div>
+               <div class="mt-1 opacity-60 break-all overflow-x-auto"><%= message.content %></div>
+             </div>
+          <% end %>
+        </div>
+      </details>
     </div>
+    <% if message.role == "assistant" && message.content.present? && !message.tool_call? %>
+      <div id="message_<%= message.id %>_content" class="chat-bubble <%= bubble_color %> max-w-[85%] whitespace-pre-wrap text-sm leading-relaxed mt-1"><%= message.content %></div>
+    <% end %>
   <% elsif (choice_payload = message.choice_payload) %>
     <div class="chat-bubble chat-bubble-neutral max-w-[85%]">
       <%= render "messages/choice_buttons", payload: choice_payload %>

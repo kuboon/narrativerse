@@ -71,6 +71,10 @@
 
     <%= yield %>
 
+    <% if Rails.env.development? %>
+      <div data-controller="ui-feedback"></div>
+    <% end %>
+
     <% if current_user && controller_name != "reader" %>
       <% chat_params = {} %>
       <% if params[:plot_id].present? %>
@@ -81,11 +85,18 @@
       <% chat_params[:scene_id] = params[:scene_id] if params[:scene_id].present? %>
       <% chat_params[:autostart] = "1" if @auto_start_chatbot %>
 
-      <div id="chatbot-wrapper" data-auto-open="<%= @auto_start_chatbot ? "true" : "false" %>" class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
-        <div id="chatbot-window" class="mb-4 hidden h-125 max-h-[calc(100vh-100px)] w-87.5 overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-2xl">
+      <div id="chatbot-wrapper" 
+           data-controller="chatbot"
+           data-chatbot-auto-open-value="<%= @auto_start_chatbot ? "true" : "false" %>" 
+           class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
+        <div id="chatbot-window" 
+             data-chatbot-target="window"
+             class="mb-4 hidden h-125 max-h-[calc(100vh-100px)] w-87.5 overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-2xl">
           <iframe src="<%= chat_path(chat_params) %>" id="chat-frame" class="h-full w-full border-0"></iframe>
         </div>
-        <button id="chatbot-toggle" class="btn btn-primary btn-circle h-14 w-14 text-xl shadow-lg" aria-label="AIアシスタントを開く">AI</button>
+        <button id="chatbot-toggle" 
+                data-action="click->chatbot#toggle"
+                class="btn btn-primary btn-circle h-14 w-14 text-xl shadow-lg" aria-label="AIアシスタントを開く">AI</button>
       </div>
     <% end %>
   </body>

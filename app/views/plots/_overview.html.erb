@@ -1,4 +1,10 @@
-<div id="plot-overview-<%= plot.id %>" class="plot-container">
+<div id="plot-overview-<%= plot.id %>" 
+     class="plot-container" 
+     data-controller="inline-editor"
+     data-action="click->inline-editor#edit window:inline-editor:close-others->inline-editor#closeOthers click@window->inline-editor#clickOutside keydown@window->inline-editor#onKeyDown"
+     data-inline-editor-editing-class="border-editing"
+     data-inline-editor-saving-class="border-saving"
+     data-inline-editor-saved-class="border-saved">
   <% editable = policy(plot).update? %>
   <% open_editor = local_assigns.fetch(:open_editor, false) %>
   <% display_classes = ["plot-display"] %>
@@ -7,7 +13,7 @@
   <% editor_classes = ["plot-editor"] %>
   <% editor_classes << "hidden" unless open_editor %>
 
-  <div class="<%= display_classes.join(" ") %>">
+  <div class="<%= display_classes.join(" ") %>" data-inline-editor-target="display">
     <div class="detail-header">
       <div class="plot-title"><%= render_plot_title(plot.title) %></div>
       <div class="detail-actions">
@@ -27,8 +33,8 @@
   </div>
 
   <% if editable %>
-    <div class="<%= editor_classes.join(" ") %>">
-      <%= form_with model: plot, method: :patch, class: "plot-form w-full", html: { data: { turbo: true } } do |form| %>
+    <div class="<%= editor_classes.join(" ") %>" data-inline-editor-target="editor">
+      <%= form_with model: plot, method: :patch, class: "plot-form w-full", html: { data: { turbo: true, inline_editor_target: "form" } } do |form| %>
         <% if plot.errors.any? %>
           <div class="flash error">
             <p><%= plot.errors.full_messages.to_sentence %></p>

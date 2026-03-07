@@ -1,6 +1,2 @@
 import "@hotwired/turbo-rails"
-import "./scene_editor"
-import "./plot_editor"
-import "./chatbot"
-import "./ui_feedback_capture"
 import "./controllers"

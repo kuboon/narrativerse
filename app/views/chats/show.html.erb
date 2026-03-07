@@ -7,15 +7,20 @@
   <%= stylesheet_link_tag :application, "data-turbo-track": "reload" %>
   <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
 </head>
-<body class="m-0 flex min-h-screen flex-col bg-base-100">
+<body class="m-0 flex min-h-screen flex-col bg-base-100" data-controller="chatbot" data-action="click->chatbot#selectChoice">
   <%= turbo_stream_from "chat_#{@chat.id}" %>
 
   <div class="chatbox-header">
     <h3 class="m-0 text-sm font-semibold">AI アシスタント</h3>
-    <button id="close-chat-btn" class="btn btn-ghost btn-xs btn-circle" aria-label="閉じる">✕</button>
+    <button id="close-chat-btn" 
+            class="btn btn-ghost btn-xs btn-circle" 
+            aria-label="閉じる"
+            onclick="window.parent.postMessage('close-chat', '*')">✕</button>
   </div>
 
-  <div id="messages" class="flex flex-1 flex-col gap-3 overflow-y-auto bg-base-100 p-4">
+  <div id="messages" 
+       data-chatbot-target="messages"
+       class="flex flex-1 flex-col gap-3 overflow-y-auto bg-base-100 p-4">
     <% @chat.messages.where.not(id: nil).each do |message| %>
       <%= render message %>
     <% end %>
@@ -30,13 +35,6 @@
       const messages = document.getElementById("messages");
       if(messages) {
         messages.scrollTop = messages.scrollHeight;
-      }
-      
-      const closeBtn = document.getElementById("close-chat-btn");
-      if(closeBtn) {
-        closeBtn.addEventListener("click", function() {
-          window.parent.postMessage("close-chat", "*");
-        });
       }
     });
   </script>

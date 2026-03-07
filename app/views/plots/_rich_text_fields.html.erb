@@ -1,15 +1,15 @@
 <div class="field">
   <%= form.label :title, "タイトル" %>
-  <div class="prosemirror-editor-container" data-controller="prosemirror">
-    <%= form.hidden_field :title, class: "prosemirror-hidden-input plot-textarea" %>
+  <div class="prosemirror-editor-container" data-controller="prosemirror" data-action="input->inline-editor#onInput">
+    <%= form.hidden_field :title, class: "prosemirror-hidden-input plot-textarea", data: { inline_editor_target: "input" } %>
     <div class="prosemirror-editor w-full p-2 border rounded min-h-[80px]" data-prosemirror-target="editor"></div>
   </div>
 </div>
 
 <div class="field">
   <%= form.label :summary, "概要" %>
-  <div class="prosemirror-editor-container" data-controller="prosemirror">
-    <%= form.hidden_field :summary, class: "prosemirror-hidden-input plot-textarea" %>
+  <div class="prosemirror-editor-container" data-controller="prosemirror" data-action="input->inline-editor#onInput">
+    <%= form.hidden_field :summary, class: "prosemirror-hidden-input plot-textarea", data: { inline_editor_target: "input" } %>
     <div class="prosemirror-editor w-full p-2 border rounded min-h-[100px]" data-prosemirror-target="editor"></div>
   </div>
 </div>
@@ -17,8 +17,8 @@
 <% if local_assigns.fetch(:include_scene_text, false) %>
   <div class="field">
     <%= form.label :scene_text, "最初の場面の本文" %>
-    <div class="prosemirror-editor-container" data-controller="prosemirror">
-      <%= form.hidden_field :scene_text, class: "prosemirror-hidden-input scene-textarea" %>
+    <div class="prosemirror-editor-container" data-controller="prosemirror" data-action="input->inline-editor#onInput">
+      <%= form.hidden_field :scene_text, class: "prosemirror-hidden-input scene-textarea", data: { inline_editor_target: "input" } %>
       <div class="prosemirror-editor w-full p-2 border rounded min-h-[100px]" data-prosemirror-target="editor"></div>
     </div>
     <p class="helper-text">※ 入力した本文がこのプロットの最初の場面として保存されます。</p>

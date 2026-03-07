@@ -68,6 +68,9 @@ class MessageTest < ActiveSupport::TestCase
     )
 
     _(tool_call_message.reload.thinking_message?).must_equal true
+
+    thinking_text_message = chat.messages.create!(role: "assistant", content: "Final answer", thinking_text: "Reasoning...")
+    _(thinking_text_message.thinking_message?).must_equal true
   end
 
   it "parses choice payload from assistant json" do

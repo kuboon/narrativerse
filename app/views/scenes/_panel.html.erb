@@ -1,6 +1,14 @@
-<article id="link-<%= link.id %>" class="scene-container" data-link-id="<%= link.id %>" data-scene-id="<%= link.scene.id %>">
+<article id="link-<%= link.id %>" 
+         class="scene-container" 
+         data-link-id="<%= link.id %>" 
+         data-scene-id="<%= link.scene.id %>"
+         data-controller="inline-editor"
+         data-action="click->inline-editor#edit window:inline-editor:close-others->inline-editor#closeOthers click@window->inline-editor#clickOutside keydown@window->inline-editor#onKeyDown"
+         data-inline-editor-editing-class="border-editing"
+         data-inline-editor-saving-class="border-saving"
+         data-inline-editor-saved-class="border-saved">
   <% owner = link.plot.user_id == current_user&.id %>
-  <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %>">
+  <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %>" data-inline-editor-target="display">
     <% if link.scene.text.present? %>
       <%= sanitize(link.scene.text, tags: %w[p strong h1 h2 ruby rt]) %>
     <% else %>
@@ -9,10 +17,10 @@
   </div>
 
   <% if owner %>
-    <div class="scene-editor hidden">
-      <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true } } do |f| %>
-        <div class="prosemirror-editor-container" data-controller="prosemirror">
-          <%= f.hidden_field :text, class: "prosemirror-hidden-input scene-textarea" %>
+    <div class="scene-editor hidden" data-inline-editor-target="editor">
+      <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true, inline_editor_target: "form" } } do |f| %>
+        <div class="prosemirror-editor-container" data-controller="prosemirror" data-action="input->inline-editor#onInput">
+          <%= f.hidden_field :text, class: "prosemirror-hidden-input scene-textarea", data: { inline_editor_target: "input" } %>
           <div class="prosemirror-editor w-full p-2 border rounded min-h-25" data-prosemirror-target="editor"></div>
         </div>
       <% end %>
