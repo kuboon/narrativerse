@@ -6,6 +6,8 @@ class ChatResponseJob < ApplicationJob
     llm_chat = chat.with_instructions(toolbox.system_prompt, replace: true)
     llm_chat = llm_chat.with_tools(*toolbox.tools) if toolbox.tools.any?
 
+    @current_streaming_message = nil
+
     response = llm_chat.ask(content) do |chunk|
       broadcast_chunk(chat, chunk)
     end
@@ -25,8 +27,6 @@ class ChatResponseJob < ApplicationJob
       rescue PlotChatbot::Halt => e
         # If a tool (like present_choices) requested a halt,
         # we still need to record the result that caused the halt.
-        # But we must find which tool call it belonged to.
-        # Usually, Halt is raised by the LAST attempted tool call in the loop.
         current_tool_call = response.tool_calls[results.size]
         if current_tool_call
           results << { tool_call_id: current_tool_call.tool_call_id, content: e.message }
@@ -36,8 +36,13 @@ class ChatResponseJob < ApplicationJob
 
       if results.any?
         # Save results to DB so they appear in the UI
+        # Reset current streaming message so chunks go to the right message
+        @current_streaming_message = nil
+
         results.each do |res|
-          chat.messages.create!(role: "tool", tool_call_id: res[:tool_call_id], content: res[:content])
+          # Resolve LLM string tool_call_id to integer FK of tool_calls table
+          tc_record_id = ToolCall.find_by(tool_call_id: res[:tool_call_id])&.id
+          chat.messages.create!(role: "tool", tool_call_id: tc_record_id, content: res[:content])
         end
 
         break if halted_result
@@ -60,9 +65,11 @@ class ChatResponseJob < ApplicationJob
   def broadcast_chunk(chat, chunk)
     return if chunk.content.blank?
 
-    message = chat.messages.last
-    return unless message
+    # Track the current assistant message being streamed.
+    # We reload only when @current_streaming_message is nil (new turn starts).
+    @current_streaming_message ||= chat.messages.where(role: :assistant).last
+    return unless @current_streaming_message
 
-    message.broadcast_append_chunk(chunk.content)
+    @current_streaming_message.broadcast_append_chunk(chunk.content)
   end
 end
