@@ -460,15 +460,7 @@ label.checkbox input[type="checkbox"] {
 }
 
 #messages .thinking-continuation {
-	@apply -mt-1 opacity-80;
-}
-
-#messages .thinking-continuation .chat-header {
 	@apply hidden;
-}
-
-#messages .thinking-continuation .chat-bubble {
-	@apply rounded-t-none border-t border-t-base-content/5;
 }
 
 .message {
@@ -517,6 +509,23 @@ label.checkbox input[type="checkbox"] {
 
 .scene-textarea.border-saved {
 	border-color: #10b981;
+}
+
+.highlight-new {
+	animation: highlight-fade 3s ease-out;
+}
+
+@keyframes highlight-fade {
+	0% {
+		background-color: color-mix(in oklab, var(--brand) 30%, transparent);
+		box-shadow: 0 0 15px color-mix(in oklab, var(--brand) 40%, transparent);
+		transform: scale(1.02);
+	}
+	100% {
+		background-color: transparent;
+		box-shadow: none;
+		transform: scale(1);
+	}
 }
 
 @keyframes page-fade-in {

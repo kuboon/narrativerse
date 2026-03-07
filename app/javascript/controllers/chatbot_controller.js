@@ -41,22 +41,45 @@ export default class extends Controller {
       node.id?.startsWith("message_")
     )
 
-    rows.forEach((row) => row.classList.remove("thinking-continuation"))
-
-    let hasThinkingLeader = false
+    let currentLeaderDetails = null
 
     rows.forEach((row) => {
       if (row.dataset.messageKind !== "thinking") {
-        hasThinkingLeader = false
+        currentLeaderDetails = null
+        row.classList.remove("thinking-continuation")
         return
       }
 
-      if (!hasThinkingLeader) {
-        hasThinkingLeader = true
+      const myDetails = row.querySelector("details")
+      const myContent = row.querySelector("details > div")
+
+      if (!currentLeaderDetails) {
+        // This is the first thinking message in a sequence
+        currentLeaderDetails = myContent
+        row.classList.remove("thinking-continuation")
         return
       }
 
+      // This is a continuation
       row.classList.add("thinking-continuation")
+
+      if (myContent && !myContent.dataset.moved) {
+        // Move all children of this thinking details into the leader's details
+        const separator = document.createElement("div")
+        separator.className = "my-3 border-t border-base-content/10 pt-3"
+        currentLeaderDetails.appendChild(separator)
+
+        while (myContent.firstChild) {
+          currentLeaderDetails.appendChild(myContent.firstChild)
+        }
+        myContent.dataset.moved = "true"
+        
+        // Auto-open the leader if a new Turn is added, so user sees something is happening
+        const leaderDetails = currentLeaderDetails.closest("details")
+        if (leaderDetails) {
+          leaderDetails.open = true
+        }
+      }
     })
   }
 

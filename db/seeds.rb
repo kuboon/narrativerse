@@ -48,7 +48,6 @@ if Rails.env.development?
   ])
 
   PlotForker.new(plot:, link: links[2], user: bob).call => { plot: forked_plot, link: forked_link }
-  p forked_plot
   forked_link.update!(next_scene: scenes[4])
   PlotSceneLink.create!(plot: forked_plot, scene: scenes[4], next_scene: scenes[5])
   PlotSceneLink.create!(plot: forked_plot, scene: scenes[5], next_scene: nil)

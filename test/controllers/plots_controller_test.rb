@@ -83,7 +83,7 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     get plot_path(untitled_plot)
 
     assert_response :success
-    assert_select "#chatbot-wrapper[data-auto-open='true']", count: 1
+    assert_select "#chatbot-wrapper[data-chatbot-auto-open-value='true']", count: 1
     assert_select "iframe#chat-frame[src*='plot_id=#{untitled_plot.id}']", count: 1
     assert_select "iframe#chat-frame[src*='autostart=1']", count: 1
   end
@@ -94,7 +94,7 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     get plot_path(plot)
 
     assert_response :success
-    assert_select "#chatbot-wrapper[data-auto-open='false']", count: 1
+    assert_select "#chatbot-wrapper[data-chatbot-auto-open-value='false']", count: 1
     assert_select "iframe#chat-frame[src*='autostart=1']", count: 0
   end
 end

@@ -54,7 +54,7 @@ class PlotScenesController < ApplicationController
     respond_to do |format|
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
-          "link-#{@link.id}",
+          ActionView::RecordIdentifier.dom_id(@link),
           partial: "scenes/panel",
           locals: { link: @link, plot: @plot }
         )

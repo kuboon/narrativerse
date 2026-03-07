@@ -116,7 +116,9 @@ class Message < ApplicationRecord
 
   def choice_tool_call_name?(name)
     normalized = name.to_s
-    normalized == CHOICE_TOOL_NAME || normalized.end_with?("--#{CHOICE_TOOL_NAME}")
+    normalized == CHOICE_TOOL_NAME ||
+      normalized.end_with?("--#{CHOICE_TOOL_NAME}") ||
+      normalized == "plot_chatbot--present_choices"
   end
 
   def extract_markdown_json(text)

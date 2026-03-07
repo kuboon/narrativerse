@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 module PlotChatbot
+  class Halt < StandardError; end
+
   class Toolbox
     attr_reader :user, :plot, :scene_id
 
@@ -108,6 +110,10 @@ module PlotChatbot
       JSON.generate(payload)
     end
 
+    def halt(result)
+      raise Halt, result
+    end
+
     def normalized_limit(limit, default: 10)
       value = limit.to_i
       value = default if value <= 0
@@ -167,12 +173,7 @@ module PlotChatbot
       json(
         status: "ok",
         message: "要素を追加しました。",
-        plot_element: {
-          id: plot_element.id,
-          element_id: plot_element.element_id,
-          name: element.name,
-          plot_role: plot_element.summary
-        }
+        plot_element_id: plot_element.id
       )
     end
   end
@@ -199,15 +200,7 @@ module PlotChatbot
 
       plot_element.update!(attrs)
 
-      json(
-        status: "ok",
-        message: "要素を更新しました。",
-        plot_element: {
-          id: plot_element.id,
-          plot_role: plot_element.summary,
-          secrets: plot_element.secrets
-        }
-      )
+      json(status: "ok", message: "要素を更新しました。")
     end
   end
 
@@ -288,11 +281,8 @@ module PlotChatbot
       json(
         status: "ok",
         message: "シーンを追加しました。",
-        scene: {
-          link_id: link.id,
-          scene_id: scene.id,
-          text: scene.text
-        }
+        link_id: link.id,
+        scene_id: scene.id
       )
     end
   end
@@ -311,15 +301,7 @@ module PlotChatbot
 
       link.scene.update!(text:)
 
-      json(
-        status: "ok",
-        message: "シーンを更新しました。",
-        scene: {
-          link_id: link.id,
-          scene_id: link.scene_id,
-          text: link.scene.text
-        }
-      )
+      json(status: "ok", message: "シーンを更新しました。")
     end
 
     private

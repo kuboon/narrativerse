@@ -1,14 +1,14 @@
-<article id="link-<%= link.id %>" 
-         class="scene-container" 
+<% owner = link.plot.user_id == current_user&.id %>
+<article id="<%= dom_id(link) %>" 
+         class="scene-container <%= "highlight-new" if local_assigns[:highlight] %>" 
          data-link-id="<%= link.id %>" 
          data-scene-id="<%= link.scene.id %>"
-         data-controller="inline-editor"
-         data-action="click->inline-editor#edit window:inline-editor:close-others->inline-editor#closeOthers click@window->inline-editor#clickOutside keydown@window->inline-editor#onKeyDown"
+         <%= 'data-controller="inline-editor"' if owner %>
+         <%= 'data-action="click->inline-editor#edit window:inline-editor:close-others->inline-editor#closeOthers click@window->inline-editor#clickOutside keydown@window->inline-editor#onKeyDown"' if owner %>
          data-inline-editor-editing-class="border-editing"
          data-inline-editor-saving-class="border-saving"
          data-inline-editor-saved-class="border-saved">
-  <% owner = link.plot.user_id == current_user&.id %>
-  <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %>" data-inline-editor-target="display">
+  <div class="scene-display <%= 'cursor-pointer hover:bg-gray-50' if owner %>" <%= 'data-inline-editor-target="display"' if owner %>>
     <% if link.scene.text.present? %>
       <%= sanitize(link.scene.text, tags: %w[p strong h1 h2 ruby rt]) %>
     <% else %>

@@ -58,7 +58,7 @@ describe PlotChatbot::Toolbox do
     _(add_scene_payload["status"]).must_equal("ok")
 
     update_scene_tool = toolbox.tools.find { |tool| tool.is_a?(PlotChatbot::UpdateSceneTool) }
-    link_id = add_scene_payload.dig("scene", "link_id")
+    link_id = add_scene_payload["link_id"]
     update_scene_payload = JSON.parse(update_scene_tool.execute(link_id:, text: "更新後シーン"))
     _(update_scene_payload["status"]).must_equal("ok")
   end
@@ -67,10 +67,11 @@ describe PlotChatbot::Toolbox do
     toolbox = PlotChatbot::Toolbox.new(user: owner, plot_id: plot.id)
     choices_tool = toolbox.tools.find { |tool| tool.is_a?(PlotChatbot::PresentChoicesTool) }
 
-    result = choices_tool.execute(prompt: "どれにしますか?", choices: [ "A", "B", "A" ])
+    err = expect {
+      choices_tool.execute(prompt: "どれにしますか?", choices: [ "A", "B", "A" ])
+    }.must_raise PlotChatbot::Halt
 
-    _(result).must_be_kind_of(RubyLLM::Tool::Halt)
-    payload = JSON.parse(result.content)
+    payload = JSON.parse(err.message)
     _(payload["type"]).must_equal("choices")
     _(payload["choices"]).must_equal([ "A", "B" ])
   end
