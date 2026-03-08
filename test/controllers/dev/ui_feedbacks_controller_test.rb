@@ -9,13 +9,11 @@ class Dev::UiFeedbacksControllerTest < ActionDispatch::IntegrationTest
   let(:history_path) { feedback_dir.join("history.ndjson") }
 
   setup do
-    FileUtils.rm_f(latest_path)
-    FileUtils.rm_f(history_path)
+    FileUtils.rm_rf(feedback_dir)
   end
 
   teardown do
-    FileUtils.rm_f(latest_path)
-    FileUtils.rm_f(history_path)
+    FileUtils.rm_rf(feedback_dir)
   end
 
   it "stores the latest feedback payload and appends history" do

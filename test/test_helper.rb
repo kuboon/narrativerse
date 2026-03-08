@@ -2,6 +2,7 @@ ENV["RAILS_ENV"] ||= "test"
 require_relative "../config/environment"
 require "rails/test_help"
 require "minitest/spec"
+require_relative "support/stub_provider"
 require "capybara/cuprite"
 
 CI = ENV["CI"].present?

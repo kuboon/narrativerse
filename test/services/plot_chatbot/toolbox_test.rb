@@ -67,11 +67,10 @@ describe PlotChatbot::Toolbox do
     toolbox = PlotChatbot::Toolbox.new(user: owner, plot_id: plot.id)
     choices_tool = toolbox.tools.find { |tool| tool.is_a?(PlotChatbot::PresentChoicesTool) }
 
-    err = expect {
-      choices_tool.execute(prompt: "どれにしますか?", choices: [ "A", "B", "A" ])
-    }.must_raise PlotChatbot::Halt
+    result = choices_tool.execute(prompt: "どれにしますか?", choices: [ "A", "B", "A" ])
 
-    payload = JSON.parse(err.message)
+    _(result).must_be_kind_of RubyLLM::Tool::Halt
+    payload = JSON.parse(result.content)
     _(payload["type"]).must_equal("choices")
     _(payload["choices"]).must_equal([ "A", "B" ])
   end

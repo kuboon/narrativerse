@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 module PlotChatbot
-  class Halt < StandardError; end
-
   class Toolbox
     attr_reader :user, :plot, :scene_id
 
@@ -108,10 +106,6 @@ module PlotChatbot
 
     def json(payload)
       JSON.generate(payload)
-    end
-
-    def halt(result)
-      raise Halt, result
     end
 
     def normalized_limit(limit, default: 10)
@@ -338,7 +332,7 @@ module PlotChatbot
         choices: cleaned_choices
       }
 
-      halt(json(payload))
+      halt json(payload)
     end
   end
 end

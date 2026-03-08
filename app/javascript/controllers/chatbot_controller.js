@@ -90,7 +90,7 @@ export default class extends Controller {
       this.applyThinkingMessageGrouping()
     })
 
-    this.observer.observe(this.messagesTarget, { childList: true, subtree: true })
+    this.observer.observe(this.messagesTarget, { childList: true })
   }
 
   selectChoice(event) {
