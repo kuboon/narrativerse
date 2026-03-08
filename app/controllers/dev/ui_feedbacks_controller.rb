@@ -55,8 +55,7 @@ class Dev::UiFeedbacksController < ApplicationController
     base_dir = Rails.root.join("tmp", "ui_feedbacks")
     return base_dir unless Rails.env.test?
 
-    worker_suffix = ENV.fetch("TEST_ENV_NUMBER", "").presence || "1"
-    base_dir.join("worker_#{worker_suffix}")
+    base_dir.join("pid_#{Process.pid}")
   end
 
   def latest_path

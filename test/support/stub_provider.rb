@@ -113,7 +113,7 @@ module RubyLLM
 
     # -- Chat completion --------------------------------------------------
 
-    def complete(messages, tools:, temperature:, model:, params: {}, headers: {}, schema: nil, thinking: nil, &block)
+    def complete(messages, tools:, temperature:, model:, params: {}, headers: {}, schema: nil, thinking: nil, tool_prefs: nil, &block)
       payload = Utils.deep_merge(
         render_payload(
           messages,

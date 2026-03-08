@@ -3,8 +3,7 @@ require "test_helper"
 class Dev::UiFeedbacksControllerTest < ActionDispatch::IntegrationTest
   extend Minitest::Spec::DSL
 
-  let(:worker_suffix) { ENV.fetch("TEST_ENV_NUMBER", "").presence || "1" }
-  let(:feedback_dir) { Rails.root.join("tmp", "ui_feedbacks", "worker_#{worker_suffix}") }
+  let(:feedback_dir) { Rails.root.join("tmp", "ui_feedbacks", "pid_#{Process.pid}") }
   let(:latest_path) { feedback_dir.join("latest.json") }
   let(:history_path) { feedback_dir.join("history.ndjson") }
 
