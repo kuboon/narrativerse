@@ -1,7 +1,0 @@
-<div class="mt-2 flex flex-col items-start gap-1 font-mono text-xs">
-  <% message.tool_calls.each do |tool_call| %>
-    <div class="rounded-md border border-base-300 bg-base-200 px-2 py-1">
-      <%= tool_call.name %>(<%= tool_call.arguments.map { |k, v| "#{k}: #{v.inspect}" }.join(", ") %>)
-    </div>
-  <% end %>
-</div>

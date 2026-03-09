@@ -1,7 +1,7 @@
 class Message < ApplicationRecord
   acts_as_message tool_calls_foreign_key: :message_id
   has_many_attached :attachments
-  broadcasts_to ->(message) { "chat_#{message.chat_id}" }
+  broadcasts_to ->(message) { "chat_#{message.chat_id}" }, partial: "messages/broadcast_message"
 
   CHOICE_TOOL_NAME = "present_choices"
 

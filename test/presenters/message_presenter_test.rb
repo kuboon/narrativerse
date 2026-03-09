@@ -7,147 +7,179 @@ class MessagePresenterTest < ActiveSupport::TestCase
 
   # -- helpers --------------------------------------------------------------
 
-  def new_message(attrs = {})
-    user = create(:user)
-    chat = create(:chat, user:)
+  let(:user) { create(:user) }
+  let(:chat) { create(:chat, user:) }
+
+  def build_message(attrs = {})
     chat.messages.create!({ role: "assistant", content: "" }.merge(attrs))
   end
 
-  # -- kind -----------------------------------------------------------------
-
-  it "regular assistant message is :regular kind" do
-    msg = new_message(role: "assistant", content: "こんにちは！")
-    p = MessagePresenter.new(msg)
-    _(p.kind).must_equal :regular
-    _(p.regular?).must_equal true
-    _(p.thinking?).must_equal false
-    _(p.choice?).must_equal false
-  end
-
-  it "user message is :regular kind" do
-    msg = new_message(role: "user", content: "テスト")
-    p = MessagePresenter.new(msg)
-    _(p.kind).must_equal :regular
-  end
-
-  it "system message is :thinking kind" do
-    msg = new_message(role: "system", content: "system prompt")
-    p = MessagePresenter.new(msg)
-    _(p.kind).must_equal :thinking
-    _(p.thinking?).must_equal true
-  end
-
-  it "assistant message with thinking_text is :thinking kind" do
-    msg = new_message(role: "assistant", content: "回答", thinking_text: "思考中...")
-    p = MessagePresenter.new(msg)
-    _(p.kind).must_equal :thinking
-  end
-
-  it "choice assistant message is :choice kind" do
-    payload = { type: "choices", prompt: "どうしますか？", choices: [ "A", "B" ] }.to_json
-    msg = new_message(role: "assistant", content: payload)
-    p = MessagePresenter.new(msg)
-    _(p.kind).must_equal :choice
-    _(p.choice?).must_equal true
-  end
-
-  # -- speaker / placement --------------------------------------------------
-
-  it "user message has correct speaker and placement" do
-    msg = new_message(role: "user", content: "hi")
-    p = MessagePresenter.new(msg)
-    _(p.speaker_name).must_equal "あなた"
-    _(p.placement).must_equal "chat-end"
-    _(p.bubble_color).must_equal ""
-  end
-
-  it "assistant message has correct speaker and placement" do
-    msg = new_message(role: "assistant", content: "hi")
-    p = MessagePresenter.new(msg)
-    _(p.speaker_name).must_equal "AI"
-    _(p.placement).must_equal "chat-start"
-    _(p.bubble_color).must_equal "chat-bubble-neutral"
-  end
-
-  # -- status_label ---------------------------------------------------------
-
-  it "tool_call message status_label is 'アクションを実行中'" do
-    msg = new_message(role: "assistant", content: "")
-    msg.tool_calls.create!(name: "plot_chatbot--add_scene", tool_call_id: "tc1", arguments: { text: "本文" })
-    p = MessagePresenter.new(msg.reload)
-    _(p.status_label).must_equal "アクションを実行中"
-  end
-
-  it "system message status_label is 'システム設定'" do
-    msg = new_message(role: "system", content: "prompt")
-    p = MessagePresenter.new(msg)
-    _(p.status_label).must_equal "システム設定"
-  end
-
-  it "thinking_text message status_label is '考え中'" do
-    msg = new_message(role: "assistant", content: "結果", thinking_text: "思考テキスト")
-    p = MessagePresenter.new(msg)
-    _(p.status_label).must_equal "考え中"
-  end
-
-  # -- tool_names_label -----------------------------------------------------
-
-  it "returns nil for non-tool_call messages" do
-    msg = new_message(role: "assistant", content: "普通のメッセージ")
-    p = MessagePresenter.new(msg)
-    _(p.tool_names_label).must_be_nil
-  end
-
-  it "returns human-readable tool names for tool_call message" do
-    msg = new_message(role: "assistant", content: "")
-    msg.tool_calls.create!(name: "plot_chatbot--add_scene", tool_call_id: "tc2", arguments: { text: "テスト" })
-    p = MessagePresenter.new(msg.reload)
-    _(p.tool_names_label).must_equal "シーンの追加"
-  end
-
-  # -- tool_result_summary --------------------------------------------------
-
-  it "returns nil for non-tool_result messages" do
-    msg = new_message(role: "assistant", content: "普通")
-    p = MessagePresenter.new(msg)
-    _(p.tool_result_summary).must_be_nil
-  end
-
-  it "returns Japanese completion summary for known tool via tool result" do
-    user = create(:user)
-    chat = create(:chat, user:)
-
-    # Create an assistant message with a known tool call
-    tc_msg = chat.messages.create!(role: "assistant", content: "")
-    tc = tc_msg.tool_calls.create!(
-      name: "plot_chatbot--add_scene",
+  def build_tool_call_message(tool_name:)
+    msg = build_message(role: "assistant", content: "")
+    msg.tool_calls.create!(
+      name: tool_name,
       tool_call_id: "tc_#{SecureRandom.uuid}",
-      arguments: { text: "新しいシーン" }
-    )
-
-    # Create the tool result message (role: "tool") linked to that tool_call
-    result_msg = chat.messages.create!(role: "tool", content: '{"status":"ok"}', tool_call_id: tc.id)
-    p = MessagePresenter.new(result_msg.reload)
-    _(p.kind).must_equal :thinking
-    _(p.status_label).must_equal "アクション完了"
-    _(p.tool_result_summary).must_equal "シーンを追加しました"
-  end
-
-  it "returns '○○を実行しました' for unknown tool names" do
-    user = create(:user)
-    chat = create(:chat, user:)
-
-    # Create an assistant message with a tool call for an unknown tool
-    tc_msg = chat.messages.create!(role: "assistant", content: "")
-    tc = tc_msg.tool_calls.create!(
-      name: "my_plugin--do_something",
-      tool_call_id: "tc_unknown_#{SecureRandom.hex(4)}",
       arguments: {}
     )
+    msg.reload
+  end
 
-    # Create the tool result referencing the tool_calls.id (integer FK)
-    result_msg = chat.messages.create!(role: "tool", content: "ok", tool_call_id: tc.id)
-    p = MessagePresenter.new(result_msg.reload)
-    _(p.tool_result_summary).must_match(/実行しました/)
+  def build_tool_result_message(tool_call:)
+    chat.messages.create!(role: "tool", content: '{"status":"ok"}', tool_call_id: tool_call.id)
+  end
+
+  def presenter(messages)
+    MessagePresenter.new(messages)
+  end
+
+  # -- entries: regular messages --------------------------------------------
+
+  it "single user message produces one RegularEntry" do
+    msg = build_message(role: "user", content: "こんにちは")
+    entries = presenter([ msg ]).entries
+    _(entries.size).must_equal 1
+    _(entries.first).must_be_instance_of MessagePresenter::RegularEntry
+    _(entries.first.message).must_equal msg
+  end
+
+  it "single assistant message produces one RegularEntry" do
+    msg = build_message(role: "assistant", content: "返答です")
+    entries = presenter([ msg ]).entries
+    _(entries.first).must_be_instance_of MessagePresenter::RegularEntry
+  end
+
+  it "choice assistant message produces one ChoiceEntry" do
+    payload = { type: "choices", prompt: "どうしますか？", choices: [ "A", "B" ] }.to_json
+    msg = build_message(role: "assistant", content: payload)
+    entries = presenter([ msg ]).entries
+    _(entries.size).must_equal 1
+    _(entries.first).must_be_instance_of MessagePresenter::ChoiceEntry
+    _(entries.first.payload["choices"]).must_equal [ "A", "B" ]
+  end
+
+  # -- entries: thinking messages -------------------------------------------
+
+  it "system message produces one ThinkingEntry" do
+    msg = build_message(role: "system", content: "system prompt")
+    entries = presenter([ msg ]).entries
+    _(entries.size).must_equal 1
+    _(entries.first).must_be_instance_of MessagePresenter::ThinkingEntry
+  end
+
+  it "assistant message with thinking_text produces ThinkingEntry" do
+    msg = build_message(role: "assistant", content: "回答", thinking_text: "思考中...")
+    entries = presenter([ msg ]).entries
+    _(entries.first).must_be_instance_of MessagePresenter::ThinkingEntry
+  end
+
+  it "empty messages list produces no entries" do
+    _(presenter([]).entries).must_be_empty
+  end
+
+  # -- grouping: consecutive thinking messages are merged -------------------
+
+  it "consecutive thinking messages are collapsed into a single ThinkingEntry" do
+    tc_msg = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
+    tc     = tc_msg.tool_calls.first
+    result_msg = build_tool_result_message(tool_call: tc)
+
+    entries = presenter([ tc_msg, result_msg ]).entries
+    _(entries.size).must_equal 1
+    entry = entries.first
+    _(entry).must_be_instance_of MessagePresenter::ThinkingEntry
+    _(entry.actions.size).must_equal 2
+  end
+
+  it "non-thinking message between thinking messages breaks the group" do
+    tc_msg     = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
+    tc         = tc_msg.tool_calls.first
+    result_msg = build_tool_result_message(tool_call: tc)
+    regular    = build_message(role: "assistant", content: "まとめです")
+    tc_msg2    = build_tool_call_message(tool_name: "plot_chatbot--list_scenes")
+
+    entries = presenter([ tc_msg, result_msg, regular, tc_msg2 ]).entries
+    _(entries.size).must_equal 3
+    _(entries[0]).must_be_instance_of MessagePresenter::ThinkingEntry
+    _(entries[0].actions.size).must_equal 2
+    _(entries[1]).must_be_instance_of MessagePresenter::RegularEntry
+    _(entries[2]).must_be_instance_of MessagePresenter::ThinkingEntry
+    _(entries[2].actions.size).must_equal 1
+  end
+
+  it "ThinkingEntry lead_message_id is the first message id in the group" do
+    tc_msg     = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
+    tc         = tc_msg.tool_calls.first
+    result_msg = build_tool_result_message(tool_call: tc)
+
+    entry = presenter([ tc_msg, result_msg ]).entries.first
+    _(entry.lead_message_id).must_equal tc_msg.id
+  end
+
+  # -- ActionItem contents --------------------------------------------------
+
+  it "tool_call action has correct status_label and detail_label" do
+    tc_msg = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
+    entry  = presenter([ tc_msg ]).entries.first
+    action = entry.actions.first
+    _(action.status_label).must_equal "アクションを実行中"
+    _(action.detail_label).must_equal "シーンの追加"
+    _(action.done).must_equal false
+  end
+
+  it "tool_result action has correct status_label, completion summary, and done=true" do
+    tc_msg = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
+    tc     = tc_msg.tool_calls.first
+    result = build_tool_result_message(tool_call: tc)
+
+    entry  = presenter([ tc_msg, result ]).entries.first
+    action = entry.actions.last
+    _(action.status_label).must_equal "アクション完了"
+    _(action.detail_label).must_equal "シーンを追加しました"
+    _(action.done).must_equal true
+  end
+
+  it "system message action has 'システム設定' label and done=true" do
+    msg    = build_message(role: "system", content: "prompt")
+    entry  = presenter([ msg ]).entries.first
+    action = entry.actions.first
+    _(action.status_label).must_equal "システム設定"
+    _(action.done).must_equal true
+  end
+
+  it "thinking_text message action has '考え中' label and thinking_text" do
+    msg    = build_message(role: "assistant", content: "回答", thinking_text: "思考テキスト")
+    entry  = presenter([ msg ]).entries.first
+    action = entry.actions.first
+    _(action.status_label).must_equal "考え中"
+    _(action.thinking_text).must_equal "思考テキスト"
+    _(action.done).must_equal false
+  end
+
+  it "unknown tool name falls back to '○○を実行しました'" do
+    tc_msg = build_tool_call_message(tool_name: "my_plugin--do_something")
+    tc     = tc_msg.tool_calls.first
+    result = build_tool_result_message(tool_call: tc)
+
+    entry  = presenter([ tc_msg, result ]).entries.first
+    action = entry.actions.last
+    _(action.detail_label).must_match(/実行しました/)
+  end
+
+  # -- mixed sequence -------------------------------------------------------
+
+  it "mixed sequence produces entries in correct order" do
+    user_msg   = build_message(role: "user", content: "お願いします")
+    sys_msg    = build_message(role: "system", content: "prompt")
+    tc_msg     = build_tool_call_message(tool_name: "plot_chatbot--list_scenes")
+    tc         = tc_msg.tool_calls.first
+    result_msg = build_tool_result_message(tool_call: tc)
+    reply_msg  = build_message(role: "assistant", content: "完了しました！")
+
+    entries = presenter([ user_msg, sys_msg, tc_msg, result_msg, reply_msg ]).entries
+    _(entries.size).must_equal 3
+    _(entries[0]).must_be_instance_of MessagePresenter::RegularEntry   # user
+    _(entries[1]).must_be_instance_of MessagePresenter::ThinkingEntry  # system + tool_call + tool_result
+    _(entries[1].actions.size).must_equal 3
+    _(entries[2]).must_be_instance_of MessagePresenter::RegularEntry   # assistant reply
   end
 end
