@@ -21,7 +21,7 @@ class PlotScenesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to reader_scene_path(@plot, @scene.id) }
-      format.turbo_stream
+      # format.turbo_stream
     end
   end
 

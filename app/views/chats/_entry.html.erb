@@ -23,7 +23,7 @@
         </svg>
       </summary>
       <% if action.execution_text.present? %>
-        <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 font-mono text-[10px] leading-relaxed text-base-content/60 whitespace-pre-wrap">
+        <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 font-mono text-[10px] leading-relaxed text-base-content/60">
           <%= action.execution_text %>
         </div>
       <% end %>
@@ -50,7 +50,7 @@
         </svg>
       </summary>
       <% if thinking.thinking_text.present? %>
-        <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 text-[11px] leading-relaxed text-base-content/60 italic whitespace-pre-wrap">
+        <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 text-[11px] leading-relaxed text-base-content/60 italic">
           <%= thinking.thinking_text.truncate(320) %>
         </div>
       <% end %>
@@ -87,7 +87,7 @@
       </div>
     <% end %>
     <div id="message_<%= regular.message.id %>_content"
-         class="chat-bubble <%= is_user ? "chat-bubble-primary" : "chat-bubble-neutral" %> max-w-[88%] whitespace-pre-wrap text-sm leading-relaxed">
+         class="chat-bubble <%= is_user ? "chat-bubble-primary" : "chat-bubble-neutral" %> max-w-[88%] text-sm leading-relaxed">
       <%= regular.message.content %>
     </div>
     <div class="chat-footer mt-1 text-xs opacity-40">

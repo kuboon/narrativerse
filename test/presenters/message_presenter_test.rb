@@ -59,11 +59,10 @@ class MessagePresenterTest < ActiveSupport::TestCase
 
   # -- entries: thinking/action messages ------------------------------------
 
-  it "system message produces one ActionItem" do
+  it "system message produces no entries" do
     msg = build_message(role: "system", content: "system prompt")
     entries = presenter([ msg ]).entries
-    _(entries.size).must_equal 1
-    _(entries.first).must_be_instance_of MessagePresenter::ActionItem
+    _(entries).must_be_empty
   end
 
   it "tool_call message produces one ActionItem" do
@@ -91,9 +90,10 @@ class MessagePresenterTest < ActiveSupport::TestCase
     result_msg = build_tool_result_message(tool_call: tc)
 
     entries = presenter([ tc_msg, result_msg ]).entries
-    _(entries.size).must_equal 2
+    # tool_call is hidden once its result exists; only the result ActionItem shows
+    _(entries.size).must_equal 1
     _(entries[0]).must_be_instance_of MessagePresenter::ActionItem
-    _(entries[1]).must_be_instance_of MessagePresenter::ActionItem
+    _(entries[0].done).must_equal true
   end
 
   it "non-thinking message keeps full order between thinking/action entries" do
@@ -104,13 +104,13 @@ class MessagePresenterTest < ActiveSupport::TestCase
     thinking   = build_message(role: "assistant", content: "", thinking_text: "検討中")
     tc_msg2    = build_tool_call_message(tool_name: "plot_chatbot--list_scenes")
 
+    # tc_msg is suppressed (result exists); tc_msg2 has no result → stays
     entries = presenter([ tc_msg, result_msg, regular, thinking, tc_msg2 ]).entries
-    _(entries.size).must_equal 5
-    _(entries[0]).must_be_instance_of MessagePresenter::ActionItem
-    _(entries[1]).must_be_instance_of MessagePresenter::ActionItem
-    _(entries[2]).must_be_instance_of MessagePresenter::RegularEntry
-    _(entries[3]).must_be_instance_of MessagePresenter::ThinkingEntry
-    _(entries[4]).must_be_instance_of MessagePresenter::ActionItem
+    _(entries.size).must_equal 4
+    _(entries[0]).must_be_instance_of MessagePresenter::ActionItem  # tool_result
+    _(entries[1]).must_be_instance_of MessagePresenter::RegularEntry
+    _(entries[2]).must_be_instance_of MessagePresenter::ThinkingEntry
+    _(entries[3]).must_be_instance_of MessagePresenter::ActionItem  # in-progress tc_msg2
   end
 
   it "thinking/action entry lead_message_id equals source message id" do
@@ -119,10 +119,10 @@ class MessagePresenterTest < ActiveSupport::TestCase
     result_msg = build_tool_result_message(tool_call: tc)
     thinking   = build_message(role: "assistant", content: "", thinking_text: "思考中")
 
+    # tc_msg suppressed (result exists); result_msg and thinking remain
     entries = presenter([ tc_msg, result_msg, thinking ]).entries
-    _(entries[0].lead_message_id).must_equal tc_msg.id
-    _(entries[1].lead_message_id).must_equal result_msg.id
-    _(entries[2].lead_message_id).must_equal thinking.id
+    _(entries[0].lead_message_id).must_equal result_msg.id
+    _(entries[1].lead_message_id).must_equal thinking.id
   end
 
   # -- ActionItem contents --------------------------------------------------
@@ -139,6 +139,22 @@ class MessagePresenterTest < ActiveSupport::TestCase
     _(entry.done).must_equal false
   end
 
+  it "completed tool_call (result exists) produces no in-progress ActionItem" do
+    tc_msg = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
+    tc     = tc_msg.tool_calls.first
+    result_msg = build_tool_result_message(tool_call: tc)
+
+    entries = presenter([ tc_msg, result_msg ]).entries
+    _(entries.size).must_equal 1
+    _(entries.first.done).must_equal true
+  end
+
+  it "present_choices tool_call produces no entry" do
+    tc_msg = build_tool_call_message(tool_name: "plot_chatbot--present_choices")
+    entries = presenter([ tc_msg ]).entries
+    _(entries).must_be_empty
+  end
+
   it "tool_result action has correct status_label, completion summary, and execution_text" do
     tc_msg = build_tool_call_message(tool_name: "plot_chatbot--add_scene")
     tc     = tc_msg.tool_calls.first
@@ -151,12 +167,9 @@ class MessagePresenterTest < ActiveSupport::TestCase
     _(entry.done).must_equal true
   end
 
-  it "system message action has system label and execution text" do
-    msg    = build_message(role: "system", content: "prompt")
-    entry  = presenter([ msg ]).entries.first
-    _(entry.status_label).must_equal "システム設定"
-    _(entry.execution_text).must_equal "prompt"
-    _(entry.done).must_equal true
+  it "system message produces no entry" do
+    msg = build_message(role: "system", content: "prompt")
+    _(presenter([ msg ]).entries).must_be_empty
   end
 
   it "thinking_text message produces ThinkingEntry with thinking text" do
@@ -186,12 +199,11 @@ class MessagePresenterTest < ActiveSupport::TestCase
     result_msg = build_tool_result_message(tool_call: tc)
     reply_msg  = build_message(role: "assistant", content: "完了しました！")
 
+    # sys_msg suppressed; tc_msg suppressed (result exists)
     entries = presenter([ user_msg, sys_msg, tc_msg, result_msg, reply_msg ]).entries
-    _(entries.size).must_equal 5
+    _(entries.size).must_equal 3
     _(entries[0]).must_be_instance_of MessagePresenter::RegularEntry   # user
-    _(entries[1]).must_be_instance_of MessagePresenter::ActionItem     # system
-    _(entries[2]).must_be_instance_of MessagePresenter::ActionItem     # tool_call
-    _(entries[3]).must_be_instance_of MessagePresenter::ActionItem     # tool_result
-    _(entries[4]).must_be_instance_of MessagePresenter::RegularEntry   # assistant reply
+    _(entries[1]).must_be_instance_of MessagePresenter::ActionItem     # tool_result
+    _(entries[2]).must_be_instance_of MessagePresenter::RegularEntry   # assistant reply
   end
 end

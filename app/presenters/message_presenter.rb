@@ -52,11 +52,17 @@ class MessagePresenter
   end
 
   def entries
-    result = []
+    messages = Array(@messages)
+    @completed_tool_call_ids = messages
+      .select { |m| m.role.present? && m.tool_result? }
+      .filter_map { |m| m.parent_tool_call&.message_id }
+      .to_set
 
-    Array(@messages).each do |msg|
+    result = []
+    messages.each do |msg|
       if thinking_message?(msg)
-        result << build_thinking_related_entry(msg)
+        entry = build_thinking_related_entry(msg)
+        result << entry if entry
       else
         cp = msg.choice_payload
         if cp
@@ -95,6 +101,9 @@ class MessagePresenter
 
   def build_action_item(msg)
     if msg.tool_call?
+      return if choice_tool_call?(msg)
+      return if @completed_tool_call_ids&.include?(msg.id)
+
       ActionItem.new(
         status_label: "アクションを実行中",
         detail_label: msg.tool_calls.map { |tc| tool_label(tc.name) }.join(", "),
@@ -112,15 +121,11 @@ class MessagePresenter
         lead_message_id: msg.id,
         done: true
       )
-    else
-      ActionItem.new(
-        status_label: "システム設定",
-        detail_label: nil,
-        execution_text: msg.content.presence,
-        lead_message_id: msg.id,
-        done: true
-      )
     end
+  end
+
+  def choice_tool_call?(msg)
+    msg.tool_calls.all? { |tc| tc.name.to_s.end_with?("--#{Message::CHOICE_TOOL_NAME}") || tc.name.to_s == Message::CHOICE_TOOL_NAME }
   end
 
   def format_tool_call_execution(msg)
