@@ -1,7 +1,1 @@
-<%# Used by Turbo Streams when a single Message is broadcast (after_create/update).
-    Wraps the single message in a one-element presenter so the same _entry
-    partial drives the output. %>
-<% entry = MessagePresenter.new([ message ]).entries.first %>
-<% if entry %>
-  <%= render "chats/entry", entry: entry %>
-<% end %>
+<%= render message %>

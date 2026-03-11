@@ -1,0 +1,10 @@
+<div class="mx-3 mt-1 mb-2 space-y-2">
+  <% message.tool_calls.each do |tool_call| %>
+    <div class="rounded-md bg-base-200 px-3 py-2">
+      <div class="text-[11px] font-semibold text-base-content/70"><%= tool_call.name %></div>
+      <% if tool_call.arguments.present? %>
+        <pre class="mt-1 overflow-x-auto whitespace-pre-wrap font-mono text-[10px] leading-relaxed text-base-content/60"><%= JSON.pretty_generate(tool_call.arguments) %></pre>
+      <% end %>
+    </div>
+  <% end %>
+</div>

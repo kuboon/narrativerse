@@ -9,7 +9,7 @@ class MessageTest < ActiveSupport::TestCase
     user = create(:user)
     plot = create(:plot, user:, scenes_count: 1)
     chat = create(:chat, user:)
-    toolbox = PlotChatbot::Toolbox.new(user:, plot_id: plot.id)
+    agent = PlotChatbot::Agent.new(chat:, plot_id: plot.id, persist_instructions: false)
 
     tool_call_response = RubyLLM::StubProvider.bedrock_tool_call(
       tool_use_id: "tc_choice_1",
@@ -18,9 +18,7 @@ class MessageTest < ActiveSupport::TestCase
     )
 
     RubyLLM::StubProvider.stub_chat(tool_call_response) do
-      llm_chat = chat.with_instructions(toolbox.system_prompt, replace: true)
-      llm_chat = llm_chat.with_tools(*toolbox.tools)
-      llm_chat.ask("何か提案して")
+      agent.ask("何か提案して")
     end
 
     tool_result_msg = chat.messages.where(role: "tool").last
@@ -36,7 +34,7 @@ class MessageTest < ActiveSupport::TestCase
     user = create(:user)
     plot = create(:plot, user:, scenes_count: 1)
     chat = create(:chat, user:)
-    toolbox = PlotChatbot::Toolbox.new(user:, plot_id: plot.id)
+    agent = PlotChatbot::Agent.new(chat:, plot_id: plot.id, persist_instructions: false)
 
     tool_call_response = RubyLLM::StubProvider.bedrock_tool_call(
       tool_use_id: "tc_dedup",
@@ -45,9 +43,7 @@ class MessageTest < ActiveSupport::TestCase
     )
 
     RubyLLM::StubProvider.stub_chat(tool_call_response) do
-      llm_chat = chat.with_instructions(toolbox.system_prompt, replace: true)
-      llm_chat = llm_chat.with_tools(*toolbox.tools)
-      llm_chat.ask("選択肢を出して")
+      agent.ask("選択肢を出して")
     end
 
     payload = chat.messages.where(role: "tool").last.choice_payload
