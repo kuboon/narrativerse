@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = ["display", "editor", "form", "input"]
 
   connect() {
-    this.isEditing = !this.editorTarget.classList.contains("hidden")
+    this.isEditing = this.hasEditorTarget && !this.editorTarget.classList.contains("hidden")
     this.boundBeforeCache = this.beforeCache.bind(this)
     document.addEventListener("turbo:before-cache", this.boundBeforeCache)
   }
@@ -20,6 +20,7 @@ export default class extends Controller {
   }
 
   edit(event) {
+    if (!this.hasDisplayTarget || !this.hasEditorTarget) return
     if (this.isEditing) return
     if (this.clickedInteractiveElement(event.target)) return
 
@@ -28,6 +29,7 @@ export default class extends Controller {
   }
 
   showEditor() {
+    if (!this.hasDisplayTarget || !this.hasEditorTarget) return
     this.displayTarget.classList.add("hidden")
     this.editorTarget.classList.remove("hidden")
     this.isEditing = true
@@ -45,6 +47,7 @@ export default class extends Controller {
   }
 
   hideEditor() {
+    if (!this.hasDisplayTarget || !this.hasEditorTarget) return
     this.displayTarget.classList.remove("hidden")
     this.editorTarget.classList.add("hidden")
     this.isEditing = false

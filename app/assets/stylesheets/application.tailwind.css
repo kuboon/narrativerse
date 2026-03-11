@@ -36,6 +36,11 @@ body {
 
 .site-header {
 	@apply sticky top-0 z-30 border-b border-base-300/70 bg-base-100/85 backdrop-blur;
+	transition: transform 0.3s ease;
+}
+
+.site-header--hidden {
+	transform: translateY(-100%);
 }
 
 .container {

@@ -19,12 +19,6 @@
       <% end %>
     </div>
 
-    <% if policy(@plot).manage_elements? %>
-      <div class="detail-actions">
-        <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn btn-ghost" %>
-      </div>
-    <% end %>
-
     <% if @plot.plot_elements.any? %>
       <div class="grid">
         <div class="grid-header">
@@ -35,6 +29,12 @@
             <%= render "plot_elements/plot_element", plot_element: plot_element %>
           <% end %>
         </div>
+      </div>
+    <% end %>
+
+    <% if policy(@plot).manage_elements? %>
+      <div class="detail-actions">
+        <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn btn-ghost" %>
       </div>
     <% end %>
 

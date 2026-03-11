@@ -2,15 +2,16 @@
 
 # Presentation layer between chat.messages and the chatbox view.
 #
-# Accepts an ActiveRecord::Relation or Array of Message records and groups
-# them into a flat list of renderable Entry value objects.  Consecutive
-# "thinking" messages (system / tool_call / tool_result / thinking_text) are
-# merged into a single ThinkingEntry so the view never needs to re-implement
-# that grouping logic (previously done in JavaScript).
+# Accepts an ActiveRecord::Relation or Array of Message records and returns
+# a flat list of renderable Entry value objects.
+#
+# Thinking-related messages are represented as independent entries:
+# - ActionItem for system / tool_call / tool_result messages
+# - ThinkingEntry for assistant thinking_text messages
 #
 # Usage:
 #   presenter = MessagePresenter.new(@chat.messages)
-#   presenter.entries  # => [ThinkingEntry, RegularEntry, ChoiceEntry, ...]
+#   presenter.entries  # => [ActionItem, ThinkingEntry, RegularEntry, ChoiceEntry, ...]
 class MessagePresenter
   TOOL_NAME_LABELS = {
     "plot_chatbot--add_plot_element"    => "要素の追加",
@@ -34,9 +35,8 @@ class MessagePresenter
     "plot_chatbot--present_choices"     => "選択肢を提示しました"
   }.freeze
 
-  # A consecutive run of thinking-kind messages collapsed into one widget.
-  # `actions` is an Array of ActionItem describing each step.
-  ThinkingEntry = Data.define(:actions, :lead_message_id)
+  # A single assistant thinking text displayed as a collapsible block.
+  ThinkingEntry = Data.define(:status_label, :thinking_text, :lead_message_id, :done)
 
   # A single visible chat bubble (user or assistant text).
   RegularEntry = Data.define(:message)
@@ -44,8 +44,8 @@ class MessagePresenter
   # An assistant message rendered as tappable choice buttons.
   ChoiceEntry = Data.define(:message, :payload)
 
-  # One row inside a ThinkingEntry.
-  ActionItem = Data.define(:status_label, :detail_label, :thinking_text, :done)
+  # A single system/tool action displayed as a collapsible block.
+  ActionItem = Data.define(:status_label, :detail_label, :execution_text, :lead_message_id, :done)
 
   def initialize(messages)
     @messages = messages
@@ -53,15 +53,11 @@ class MessagePresenter
 
   def entries
     result = []
-    pending_thinking = []
 
     Array(@messages).each do |msg|
       if thinking_message?(msg)
-        pending_thinking << msg
+        result << build_thinking_related_entry(msg)
       else
-        flush_thinking(pending_thinking, result)
-        pending_thinking = []
-
         cp = msg.choice_payload
         if cp
           result << ChoiceEntry.new(message: msg, payload: cp)
@@ -71,7 +67,6 @@ class MessagePresenter
       end
     end
 
-    flush_thinking(pending_thinking, result)
     result
   end
 
@@ -83,11 +78,19 @@ class MessagePresenter
     msg.thinking_message?
   end
 
-  def flush_thinking(msgs, result)
-    return if msgs.empty?
+  def build_thinking_related_entry(msg)
+    return build_action_item(msg) if action_message?(msg)
 
-    actions = msgs.map { |msg| build_action_item(msg) }
-    result << ThinkingEntry.new(actions:, lead_message_id: msgs.first.id)
+    ThinkingEntry.new(
+      status_label: "考え中",
+      thinking_text: msg.thinking_text.presence || msg.content.presence,
+      lead_message_id: msg.id,
+      done: false
+    )
+  end
+
+  def action_message?(msg)
+    msg.tool_call? || msg.tool_result? || msg.role.to_s == "system"
   end
 
   def build_action_item(msg)
@@ -95,7 +98,8 @@ class MessagePresenter
       ActionItem.new(
         status_label: "アクションを実行中",
         detail_label: msg.tool_calls.map { |tc| tool_label(tc.name) }.join(", "),
-        thinking_text: nil,
+        execution_text: format_tool_call_execution(msg),
+        lead_message_id: msg.id,
         done: false
       )
     elsif msg.tool_result?
@@ -104,24 +108,46 @@ class MessagePresenter
       ActionItem.new(
         status_label: "アクション完了",
         detail_label: summary,
-        thinking_text: nil,
-        done: true
-      )
-    elsif msg.role.to_s == "system"
-      ActionItem.new(
-        status_label: "システム設定",
-        detail_label: nil,
-        thinking_text: nil,
+        execution_text: format_tool_result_execution(msg.content),
+        lead_message_id: msg.id,
         done: true
       )
     else
       ActionItem.new(
-        status_label: "考え中",
+        status_label: "システム設定",
         detail_label: nil,
-        thinking_text: msg.thinking_text.presence,
-        done: false
+        execution_text: msg.content.presence,
+        lead_message_id: msg.id,
+        done: true
       )
     end
+  end
+
+  def format_tool_call_execution(msg)
+    lines = msg.tool_calls.map do |tool_call|
+      payload = format_json_payload(tool_call.arguments)
+      label = tool_label(tool_call.name)
+      payload.present? ? "#{label}\n#{payload}" : label
+    end
+
+    lines.join("\n\n").presence
+  end
+
+  def format_tool_result_execution(raw_content)
+    return if raw_content.blank?
+
+    parsed = JSON.parse(raw_content)
+    JSON.pretty_generate(parsed)
+  rescue JSON::ParserError
+    raw_content
+  end
+
+  def format_json_payload(payload)
+    return if payload.blank?
+
+    JSON.pretty_generate(payload.as_json)
+  rescue JSON::GeneratorError, TypeError
+    payload.to_s
   end
 
   def tool_label(tool_name)

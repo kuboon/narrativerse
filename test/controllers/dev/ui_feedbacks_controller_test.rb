@@ -34,6 +34,7 @@ class Dev::UiFeedbacksControllerTest < ActionDispatch::IntegrationTest
     response_body = JSON.parse(response.body)
     assert_equal "ok", response_body.fetch("status")
     assert_equal latest_path.relative_path_from(Rails.root).to_s, response_body.fetch("saved_to")
+    assert_includes [ true, false ], response_body.fetch("copilot_cli_kicked")
 
     assert File.exist?(latest_path)
     assert File.exist?(history_path)

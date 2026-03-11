@@ -1,11 +1,11 @@
+<% editable = policy(plot).update? %>
 <div id="plot-overview-<%= plot.id %>" 
      class="plot-container" 
-     data-controller="inline-editor"
-     data-action="click->inline-editor#edit window:inline-editor:close-others->inline-editor#closeOthers click@window->inline-editor#clickOutside keydown@window->inline-editor#onKeyDown"
+  <%= 'data-controller="inline-editor"' if editable %>
+  <%= 'data-action="click->inline-editor#edit window:inline-editor:close-others->inline-editor#closeOthers click@window->inline-editor#clickOutside keydown@window->inline-editor#onKeyDown"' if editable %>
      data-inline-editor-editing-class="border-editing"
      data-inline-editor-saving-class="border-saving"
      data-inline-editor-saved-class="border-saved">
-  <% editable = policy(plot).update? %>
   <% open_editor = local_assigns.fetch(:open_editor, false) %>
   <% display_classes = ["plot-display"] %>
   <% display_classes << "cursor-pointer hover:bg-gray-50" if editable %>

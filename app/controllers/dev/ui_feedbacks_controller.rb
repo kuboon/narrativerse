@@ -9,8 +9,13 @@ class Dev::UiFeedbacksController < ApplicationController
     FileUtils.mkdir_p(feedback_dir)
     File.write(latest_path, JSON.pretty_generate(payload))
     File.open(history_path, "a") { |file| file.puts(payload.to_json) }
+    copilot_kicked = kick_copilot_cli
 
-    render json: { status: "ok", saved_to: latest_path.relative_path_from(Rails.root).to_s }
+    render json: {
+      status: "ok",
+      saved_to: latest_path.relative_path_from(Rails.root).to_s,
+      copilot_cli_kicked: copilot_kicked
+    }
   rescue JSON::GeneratorError, Errno::EACCES => error
     render json: { status: "error", message: error.message }, status: :unprocessable_entity
   end
@@ -64,5 +69,17 @@ class Dev::UiFeedbacksController < ApplicationController
 
   def history_path
     feedback_dir.join("history.ndjson")
+  end
+
+  def kick_copilot_cli
+    script_path = Rails.root.join("bin", "ui_feedback_to_copilot")
+    return false unless script_path.exist? && script_path.executable?
+
+    pid = Process.spawn(script_path.to_s, chdir: Rails.root.to_s, out: File::NULL, err: File::NULL)
+    Process.detach(pid)
+    true
+  rescue StandardError => error
+    Rails.logger.warn("Failed to kick Copilot CLI: #{error.class}: #{error.message}")
+    false
   end
 end

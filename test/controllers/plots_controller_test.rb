@@ -28,6 +28,21 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     assert_response :not_found
   end
 
+  it "renders add-element button below the plot elements section" do
+    post session_path, params: { user_id: owner.id }
+    create(:plot_element, plot:, element: create(:element, user: owner))
+
+    get plot_path(plot)
+
+    assert_response :success
+    heading_index = @response.body.index("<h2>登場要素</h2>")
+    button_index = @response.body.index(%(href="#{new_plot_plot_element_path(plot)}"))
+
+    refute_nil heading_index
+    refute_nil button_index
+    assert_operator heading_index, :<, button_index
+  end
+
   it "redirects edit path to show" do
     post session_path, params: { user_id: owner.id }
 
@@ -63,6 +78,16 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "span.meta-label", text: "親プロット", count: 0
     assert_select "span", text: "なし", count: 0
+  end
+
+  it "does not mount inline editor for non-owner viewer" do
+    viewer = create(:user)
+    post session_path, params: { user_id: viewer.id }
+
+    get plot_path(plot)
+
+    assert_response :success
+    assert_select "#plot-overview-#{plot.id}[data-controller='inline-editor']", count: 0
   end
 
   it "shows parent plot links when there are parents" do
