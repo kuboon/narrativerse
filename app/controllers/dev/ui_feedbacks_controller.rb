@@ -48,7 +48,6 @@ class Dev::UiFeedbacksController < ApplicationController
       :tag_name,
       :element_id,
       :text,
-      :prompt,
       classes: [],
       styles: {},
       viewport: {},

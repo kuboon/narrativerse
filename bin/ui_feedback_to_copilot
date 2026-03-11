@@ -13,20 +13,15 @@ unless File.exist?(LATEST_FEEDBACK_PATH)
 end
 
 feedback = JSON.parse(File.read(LATEST_FEEDBACK_PATH))
-prompt = feedback.fetch("prompt", "").to_s.strip
-
-if prompt.empty?
-  prompt = <<~PROMPT
-    UI修正要望です。以下の要素を修正してください。
-    要望: #{feedback["request"]}
-    URL: #{feedback["url"]}
-    controller: #{feedback["page_controller"].presence || "(不明)"}
-    action: #{feedback["page_action"].presence || "(不明)"}
-    selector: #{feedback["selector"]}
-    tag: #{feedback["tag_name"]}
-    text: #{feedback["text"]}
-  PROMPT
-end
+prompt = <<~PROMPT
+  #{feedback["request"]}
+  URL: #{feedback["url"]}
+  controller: #{feedback["page_controller"].presence || "(不明)"}
+  action: #{feedback["page_action"].presence || "(不明)"}
+  selector: #{feedback["selector"]}
+  tag: #{feedback["tag_name"]}
+  text: #{feedback["text"]}
+PROMPT
 
 if ARGV.include?("--print")
   puts prompt

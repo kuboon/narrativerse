@@ -176,26 +176,6 @@ export default class extends Controller {
     }, {})
   }
 
-  buildPrompt(payload) {
-    const styleLines = Object.entries(payload.styles)
-      .map(([key, value]) => `- ${key}: ${value}`)
-      .join("\n")
-
-    return [
-      "UI修正要望です。以下の要素を修正してください。",
-      `要望: ${payload.request}`,
-      `URL: ${payload.url}`,
-      `controller: ${payload.page_controller || "(不明)"}`,
-      `action: ${payload.page_action || "(不明)"}`,
-      `selector: ${payload.selector}`,
-      `tag: ${payload.tag_name}`,
-      `text: ${payload.text || "(空)"}`,
-      "現在のスタイル:",
-      styleLines,
-      "最小変更で実装し、必要なら該当CSS/テンプレートも更新してください。"
-    ].join("\n")
-  }
-
   readCsrfToken() {
     const meta = document.querySelector("meta[name='csrf-token']")
     return meta ? meta.content : ""
@@ -261,8 +241,6 @@ export default class extends Controller {
         height: rect.height
       }
     }
-
-    payload.prompt = this.buildPrompt(payload)
     return payload
   }
 
