@@ -1,12 +1,17 @@
 <%= form_with(model: message, url: chat_messages_path, id: "new_message") do |form| %>
-  <div class="flex gap-2">
-    <% if local_assigns[:plot_id].present? %>
-      <%= form.hidden_field :plot_id, value: local_assigns[:plot_id] %>
-    <% end %>
-    <% if local_assigns[:scene_id].present? %>
-      <%= form.hidden_field :scene_id, value: local_assigns[:scene_id] %>
-    <% end %>
-    <%= form.text_field :content, class: "input input-bordered flex-1", placeholder: "Type a message...", autocomplete: "off", data: { chatbot_target: "input" } %>
-    <%= form.submit "Send", class: "btn btn-primary" %>
+  <% if local_assigns[:plot_id].present? %>
+    <%= form.hidden_field :plot_id, value: local_assigns[:plot_id] %>
+  <% end %>
+  <% if local_assigns[:scene_id].present? %>
+    <%= form.hidden_field :scene_id, value: local_assigns[:scene_id] %>
+  <% end %>
+  <div class="flex items-end gap-2">
+    <%= form.text_area :content,
+        class: "textarea textarea-bordered flex-1 resize-none leading-snug",
+        placeholder: "メッセージを入力...",
+        autocomplete: "off",
+        rows: 1,
+        data: { chatbot_target: "input" } %>
+    <%= form.submit "送信", class: "btn btn-primary btn-sm h-10 self-end" %>
   </div>
 <% end %>

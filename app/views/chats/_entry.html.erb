@@ -3,98 +3,95 @@
 <% case entry %>
 <% in MessagePresenter::ActionItem => action %>
   <div id="action_entry_<%= action.lead_message_id %>"
-       class="chat chat-start"
-       data-message-kind="thinking">
-    <div class="chat-header text-xs font-semibold text-base-content/70">AI</div>
-    <div class="chat-bubble chat-bubble-neutral max-w-[85%] p-0 overflow-hidden text-[11px] text-base-content/70">
-      <details class="group">
-        <summary class="flex items-center gap-2 p-2 px-3 cursor-pointer list-none hover:bg-base-content/5 transition-colors">
-          <% if action.done %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-success" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-          <% else %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 animate-spin" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-            </svg>
-          <% end %>
-          <span class="font-bold"><%= action.status_label %></span>
-          <% if action.detail_label.present? %>
-            <span class="opacity-60 ml-1"><%= action.detail_label %></span>
-          <% end %>
-          <span class="loading loading-dots loading-xs group-open:hidden ml-auto" aria-hidden="true"></span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-auto transition-transform group-open:rotate-180 opacity-50" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+       class="my-0.5 px-1"
+       data-message-kind="action">
+    <details class="group">
+      <summary class="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-base-content/50 transition-colors hover:bg-base-200 hover:text-base-content/70">
+        <% if action.done %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0 text-success/70" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
           </svg>
-        </summary>
-        <% if action.execution_text.present? %>
-          <div class="border-t border-base-content/5 bg-base-100/20 px-3 py-2 text-[10px] font-mono whitespace-pre-wrap opacity-70">
-            <%= action.execution_text %>
-          </div>
+        <% else %>
+          <span class="loading loading-spinner loading-xs shrink-0 opacity-60"></span>
         <% end %>
-      </details>
-    </div>
+        <span><%= action.status_label %></span>
+        <% if action.detail_label.present? %>
+          <span class="opacity-60">— <%= action.detail_label %></span>
+        <% end %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-3 w-3 shrink-0 opacity-40 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </summary>
+      <% if action.execution_text.present? %>
+        <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 font-mono text-[10px] leading-relaxed text-base-content/60 whitespace-pre-wrap">
+          <%= action.execution_text %>
+        </div>
+      <% end %>
+    </details>
   </div>
 
 <% in MessagePresenter::ThinkingEntry => thinking %>
   <div id="thinking_group_<%= thinking.lead_message_id %>"
-       class="chat chat-start"
+       class="my-0.5 px-1"
        data-message-kind="thinking">
-    <div class="chat-header text-xs font-semibold text-base-content/70">AI</div>
-    <div class="chat-bubble chat-bubble-neutral max-w-[85%] p-0 overflow-hidden text-[11px] text-base-content/70">
-      <details class="group">
-        <summary class="flex items-center gap-2 p-2 px-3 cursor-pointer list-none hover:bg-base-content/5 transition-colors">
-          <% if thinking.done %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-success" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-          <% else %>
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 animate-spin" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z" clip-rule="evenodd" />
-            </svg>
-          <% end %>
-          <span class="font-bold"><%= thinking.status_label %></span>
-          <span class="loading loading-dots loading-xs group-open:hidden ml-auto" aria-hidden="true"></span>
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 ml-auto transition-transform group-open:rotate-180 opacity-50" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+    <details class="group">
+      <summary class="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-base-content/50 transition-colors hover:bg-base-200 hover:text-base-content/70">
+        <% if thinking.done %>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0 text-success/70" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
           </svg>
-        </summary>
-        <% if thinking.thinking_text.present? %>
-          <div class="border-t border-base-content/5 bg-base-100/20 px-3 py-2 text-[10px] font-serif not-italic leading-relaxed opacity-70 whitespace-pre-wrap">
-            <%= thinking.thinking_text.truncate(320) %>
-          </div>
+        <% else %>
+          <span class="loading loading-spinner loading-xs shrink-0 opacity-60"></span>
         <% end %>
-      </details>
-    </div>
+        <span><%= thinking.status_label %></span>
+        <span class="loading loading-dots loading-xs opacity-40 group-open:hidden" aria-hidden="true"></span>
+        <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-3 w-3 shrink-0 opacity-40 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </summary>
+      <% if thinking.thinking_text.present? %>
+        <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 text-[11px] leading-relaxed text-base-content/60 italic whitespace-pre-wrap">
+          <%= thinking.thinking_text.truncate(320) %>
+        </div>
+      <% end %>
+    </details>
   </div>
 
 <% in MessagePresenter::ChoiceEntry => choice %>
   <div id="message_<%= choice.message.id %>"
-       class="chat chat-start"
-       data-message-kind="default">
-    <div class="chat-header text-xs font-semibold text-base-content/70">
-      AI
-      <time class="ml-2 text-[11px] font-normal text-base-content/50"><%= choice.message.created_at&.strftime("%I:%M %p") %></time>
+       class="chat chat-start my-2"
+       data-message-kind="choice">
+    <div class="chat-image avatar placeholder">
+      <div class="w-8 rounded-full bg-neutral text-neutral-content text-[10px]">
+        <span>AI</span>
+      </div>
     </div>
-    <div class="chat-bubble chat-bubble-neutral max-w-[85%]">
+    <div class="chat-bubble chat-bubble-neutral max-w-[88%]">
       <%= render "messages/choice_buttons", payload: choice.payload %>
+    </div>
+    <div class="chat-footer mt-1 text-xs opacity-40">
+      <%= choice.message.created_at&.strftime("%H:%M") %>
     </div>
   </div>
 
 <% in MessagePresenter::RegularEntry => regular %>
-  <% speaker = regular.message.role == "user" ? "あなた" : "AI" %>
-  <% placement = regular.message.role == "user" ? "chat-end" : "chat-start" %>
-  <% bubble_color = regular.message.role == "user" ? "" : "chat-bubble-neutral" %>
+  <% is_user = regular.message.role == "user" %>
   <div id="message_<%= regular.message.id %>"
-       class="chat <%= placement %>"
+       class="chat <%= is_user ? "chat-end" : "chat-start" %> my-2"
        data-message-kind="default">
-    <div class="chat-header text-xs font-semibold text-base-content/70">
-      <%= speaker %>
-      <time class="ml-2 text-[11px] font-normal text-base-content/50"><%= regular.message.created_at&.strftime("%I:%M %p") %></time>
-    </div>
+    <% unless is_user %>
+      <div class="chat-image avatar placeholder">
+        <div class="w-8 rounded-full bg-neutral text-neutral-content text-[10px]">
+          <span>AI</span>
+        </div>
+      </div>
+    <% end %>
     <div id="message_<%= regular.message.id %>_content"
-         class="chat-bubble <%= bubble_color %> max-w-[85%] whitespace-pre-wrap text-sm leading-relaxed">
+         class="chat-bubble <%= is_user ? "chat-bubble-primary" : "chat-bubble-neutral" %> max-w-[88%] whitespace-pre-wrap text-sm leading-relaxed">
       <%= regular.message.content %>
+    </div>
+    <div class="chat-footer mt-1 text-xs opacity-40">
+      <%= regular.message.created_at&.strftime("%H:%M") %>
     </div>
   </div>
 

@@ -456,30 +456,8 @@ label.checkbox input[type="checkbox"] {
 	@apply border-base-content/20;
 }
 
-.chat-header {
-	@apply flex items-center justify-between;
-}
-
-.chatbox-header {
-	@apply flex items-center justify-between border-b border-base-300 bg-base-200 px-4 py-3;
-}
-
 #messages .thinking-continuation {
 	@apply hidden;
-}
-
-.message {
-	@apply rounded-xl border border-base-300 bg-base-100 p-3;
-}
-
-.message--user {
-	@apply border-l-4;
-	border-left-color: var(--brand);
-}
-
-.message--assistant {
-	@apply border-l-4;
-	border-left-color: var(--accent);
 }
 
 .hidden {
