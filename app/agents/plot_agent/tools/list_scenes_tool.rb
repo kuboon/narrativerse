@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class ListScenesTool < BaseTool
       description "現在のプロットのシーン一覧を返します。"

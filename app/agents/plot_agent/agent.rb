@@ -1,25 +1,14 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   class Agent < RubyLLM::Agent
     chat_model Chat
-    inputs :plot_id, :scene_id
+    inputs :plot, :scene
 
-    instructions do
-      current_plot_id = respond_to?(:plot_id) ? plot_id : nil
-      current_scene_id = respond_to?(:scene_id) ? scene_id : nil
-
-      plot = current_plot_id.present? ? Plot.find_by(id: current_plot_id) : nil
-      PromptBuilder.new(plot:, scene_id: current_scene_id).build
-    end
+    instructions
 
     tools do
-      current_plot_id = respond_to?(:plot_id) ? plot_id : nil
-      plot = current_plot_id.present? ? Plot.find_by(id: current_plot_id) : nil
-      next [] unless plot
-
       user = chat.user
-
       [
         Tools::ListPlotElementsTool.new(user:, plot:),
         Tools::AddPlotElementTool.new(user:, plot:),

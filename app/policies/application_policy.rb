@@ -8,33 +8,19 @@ class ApplicationPolicy
     @record = record
   end
 
-  def index?
-    false
-  end
+  def index? = true
 
-  def show?
-    false
-  end
+  def show? = index?
 
-  def create?
-    false
-  end
+  def create? = user.present?
+  def new? = create?
 
-  def new?
-    create?
-  end
+  def update? = own?
+  def edit? = update?
 
-  def update?
-    false
-  end
+  def destroy? = own?
 
-  def edit?
-    update?
-  end
-
-  def destroy?
-    false
-  end
+  def own? = user.present? && record.respond_to?(:user_id) && record.user_id == user.id
 
   class Scope
     attr_reader :user, :scope

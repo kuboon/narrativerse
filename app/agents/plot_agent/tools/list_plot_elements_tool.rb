@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class ListPlotElementsTool < BaseTool
       description "現在のプロットに紐づく要素一覧を返します。"

@@ -4,7 +4,7 @@
   <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
   <div class="card-actions">
     <%= link_to "詳細", element_path(plot_element.element), class: "btn btn-soft btn-neutral btn-sm" %>
-    <% if policy(plot_element.plot).manage_elements? %>
+    <% if policy(plot_element.plot).own? %>
       <%= link_to "編集", edit_plot_element_path(plot_element), class: "btn btn-soft btn-primary btn-sm" %>
       <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
         <%= button_to "更新する", refresh_revision_plot_plot_element_path(plot_element.plot, plot_element), method: :patch, class: "btn btn-soft btn-info btn-sm" %>

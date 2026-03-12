@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class BaseTool < RubyLLM::Tool
       MAX_SEARCH_RESULTS = 20

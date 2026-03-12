@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class SearchElementsTool < BaseTool
       description "プロット外の要素を検索します。"

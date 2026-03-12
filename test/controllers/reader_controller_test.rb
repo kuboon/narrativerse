@@ -23,7 +23,7 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
 
   it "focuses requested scene when scene_id is present" do
     target_scene_id = ordered_scene_ids.second
-    get reader_scene_path(plot, target_scene_id)
+    get reader_path(plot, target_scene_id)
 
     assert_response :success
     assert_select "[data-reader-flow][data-focus-scene-id='#{target_scene_id}']", count: 1
@@ -33,7 +33,7 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
 
   it "falls back to plot start scene when scene_id is invalid" do
     invalid_scene_id = Scene.maximum(:id).to_i + 100
-    get reader_scene_path(plot, invalid_scene_id)
+    get reader_path(plot, invalid_scene_id)
 
     assert_response :success
     first_scene_id = ordered_scene_ids.first
@@ -48,7 +48,7 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
     main_source_link = plot.plot_scene_links.find_by!(scene_id: source_scene_id)
     target_scene_id = main_source_link.next_scene_id
 
-    get reader_scene_path(plot, source_scene_id)
+    get reader_path(plot, source_scene_id)
 
     assert_response :success
     assert_select ".story-branch-links", count: 0
@@ -66,7 +66,7 @@ class ReaderControllerTest < ActionDispatch::IntegrationTest
     viewer = create(:user)
 
     post session_path, params: { user_id: viewer.id }
-    get reader_scene_path(plot, focused_scene_id)
+    get reader_path(plot, focused_scene_id)
 
     assert_response :success
     assert_select "article.scene .scene-branch-menu", count: 3

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class UpdateSceneTool < BaseTool
       description "現在のプロットのシーン本文を更新します。"

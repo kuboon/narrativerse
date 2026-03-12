@@ -1,6 +1,6 @@
 class ChatResponseJob < ApplicationJob
   def perform(chat_id, content, plot_id = nil, scene_id = nil)
-    chat = PlotChatbot::Agent.find(chat_id, plot_id:, scene_id:)
+    chat = PlotAgent::Agent.find(chat_id, plot_id:, scene_id:)
 
     chat.ask(content) do |chunk|
       next if chunk.content.blank?

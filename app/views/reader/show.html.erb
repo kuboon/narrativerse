@@ -30,7 +30,7 @@
                 </summary>
                 <div class="scene-branch-menu-popover">
                   <% branches.each do |branch| %>
-                    <%= link_to reader_scene_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" do %>
+                    <%= link_to reader_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" do %>
                       <%= safe_join([ "分岐: ", render_plot_title(branch.plot.title) ]) %>
                     <% end %>
                   <% end %>

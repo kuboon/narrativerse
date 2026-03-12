@@ -32,7 +32,7 @@
       </div>
     <% end %>
 
-    <% if policy(@plot).manage_elements? %>
+    <% if policy(@plot).own? %>
       <div class="detail-actions">
         <%= link_to "要素を追加", new_plot_plot_element_path(@plot), class: "btn btn-ghost" %>
       </div>
@@ -53,7 +53,7 @@
           </div>
         <% end %>
       </div>
-      <% if policy(@plot).manage_story? %>
+      <% if policy(@plot).own? %>
         <div class="actions mt-4">
           <%= button_to @story_links.any? ? "シーンを追加" : "最初のシーンを追加", plot_plot_scenes_path(@plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
         </div>

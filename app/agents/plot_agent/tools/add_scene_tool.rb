@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class AddSceneTool < BaseTool
       description "現在のプロットに新しいシーンを追加します。"

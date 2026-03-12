@@ -18,7 +18,7 @@
 
   <% if owner %>
     <div class="scene-editor hidden" data-inline-editor-target="editor">
-      <%= form_with model: link.scene, url: plot_scene_path(link), method: :patch, class: "scene-form w-full", html: { data: { turbo: true, inline_editor_target: "form" } } do |f| %>
+      <%= form_with link.scene, method: :patch, class: "scene-form w-full", html: { data: { turbo: true, inline_editor_target: "form" } } do |f| %>
         <div class="prosemirror-editor-container" data-controller="prosemirror" data-action="input->inline-editor#onInput">
           <%= f.hidden_field :text, class: "prosemirror-hidden-input scene-textarea", data: { inline_editor_target: "input" } %>
           <div class="prosemirror-editor w-full p-2 border rounded min-h-25" data-prosemirror-target="editor"></div>

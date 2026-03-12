@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class PresentChoicesTool < BaseTool
       MAX_CHOICES = 6

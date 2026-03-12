@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotChatbot
+module PlotAgent
   module Tools
     class UpdatePlotElementTool < BaseTool
       description "現在のプロット内の要素設定を更新します。"

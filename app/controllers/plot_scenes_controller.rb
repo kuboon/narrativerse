@@ -20,7 +20,7 @@ class PlotScenesController < ApplicationController
     @link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
 
     respond_to do |format|
-      format.html { redirect_to reader_scene_path(@plot, @scene.id) }
+      format.html { redirect_to reader_path(@plot, @scene.id) }
       # format.turbo_stream
     end
   end
@@ -36,7 +36,7 @@ class PlotScenesController < ApplicationController
       result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
       redirect_to plot_path(result[:plot]), notice: "分岐プロットを作成しました"
     rescue ArgumentError => e
-      redirect_to reader_scene_path(source_plot, source_link.scene_id), alert: e.message
+      redirect_to reader_path(source_plot, source_link.scene_id), alert: e.message
     end
   end
 

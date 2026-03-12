@@ -1,15 +1,13 @@
 class ApplicationController < ActionController::Base
   include Pundit::Authorization
+  # after_action :verify_authorized
 
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
+  # Allow dev tool on development
   allow_browser versions: :modern if Rails.env.production?
 
   helper_method :current_user
 
   private
-
-  def self.collection_actions = %i[index new create]
-  def self.member_actions = %i[show edit update destroy]
 
   def current_user
     return @current_user if defined?(@current_user)
@@ -21,10 +19,6 @@ class ApplicationController < ActionController::Base
     return if current_user
 
     redirect_to new_session_path, alert: "ログインが必要です"
-  end
-
-  def pundit_user
-    current_user
   end
 
   rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<html data-theme="autumn">
+<html>
   <head>
-    <title><%= content_for(:title) || "ナラティバース" %></title>
+    <title><%= content_for(:title) %> | ナラティバース</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
@@ -70,31 +70,6 @@
 
     <% if Rails.env.development? %>
       <div data-controller="ui-feedback"></div>
-    <% end %>
-
-    <% if current_user && controller_name != "reader" %>
-      <% chat_params = {} %>
-      <% if params[:plot_id].present? %>
-        <% chat_params[:plot_id] = params[:plot_id] %>
-      <% elsif controller_name == "plots" && params[:id].present? %>
-        <% chat_params[:plot_id] = params[:id] %>
-      <% end %>
-      <% chat_params[:scene_id] = params[:scene_id] if params[:scene_id].present? %>
-      <% chat_params[:autostart] = "1" if @auto_start_chatbot %>
-
-      <div id="chatbot-wrapper" 
-           data-controller="chatbot"
-           data-chatbot-auto-open-value="<%= @auto_start_chatbot ? "true" : "false" %>" 
-           class="fixed bottom-5 right-5 z-50 flex flex-col items-end">
-        <div id="chatbot-window" 
-             data-chatbot-target="window"
-             class="mb-4 hidden h-125 max-h-[calc(100vh-100px)] w-87.5 overflow-hidden rounded-2xl border border-base-300 bg-base-100 shadow-2xl">
-          <iframe src="<%= chat_path(chat_params) %>" id="chat-frame" class="h-full w-full border-0"></iframe>
-        </div>
-        <button id="chatbot-toggle" 
-                data-action="click->chatbot#toggle"
-                class="btn btn-primary btn-circle h-14 w-14 text-xl shadow-lg" aria-label="AIアシスタントを開く">AI</button>
-      </div>
     <% end %>
   </body>
 </html>
