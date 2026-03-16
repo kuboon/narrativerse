@@ -3,22 +3,25 @@ require "test_helper"
 class McpControllerTest < ActionDispatch::IntegrationTest
   extend Minitest::Spec::DSL
 
-  it "redirects to login when not logged in" do
+  it "returns unauthorized without signature" do
     post mcp_path, params: {
       jsonrpc: "2.0",
       id: "1",
       method: "ping"
-    }, as: :json
+    }.to_json, headers: {
+      "CONTENT_TYPE" => "application/json",
+      "ACCEPT" => "application/json, text/event-stream"
+    }
 
-    assert_redirected_to new_session_path
+    assert_response :unauthorized
   end
 
-  it "responds to initialize request when logged in" do
+  it "responds to initialize request with a valid signature" do
     user = create(:user)
-    plot = create(:plot, user:)
+    create(:plot, user:)
+    signature = McpAuth.sign_user_id(user.id)
 
-    post session_path, params: { user_id: user.id }
-    post mcp_path(plot_id: plot.id), params: {
+    post mcp_path(signature:), params: {
       jsonrpc: "2.0",
       id: "1",
       method: "initialize",

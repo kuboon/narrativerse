@@ -1,5 +1,5 @@
 class McpController < ApplicationController
-  before_action :require_login
+  before_action :require_mcp_user
   skip_before_action :verify_authenticity_token, only: :create
 
   def create
@@ -9,9 +9,10 @@ class McpController < ApplicationController
       version: "1.0.0",
       instructions: "Narrativerse のプロット編集を行うための MCP サーバーです。",
       tools: PlotWriter::McpTools.all,
+      prompts: PlotWriter::McpPrompts.all,
       server_context: {
-        user_id: current_user.id,
-        plot_id: params[:plot_id]
+        user_id: @mcp_user.id,
+        plot_id: @mcp_user.plots.latest&.id
       }
     )
 
@@ -27,6 +28,14 @@ class McpController < ApplicationController
   end
 
   private
+
+  def require_mcp_user
+    user_id = McpAuth.verify_user_id(params[:signature])
+    @mcp_user = User.find_by(id: user_id)
+    return if @mcp_user
+
+    render json: { error: "Unauthorized" }, status: :unauthorized
+  end
 
   def response_headers(headers)
     headers.to_h.except("Content-Type", "content-type", "Content-Length", "content-length")

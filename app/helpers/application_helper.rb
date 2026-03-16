@@ -1,6 +1,16 @@
 module ApplicationHelper
   PLOT_RICH_TEXT_TAGS = %w[p strong h1 h2 ruby rt].freeze
 
+  def signed_mcp_url(user: current_user)
+    token = signed_mcp_token(user)
+    mcp_url(signature: token)
+  end
+
+  def signed_mcp_path(user: current_user)
+    token = signed_mcp_token(user)
+    mcp_path(signature: token)
+  end
+
   def format_scene_text(text)
     simple_format(text)
   end
@@ -24,6 +34,12 @@ module ApplicationHelper
   end
 
   private
+
+  def signed_mcp_token(user)
+    raise ArgumentError, "user is required" if user.blank?
+
+    McpAuth.sign_user_id(user.id)
+  end
 
   def unwrap_single_paragraph(html)
     match = html.match(%r{\A<p>(.*)</p>\z}m)
