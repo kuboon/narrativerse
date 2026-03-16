@@ -1,4 +1,7 @@
 class PlotEditor
+  include Turbo::Broadcastable
+  def model_name = "Plot"
+
   def initialize(plot:, user:)
     @plot = plot
     @user = user
@@ -9,7 +12,9 @@ class PlotEditor
     last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
     last_link.update!(next_scene_id: scene.id) if last_link
     @plot.update!(scene: scene) if @plot.scene_id.blank?
-    PlotSceneLink.create!(plot: @plot, scene:, next_scene_id: nil)
+    new_link = PlotSceneLink.create!(plot: @plot, scene:, next_scene_id: nil)
+    new_link.broadcast_append_to @plot, locals: { own: true }
+    new_link
   end
 
   def fork(link:)

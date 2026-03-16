@@ -1,5 +1,4 @@
-<% own = policy(plot_scene_link.plot).own?
-  scene = plot_scene_link.scene
+<% scene = plot_scene_link.scene
   scene_html = sanitize(scene.text.presence || "シーンを書く", tags: %w[p strong h1 h2 ruby rt])
   editor_data = {
     controller: "inline-prosemirror",

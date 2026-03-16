@@ -58,9 +58,9 @@
 			<h2>シーン</h2>
 		</div>
 
-		<div id="scenes">
+		<div id="plot_scene_links">
 			<% if links.any? %>
-				<%= render links %>
+				<%= render links, own: policy(plot).own? %>
 			<% else %>
 				<div id="story-flow-empty" class="empty-state">
 					<p>まだシーンがありません。最初のシーンを追加しましょう。</p>
@@ -70,7 +70,7 @@
 
 		<% if policy(plot).own? %>
 			<div class="actions mt-4">
-				<%= button_to "シーンを追加", plot_links_path(plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
+				<%= button_to "シーンを追加", plot_plot_scene_links_path(plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
 			</div>
 		<% end %>
 	</div>
