@@ -35,7 +35,7 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     get plot_path(plot)
 
     assert_response :success
-    assert_select "#plot-overview-#{plot.id}[data-controller='inline-editor']", count: 0
+    assert_select "[data-controller='inline-prosemirror']", count: 0
   end
 
   it "shows parent plot links when there are parents" do

@@ -7,11 +7,8 @@ import { application } from "./application"
 import ChatbotController from "./chatbot_controller"
 application.register("chatbot", ChatbotController)
 
-import InlineEditorController from "./inline_editor_controller"
-application.register("inline-editor", InlineEditorController)
-
-import ProsemirrorController from "./prosemirror_controller"
-application.register("prosemirror", ProsemirrorController)
+import InlineProsemirrorController from "./inline_prosemirror_controller"
+application.register("inline-prosemirror", InlineProsemirrorController)
 
 import UiFeedbackController from "./ui_feedback_controller"
 application.register("ui-feedback", UiFeedbackController)

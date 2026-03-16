@@ -22,7 +22,7 @@ class SceneEditFlowTest < ApplicationSystemTestCase
 
     visit plot_path(plot)
 
-    within "#link-#{link.id}" do
+    within "##{ActionView::RecordIdentifier.dom_id(link)}" do
       assert_no_selector ".scene-editor"
       find(".scene-display", visible: true).click
       assert_no_selector ".scene-editor"

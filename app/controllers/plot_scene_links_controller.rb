@@ -44,8 +44,8 @@ class PlotSceneLinksController < ApplicationController
       format.turbo_stream do
         render turbo_stream: turbo_stream.replace(
           ActionView::RecordIdentifier.dom_id(@link),
-          partial: "scenes/panel",
-          locals: { link: @link, plot: @plot }
+          partial: "plot_scene_links/plot_scene_link",
+          locals: { plot_scene_link: @link }
         )
       end
       format.html { redirect_to plot_path(@plot) }

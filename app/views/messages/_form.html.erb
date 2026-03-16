@@ -1,10 +1,4 @@
 <% msg_form = form_with(model: Message, url: messages_path, id: "new_message") do |form| %>
-  <% if local_assigns[:plot_id].present? %>
-    <%= form.hidden_field :plot_id, value: local_assigns[:plot_id] %>
-  <% end %>
-  <% if local_assigns[:scene_id].present? %>
-    <%= form.hidden_field :scene_id, value: local_assigns[:scene_id] %>
-  <% end %>
   <div class="flex items-end gap-2">
     <%= form.text_area :content,
         class: "textarea textarea-bordered flex-1 resize-none leading-snug",

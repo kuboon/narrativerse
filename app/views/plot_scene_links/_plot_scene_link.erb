@@ -1,33 +1,19 @@
 <% own = policy(plot_scene_link.plot).own?
   scene = plot_scene_link.scene
-  data = {
-    scene_id: scene.id,
-    controller: "inline-editor",
-    action: [
-      "click->inline-editor#edit",
-      "window:inline-editor:close-others->inline-editor#closeOthers",
-      "click@window->inline-editor#clickOutside",
-      "keydown@window->inline-editor#onKeyDown"
-    ].join(" "),
-    inline_editor_editing_class: "border-editing",
-    inline_editor_saving_class: "border-saving",
-    inline_editor_saved_class: "border-saved"
+  scene_html = sanitize(scene.text.presence || "シーンを書く", tags: %w[p strong h1 h2 ruby rt])
+  editor_data = {
+    controller: "inline-prosemirror",
+    inline_prosemirror_url_value: plot_scene_link_path(plot_scene_link),
+    inline_prosemirror_param_value: "scene[text]",
+    inline_prosemirror_method_value: "patch",
+    inline_prosemirror_placeholder_value: "シーンを書く",
+    inline_prosemirror_initial_html_value: scene_html
   } %>
 
 <div id="<%= dom_id(plot_scene_link) %>" data-own="<%= own %>">
-  <% article_html = capture do %>
-    <div class="scene-display" data-inline-editor-target="display">
-      <%= sanitize(scene.text.presence || "シーンを書く", tags: %w[p strong h1 h2 ruby rt]) %>
-    </div>
-
-    <div class="scene-editor hidden" data-inline-editor-target="editor">
-      <% form_html = form_with model: plot_scene_link, method: :patch, class: "scene-form w-full", html: { data: { turbo: true, inline_editor_target: "form" } } do |f| %>
-        <%= f.hidden_field :text, data: { controller: "prosemirror", action: "input->inline-editor#onInput", inline_editor_target: "input" } %>
-      <% end %>
-
-      <%= form_html %>
-    </div>
+  <% if own %>
+    <%= tag.article(scene_html, id: dom_id(scene), class: "scene-container scene-display", data: editor_data) %>
+  <% else %>
+    <%= tag.article(scene_html, id: dom_id(scene), class: "scene-container scene-display") %>
   <% end %>
-
-  <%= tag.article(article_html, id: dom_id(scene), data:, class: "scene-container") %>
 </div>
