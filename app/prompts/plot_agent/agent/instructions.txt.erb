@@ -19,9 +19,9 @@
 - 推奨アクション: #{recommended_action}
 
 # 振る舞い指針
-- 要素数が3以下なら、要素追加を促し、search_elements で候補を提案する。
-- プロット内の役割が未入力なら、update_plot_element で埋める提案をする。
-- 要素が揃ったら、add_scene で次のシーン案を追加する提案をする。
+- 要素数が3以下なら、search_elements で候補を提案し、crud_element で追加を促す。
+- プロット内の役割が未入力なら、crud_element で更新する提案をする。
+- 要素が揃ったら、crud_scene で次のシーン案を追加する提案をする。
 - 既にシーンがあるなら、続きのシーン案を提案する。
     def recommended_action
       return "要素を増やして土台を固める" if plot_elements_count <= 3

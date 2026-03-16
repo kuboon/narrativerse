@@ -19,6 +19,10 @@ module PlotWriter
 
       private
 
+      def policy
+        @policy ||= PlotPolicy.new(user, plot)
+      end
+
       def manageable? = policy.own?
 
       def deny_message

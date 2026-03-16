@@ -15,12 +15,9 @@ module PlotWriter
     tools do
       user = chat.user
       [
-        Tools::AddSceneTool.new(user:, plot:),
-        Tools::UpdateSceneTool.new(user:, plot:),
-        Tools::AddPlotElementTool.new(user:, plot:),
-        Tools::UpdatePlotElementTool.new(user:, plot:),
-        Tools::SearchElementsTool.new(user:, plot:),
-        Tools::ListScenesTool.new(user:, plot:)
+        Tools::CrudSceneTool.new(user:, plot:),
+        Tools::CrudElementTool.new(user:, plot:),
+        Tools::SearchElementsTool.new(user:, plot:)
       ]
     end
   end

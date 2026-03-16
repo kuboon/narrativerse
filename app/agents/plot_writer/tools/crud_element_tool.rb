@@ -2,9 +2,9 @@
 
 module PlotWriter
   module Tools
-    class AddPlotElementTool < BaseTool
+    class CrudElementTool < BaseTool
       description "現在のプロットへ要素を追加します。"
-      param :element_id, type: :integer, desc: "追加する要素 ID"
+      param :element_id, type: :integer, required: false, desc: "追加する要素 ID"
       param :summary, required: false, desc: "プロット内の役割"
       param :secrets, required: false, desc: "秘密の設定"
 
@@ -15,8 +15,7 @@ module PlotWriter
           return json(status: "error", message: "その要素は既に追加済みです。")
         end
 
-        element = Element.find_by(id: element_id)
-        return json(status: "error", message: "要素が見つかりません。") unless element
+        element = element_id ? Element.find_by(id: element_id) : Element.new
 
         revision = element.latest_revision
         return json(status: "error", message: "要素にリビジョンがありません。") unless revision

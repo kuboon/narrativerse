@@ -405,6 +405,7 @@ DEPENDENCIES
   factory_bot_rails
   jbuilder
   jsbundling-rails
+  mcp
   minitest (~> 6.0)
   propshaft
   puma (>= 5.0)
