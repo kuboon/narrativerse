@@ -1,7 +1,7 @@
 <main class="page">
   <section class="form-card">
     <h1>ログイン</h1>
-    <%= form_with url: session_path do |form| %>
+    <% session_form = form_with url: session_path do |form| %>
       <div class="field">
         <%= form.label :user_id, "ユーザー選択" %>
         <%= form.select :user_id, @users.map { |user| [user.name, user.id] }, prompt: "選択" %>
@@ -11,5 +11,6 @@
         <%= link_to "ユーザー作成", new_user_path, class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= session_form %>
   </section>
 </main>

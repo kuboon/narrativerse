@@ -1,7 +1,7 @@
 <main class="page">
   <section class="form-card">
     <h1><%= render_plot_title(@plot.title) %> に要素を追加</h1>
-    <%= form_with url: plot_plot_elements_path(@plot), method: :get, class: "filter-bar" do |form| %>
+    <% filter_form = form_with url: plot_plot_elements_path(@plot), method: :get, class: "filter-bar" do |form| %>
       <div class="field">
         <%= form.label :q, "キーワード" %>
         <%= form.text_field :q, value: @query, placeholder: "探偵、ファンタジー..." %>
@@ -22,6 +22,7 @@
         <%= link_to "要素作成", new_element_path, class: "btn btn-primary" %>
       </div>
     <% end %>
+    <%= filter_form %>
 
     <% if @plot_element.errors.any? %>
       <div class="flash error">
@@ -35,7 +36,7 @@
           <h3><%= element.name %></h3>
             <p class="badge"><%= t("elements.types.#{element.element_type.downcase}") %></p>
           <p><%= element.latest_revision&.summary.presence || "まだ概要がありません。" %></p>
-          <%= form_with model: [@plot, PlotElement.new], class: "inline-form" do |form| %>
+          <% pe_form = form_with model: [@plot, PlotElement.new], class: "inline-form" do |form| %>
             <%= form.hidden_field :element_id, value: element.id %>
             <div class="field">
               <%= form.label :summary, "プロット内の役割" %>
@@ -47,6 +48,7 @@
             </div>
             <%= form.submit "追加", class: "btn btn-primary" %>
           <% end %>
+          <%= pe_form %>
         </article>
       <% end %>
     </div>

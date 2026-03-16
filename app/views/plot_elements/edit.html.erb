@@ -2,7 +2,7 @@
   <section class="form-card">
     <h1>プロット要素の編集</h1>
     <p class="badge"><%= @plot_element.element.name %> · <%= t("elements.types.#{@plot_element.element.element_type.downcase}") %></p>
-    <%= form_with model: @plot_element do |form| %>
+    <% edit_form = form_with model: @plot_element do |form| %>
       <div class="field">
         <%= form.label :summary, "プロット内の役割" %>
         <%= form.text_area :summary, rows: 3 %>
@@ -16,5 +16,6 @@
         <%= link_to "戻る", plot_path(@plot), class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= edit_form %>
   </section>
 </main>

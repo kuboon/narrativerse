@@ -1,0 +1,77 @@
+<% links = plot.story.links %>
+<section class="detail" id="<%= dom_id(plot) %>">
+	<div class="detail-header">
+		<div class="plot-title"><%= render_plot_title(plot.title) %></div>
+
+		<div class="detail-actions">
+			<% if links.any? %>
+				<%= link_to "読む", reader_path(plot), class: "btn btn-primary" %>
+			<% end %>
+		</div>
+	</div>
+
+	<div class="plot-summary">
+		<%= render_plot_summary(plot.summary) %>
+	</div>
+
+	<div class="detail-meta">
+		<div>
+			<span class="meta-label">作成者</span>
+			<span><%= plot.user.name %></span>
+		</div>
+
+		<% parent_plots = plot.parent_plots %>
+
+		<% if parent_plots.any? %>
+			<div>
+				<span class="meta-label">親プロット</span>
+
+				<span>
+					<%= safe_join(parent_plots.map { |parent| link_to(render_plot_title(parent.title), plot_path(parent), class: "text-link") }, ", ") %>
+				</span>
+			</div>
+		<% end %>
+	</div>
+
+	<% if plot.plot_elements.any? %>
+		<div class="grid">
+			<div class="grid-header">
+				<h2>登場要素</h2>
+			</div>
+
+			<div class="cards" id="plot-elements">
+				<% plot.plot_elements.includes(:element, :element_revision).each do |plot_element| %>
+					<%= render "plot_elements/plot_element", plot_element: %>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+
+	<% if policy(plot).own? %>
+		<div class="detail-actions">
+			<%= link_to "要素を追加", new_plot_element_path(plot), class: "btn btn-primary" %>
+		</div>
+	<% end %>
+
+	<div class="grid">
+		<div class="grid-header">
+			<h2>シーン</h2>
+		</div>
+
+		<div id="scenes">
+			<% if links.any? %>
+				<%= render links %>
+			<% else %>
+				<div id="story-flow-empty" class="empty-state">
+					<p>まだシーンがありません。最初のシーンを追加しましょう。</p>
+				</div>
+			<% end %>
+		</div>
+
+		<% if policy(plot).own? %>
+			<div class="actions mt-4">
+				<%= button_to "シーンを追加", plot_links_path(plot, scene: { text: "新しいシーン" }), method: :post, form: { data: { turbo: true } }, class: "btn btn-primary w-full text-center" %>
+			</div>
+		<% end %>
+	</div>
+</section>

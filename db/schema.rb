@@ -118,7 +118,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
     t.integer "element_id", null: false
     t.integer "element_revision_id", null: false
     t.integer "plot_id", null: false
-    t.text "secrets"
+    t.text "secrets", comment: "このプロットにおける秘密の役割。読者には提示しない。"
     t.text "summary"
     t.datetime "updated_at", null: false
     t.index ["element_id"], name: "index_plot_elements_on_element_id"

@@ -30,12 +30,13 @@
                 </summary>
                 <div class="scene-branch-menu-popover">
                   <% branches.each do |branch| %>
-                    <%= link_to reader_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" do %>
+                    <% branch_link = capture do %>
                       <%= safe_join([ "分岐: ", render_plot_title(branch.plot.title) ]) %>
                     <% end %>
+                    <%= link_to branch_link, reader_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" %>
                   <% end %>
                   <% if current_user.present? %>
-                    <%= link_to "分岐を追加", fork_plot_scene_path(link), data: { turbo_method: :post }, class: "scene-branch-menu-item" %>
+                    <%= link_to "分岐を追加", fork_link_path(link), data: { turbo_method: :post }, class: "scene-branch-menu-item" %>
                   <% end %>
                 </div>
               </details>

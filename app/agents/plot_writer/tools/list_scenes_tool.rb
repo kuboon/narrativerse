@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class ListScenesTool < BaseTool
       description "現在のプロットのシーン一覧を返します。"

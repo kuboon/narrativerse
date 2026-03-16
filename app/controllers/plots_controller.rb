@@ -14,8 +14,6 @@ class PlotsController < ApplicationController
 
   def show
     authorize @plot
-    @story_links = build_story_links(@plot)
-    @auto_start_chatbot = auto_start_chatbot?
   end
 
 
@@ -68,19 +66,5 @@ class PlotsController < ApplicationController
 
   def plot_update_params
     params.require(:plot).permit(:title, :summary)
-  end
-
-  def plot_overview_dom_id(plot)
-    "plot-overview-#{plot.id}"
-  end
-
-  def build_story_links(plot)
-    return [] unless plot.persisted?
-
-    PlotStory.new(plot).links
-  end
-
-  def auto_start_chatbot?
-    current_user.present? && @plot.user_id == current_user.id && @plot.title.blank?
   end
 end

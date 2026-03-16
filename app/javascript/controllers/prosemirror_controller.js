@@ -108,21 +108,23 @@ function docToHTML(doc) {
 }
 
 // Connects to data-controller="prosemirror"
+// Attach directly to any <input type="hidden"> or <textarea>.
+// The controller creates the editor DOM itself — no extra markup needed.
 export default class extends Controller {
-  static targets = ["editor"]
-
   connect() {
-    this.hiddenInput =
-      this.element.querySelector('input[type="hidden"]') ||
-      this.element.previousElementSibling
+    const input = this.element
 
-    const editorElement = this.hasEditorTarget ? this.editorTarget : this.element
+    const wrapper = document.createElement("div")
+    wrapper.className = "prosemirror-editor-container"
+    input.after(wrapper)
 
-    const initialDoc = this.hiddenInput.value
+    const editorDiv = document.createElement("div")
+    editorDiv.className = "prosemirror-editor w-full p-2 border rounded min-h-25"
+    wrapper.appendChild(editorDiv)
+
+    const initialDoc = input.value
       ? DOMParser.fromSchema(schema).parse(
-          Object.assign(document.createElement("div"), {
-            innerHTML: this.hiddenInput.value,
-          })
+          Object.assign(document.createElement("div"), { innerHTML: input.value })
         )
       : schema.nodes.doc.createAndFill()
 
@@ -135,22 +137,29 @@ export default class extends Controller {
       ],
     })
 
-    this.view = new EditorView(editorElement, {
+    this.view = new EditorView(editorDiv, {
       state,
       dispatchTransaction: (tr) => {
         const newState = this.view.state.apply(tr)
         this.view.updateState(newState)
         if (tr.docChanged) {
-          this.hiddenInput.value = docToHTML(newState.doc)
-          editorElement.dispatchEvent(new Event("input", { bubbles: true }))
+          input.value = docToHTML(newState.doc)
+          input.dispatchEvent(new Event("input", { bubbles: true }))
         }
       },
     })
+
+    this._wrapper = wrapper
   }
 
   disconnect() {
     if (this.view) {
       this.view.destroy()
+      this.view = null
+    }
+    if (this._wrapper) {
+      this._wrapper.remove()
+      this._wrapper = null
     }
   }
 }

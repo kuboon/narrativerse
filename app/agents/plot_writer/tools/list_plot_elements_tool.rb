@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class ListPlotElementsTool < BaseTool
       description "現在のプロットに紐づく要素一覧を返します。"

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class BaseTool < RubyLLM::Tool
       MAX_SEARCH_RESULTS = 20
@@ -14,14 +14,12 @@ module PlotAgent
       end
 
       def name
-        super.sub("--tools--", "--")
+        super.split("--").last
       end
 
       private
 
-      def manageable?
-        plot.user_id == user.id
-      end
+      def manageable? = policy.own?
 
       def deny_message
         json(status: "error", message: "このプロットを編集する権限がありません。")

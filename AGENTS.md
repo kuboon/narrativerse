@@ -23,7 +23,7 @@ Plot から Scene の配列を生成する。
 ## Important Implementation Details
 - Reading URL: `/reader/:plot_id(/:link_id)`
 - PlotStory builds a full story-flow by walking links (and parents) and returns focus link + branches.
-- PlotForker duplicates a plot from a specific scene and links to parent plot (self-fork guard).
+- PlotEditor duplicates a plot from a specific scene and links to parent plot (self-fork guard).
 - ElementRevisionManager updates owned plot elements to latest revision and prunes unreferenced revisions.
 - Locale config: `config.i18n.default_locale = :ja` in `config/application.rb`.
 - Pundit導入済み（Plot/Elementポリシーで作成・編集・分岐を制御）。

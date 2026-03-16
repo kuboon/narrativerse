@@ -12,7 +12,6 @@
 	--surface-strong: #f1e3d0;
 	--surface-card: #fffdf8;
 	--muted: #6b5a47;
-	--text-main: #2f261d;
 	--brand: #8f4b35;
 	--accent: #b07647;
 	--brand-soft: #f2e2d7;
@@ -26,7 +25,6 @@
 
 body {
 	min-height: 100vh;
-	color: var(--text-main);
 	background:
 		radial-gradient(circle at 15% 20%, color-mix(in oklab, var(--brand) 22%, transparent) 0%, transparent 45%),
 		radial-gradient(circle at 90% 0%, color-mix(in oklab, var(--accent) 18%, transparent) 0%, transparent 50%),
@@ -112,10 +110,6 @@ nav {
 	@apply grid gap-4 md:grid-cols-2 xl:grid-cols-3;
 }
 
-.card {
-	@apply block rounded-2xl border border-base-300 bg-base-100 p-5 shadow-md transition duration-200;
-}
-
 .card:hover {
 	@apply -translate-y-0.5 shadow-lg;
 }
@@ -146,10 +140,6 @@ nav {
 
 .empty-state {
 	@apply rounded-2xl border border-dashed border-base-300 bg-base-100/70 p-6 text-base-content/70;
-}
-
-.detail {
-	@apply rounded-3xl border border-base-300 bg-base-100 p-6 shadow-lg md:p-8;
 }
 
 .detail-header {
@@ -527,4 +517,10 @@ label.checkbox input[type="checkbox"] {
 	.actions {
 		@apply flex-col items-stretch;
 	}
+}
+
+#chat {
+	@apply block rounded-2xl border border-base-300 bg-base-100 p-5 shadow-md transition duration-200;
+	@apply w-80 max-w-full overflow-x-scroll;
+	height: calc(100dvh - 70px);
 }

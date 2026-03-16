@@ -1,7 +1,7 @@
 <main class="page">
   <section class="form-card">
     <h1>要素作成</h1>
-    <%= form_with model: @element do |form| %>
+    <% new_form = form_with model: @element do |form| %>
       <div class="field">
         <%= form.label :element_type, "種別" %>
         <%= form.select :element_type, Element::ELEMENT_TYPES.map { |type| [t("elements.types.#{type.downcase}"), type] }, prompt: "選択" %>
@@ -23,5 +23,6 @@
         <%= link_to "キャンセル", elements_path, class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= new_form %>
   </section>
 </main>

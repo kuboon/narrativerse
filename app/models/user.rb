@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :element_revisions, dependent: :destroy
   has_many :scenes, dependent: :destroy
   has_many :chats, dependent: :destroy
+  has_one :chat, -> { order(created_at: :desc) }
 
   validates :name, presence: true
   validates :bio, length: { maximum: 200 }, allow_nil: true

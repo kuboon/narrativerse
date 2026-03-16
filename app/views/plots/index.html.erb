@@ -6,7 +6,7 @@
         <%= link_to "プロット作成", new_plot_path, class: "btn btn-primary" %>
       <% end %>
     </div>
-    <%= form_with url: plots_path, method: :get, class: "filter-bar" do |form| %>
+    <% filter_form = form_with url: plots_path, method: :get, class: "filter-bar" do |form| %>
       <div class="field">
         <%= form.label :q, "検索" %>
         <%= form.text_field :q, value: @query, placeholder: "タイトル / 概要" %>
@@ -15,6 +15,7 @@
         <%= form.submit "絞り込む", class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= filter_form %>
     <div class="cards">
       <% @plots.each do |plot| %>
         <article class="card">

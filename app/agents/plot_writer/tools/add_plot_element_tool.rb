@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class AddPlotElementTool < BaseTool
       description "現在のプロットへ要素を追加します。"

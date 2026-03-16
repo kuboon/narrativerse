@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class UpdatePlotElementTool < BaseTool
       description "現在のプロット内の要素設定を更新します。"

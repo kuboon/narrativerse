@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class PresentChoicesTool < BaseTool
       MAX_CHOICES = 6

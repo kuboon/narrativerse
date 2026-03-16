@@ -1,17 +1,24 @@
 FactoryBot.define do
   factory :plot do
     association :user
-    association :scene
+    scene { association :scene, text: scene_texts.first }
     sequence(:title) { |n| "Plot #{n}" }
 
     transient do
-      scenes_count { 1 }
+      story {
+        <<~EOS
+        私は目が覚めた。
+        ---
+        私は眠った。
+        EOS
+      }
+      scene_texts { story.split("---").map(&:strip) }
     end
 
     after(:create) do |plot, evaluator|
       scenes = [ plot.scene ]
-      (evaluator.scenes_count - 1).times do
-        scenes << create(:scene, user: plot.user)
+      evaluator.scene_texts.slice(1..).each do |text|
+        scenes << create(:scene, user: plot.user, text:)
       end
 
       scenes.each_with_index do |scene, i|

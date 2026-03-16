@@ -1,59 +1,7 @@
-<% return if message.role.to_s == "system" %>
-<% choice_payload = message.choice_payload %>
-
-<% if choice_payload.present? %>
-  <div id="message_<%= message.id %>" class="chat chat-start my-2" data-message-kind="choice">
-    <div class="chat-image avatar placeholder">
-      <div class="w-8 rounded-full bg-neutral text-neutral-content text-[10px]">
-        <span>AI</span>
-      </div>
-    </div>
-    <div class="chat-bubble chat-bubble-neutral max-w-[88%] text-sm leading-relaxed">
-      <%= render "messages/choice_buttons", payload: choice_payload %>
-    </div>
-    <div class="chat-footer mt-1 text-xs opacity-40"><%= message.created_at&.strftime("%H:%M") %></div>
+<% is_user = message.role.to_s == "user" %>
+<div id="message_<%= message.id %>" class="chat <%= is_user ? "chat-end" : "chat-start" %> my-2" data-message-kind="default">
+  <div id="message_<%= message.id %>_content" class="chat-bubble <%= is_user ? "chat-bubble-primary" : "chat-bubble-neutral" %> max-w-[88%] text-sm leading-relaxed">
+    <%= render "messages/content", content: message.content %>
   </div>
-<% elsif message.tool_call? %>
-  <div id="message_<%= message.id %>" class="my-2 px-1" data-message-kind="tool-call">
-    <details class="group">
-      <summary class="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-base-content/50 transition-colors hover:bg-base-200 hover:text-base-content/70">
-        <span class="loading loading-spinner loading-xs shrink-0 opacity-60"></span>
-        <span>アクションを実行中</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-3 w-3 shrink-0 opacity-40 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-        </svg>
-      </summary>
-      <%= render "messages/tool_calls", message: message %>
-    </details>
-  </div>
-<% elsif message.tool_result? %>
-  <div id="message_<%= message.id %>" class="my-2 px-1" data-message-kind="tool-result">
-    <details class="group">
-      <summary class="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-1.5 text-xs text-base-content/50 transition-colors hover:bg-base-200 hover:text-base-content/70">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 shrink-0 text-success/70" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-        </svg>
-        <span>アクション完了</span>
-        <svg xmlns="http://www.w3.org/2000/svg" class="ml-auto h-3 w-3 shrink-0 opacity-40 transition-transform group-open:rotate-180" viewBox="0 0 20 20" fill="currentColor">
-          <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-        </svg>
-      </summary>
-      <div class="mx-3 mt-1 mb-2 rounded-md bg-base-200 px-3 py-2 font-mono text-[10px] leading-relaxed text-base-content/60"><%= message.content %></div>
-    </details>
-  </div>
-<% else %>
-  <% is_user = message.role.to_s == "user" %>
-  <div id="message_<%= message.id %>" class="chat <%= is_user ? "chat-end" : "chat-start" %> my-2" data-message-kind="default">
-    <% unless is_user %>
-      <div class="chat-image avatar placeholder">
-        <div class="w-8 rounded-full bg-neutral text-neutral-content text-[10px]">
-          <span>AI</span>
-        </div>
-      </div>
-    <% end %>
-    <div id="message_<%= message.id %>_content" class="chat-bubble <%= is_user ? "chat-bubble-primary" : "chat-bubble-neutral" %> max-w-[88%] text-sm leading-relaxed">
-      <%= render "messages/content", content: message.content %>
-    </div>
-    <div class="chat-footer mt-1 text-xs opacity-40"><%= message.created_at&.strftime("%H:%M") %></div>
-  </div>
-<% end %>
+  <div class="chat-footer mt-1 text-xs opacity-40"><%= message.created_at&.strftime("%H:%M") %></div>
+</div>

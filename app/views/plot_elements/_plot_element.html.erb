@@ -1,15 +1,19 @@
-<article id="<%= dom_id(plot_element) %>" class="card <%= "highlight-new" if local_assigns[:highlight] %>">
-  <h3><%= plot_element.element.name %></h3>
-  <p class="badge"><%= t("elements.types.#{plot_element.element.element_type.downcase}") %></p>
-  <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
-  <div class="card-actions">
-    <%= link_to "詳細", element_path(plot_element.element), class: "btn btn-soft btn-neutral btn-sm" %>
-    <% if policy(plot_element.plot).own? %>
-      <%= link_to "編集", edit_plot_element_path(plot_element), class: "btn btn-soft btn-primary btn-sm" %>
-      <% if plot_element.element.latest_revision && plot_element.element.latest_revision.id != plot_element.element_revision_id %>
-        <%= button_to "更新する", refresh_revision_plot_plot_element_path(plot_element.plot, plot_element), method: :patch, class: "btn btn-soft btn-info btn-sm" %>
+<% element = plot_element.element %>
+<% outdated = element.latest_revision && element.latest_revision.id != plot_element.element_revision_id %>
+<div id="<%= dom_id(plot_element) %>" class="card">
+  <div class="card-body">
+    <h3 class="card-title"><%= element.name %></h3>
+    <p class="badge"><%= t("elements.types.#{element.element_type.downcase}") %></p>
+    <p><%= plot_element.summary.presence || plot_element.element_revision&.summary.presence || "まだ概要がありません。" %></p>
+    <div class="card-actions">
+      <%= link_to "詳細", element_path(element), class: "btn btn-soft btn-neutral btn-sm" %>
+      <% if policy(plot_element.plot).own? %>
+        <%= link_to "編集", edit_element_path(element), class: "btn btn-soft btn-primary btn-sm" %>
+        <% if outdated %>
+          <%= button_to "更新する", refresh_revision_plot_plot_element_path(plot_element.plot, plot_element), method: :patch, class: "btn btn-soft btn-info btn-sm" %>
+        <% end %>
+        <%= button_to "削除", element_path(plot_element), method: :delete, class: "btn btn-soft btn-error btn-sm" %>
       <% end %>
-      <%= button_to "削除", plot_element_path(plot_element), method: :delete, class: "btn btn-soft btn-error btn-sm" %>
-    <% end %>
+    </div>
   </div>
-</article>
+</div>

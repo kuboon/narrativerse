@@ -4,7 +4,7 @@
       <h1><%= @element.name %></h1>
       <div class="detail-actions">
         <% if policy(@element).update? %>
-          <%= link_to policy(@element).manage? ? "編集" : "改訂を作成", edit_element_path(@element), class: "btn btn-ghost" %>
+          <%= link_to policy(@element).own? ? "編集" : "改訂を作成", edit_element_path(@element), class: "btn btn-ghost" %>
         <% end %>
       </div>
     </div>

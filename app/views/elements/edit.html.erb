@@ -1,7 +1,7 @@
 <main class="page">
   <section class="form-card">
     <h1><%= @owns_element ? "要素編集" : "要素の改訂" %></h1>
-    <%= form_with model: @element do |form| %>
+    <% edit_form = form_with model: @element do |form| %>
       <% if @owns_element %>
         <div class="field">
           <%= form.label :element_type, "種別" %>
@@ -29,5 +29,6 @@
         <%= link_to "キャンセル", element_path(@element), class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= edit_form %>
   </section>
 </main>

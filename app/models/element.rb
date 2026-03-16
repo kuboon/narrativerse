@@ -8,4 +8,5 @@ class Element < ApplicationRecord
 
   validates :element_type, presence: true, inclusion: { in: ELEMENT_TYPES }
   validates :name, presence: true
+  broadcasts
 end

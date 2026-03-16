@@ -6,7 +6,7 @@
         <%= link_to "要素作成", new_element_path, class: "btn btn-primary" %>
       <% end %>
     </div>
-    <%= form_with url: elements_path, method: :get, class: "filter-bar" do |form| %>
+    <% filter_form = form_with url: elements_path, method: :get, class: "filter-bar" do |form| %>
       <div class="field">
         <%= form.label :q, "検索" %>
         <%= form.text_field :q, value: @query, placeholder: "名前 / 種別" %>
@@ -15,6 +15,7 @@
         <%= form.submit "絞り込む", class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= filter_form %>
     <div class="cards">
       <% @elements.each do |element| %>
         <article class="card">

@@ -4,4 +4,5 @@ class Scene < ApplicationRecord
   has_many :plots, dependent: :nullify
 
   validates :text, presence: true, length: { maximum: 1000 }
+  broadcasts
 end

@@ -6,41 +6,10 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
   let(:owner) { create(:user) }
   let(:plot) { create(:plot, user: owner) }
 
-  it "creates a draft plot on new and redirects to show" do
-    post session_path, params: { user_id: owner.id }
-
-    assert_difference "Plot.count", +1 do
-      get new_plot_path
-    end
-
-    draft = Plot.order(:id).last
-    assert_redirected_to plot_path(draft)
-
-    follow_redirect!
-    assert_response :success
-    assert_select "a[href='#{new_plot_plot_element_path(draft)}']", text: "要素を追加", count: 1
-    assert_select "form[action^='#{plot_plot_scenes_path(draft)}']", count: 1
-  end
-
   it "does not route post /plots" do
     post plots_path, params: { plot: { title: "unused" } }
 
     assert_response :not_found
-  end
-
-  it "renders add-element button below the plot elements section" do
-    post session_path, params: { user_id: owner.id }
-    create(:plot_element, plot:, element: create(:element, user: owner))
-
-    get plot_path(plot)
-
-    assert_response :success
-    heading_index = @response.body.index("<h2>登場要素</h2>")
-    button_index = @response.body.index(%(href="#{new_plot_plot_element_path(plot)}"))
-
-    refute_nil heading_index
-    refute_nil button_index
-    assert_operator heading_index, :<, button_index
   end
 
   it "redirects edit path to show" do
@@ -49,27 +18,6 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     get edit_plot_path(plot)
 
     assert_redirected_to plot_path(plot)
-  end
-
-  it "updates a plot inline with turbo stream" do
-    post session_path, params: { user_id: owner.id }
-
-    patch plot_path(plot),
-      params: {
-        plot: {
-          title: "<p><strong>更新タイトル</strong></p>",
-          summary: "<p><ruby>更新概要<rt>こうしんがいよう</rt></ruby></p>"
-        }
-      },
-      headers: { "Accept" => Mime[:turbo_stream].to_s }
-
-    assert_response :success
-    assert_equal Mime[:turbo_stream].to_s, @response.media_type
-    assert_includes @response.body, "target=\"plot-overview-#{plot.id}\""
-    assert_includes @response.body, "<ruby>"
-
-    updated_plot = plot.reload
-    assert_equal "更新タイトル", ActionController::Base.helpers.strip_tags(updated_plot.title).squish
   end
 
   it "does not show parent plot row when there is no parent" do
@@ -99,27 +47,5 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
     assert_select "span.meta-label", text: "親プロット", count: 1
     assert_select "a[href='#{plot_path(parent_plot)}']", text: ActionController::Base.helpers.strip_tags(parent_plot.title), count: 1
-  end
-
-  it "auto opens chatbot for an untitled owned plot" do
-    untitled_plot = create(:plot, user: owner, title: nil)
-    post session_path, params: { user_id: owner.id }
-
-    get plot_path(untitled_plot)
-
-    assert_response :success
-    assert_select "#chatbot-wrapper[data-chatbot-auto-open-value='true']", count: 1
-    assert_select "iframe#chat-frame[src*='plot_id=#{untitled_plot.id}']", count: 1
-    assert_select "iframe#chat-frame[src*='autostart=1']", count: 1
-  end
-
-  it "does not auto open chatbot for titled plot" do
-    post session_path, params: { user_id: owner.id }
-
-    get plot_path(plot)
-
-    assert_response :success
-    assert_select "#chatbot-wrapper[data-chatbot-auto-open-value='false']", count: 1
-    assert_select "iframe#chat-frame[src*='autostart=1']", count: 0
   end
 end

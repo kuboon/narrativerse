@@ -2,6 +2,10 @@ source "https://rubygems.org"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 8.1.2"
+
+gem "action_args"
+gem "reactionview"
+
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
@@ -21,7 +25,7 @@ gem "jbuilder"
 gem "pundit"
 
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
-# gem "bcrypt", "~> 3.1.7"
+gem "bcrypt"
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: %i[ windows jruby ]
@@ -35,7 +39,7 @@ gem "solid_cable"
 gem "bootsnap", require: false
 
 # Deploy this application anywhere as a Docker container [https://kamal-deploy.org]
-gem "kamal", require: false
+# gem "kamal", require: false
 
 # Add HTTP asset caching/compression and X-Sendfile acceleration to Puma [https://github.com/basecamp/thruster/]
 gem "thruster", require: false

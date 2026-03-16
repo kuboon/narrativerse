@@ -1,47 +1,36 @@
-class PlotScenesController < ApplicationController
+class PlotSceneLinksController < ApplicationController
   before_action :require_login
 
-  def create
-    @plot = Plot.find(params[:plot_id])
-    authorize @plot, :manage_story?
+  def create(plot_id:)
+    @plot = Plot.find(plot_id)
+    authorize @plot
 
-    @scene = Scene.new(scene_params)
-    @scene.user = current_user
+    editor = PlotEditor.new(plot: @plot, user: current_user)
+    link = editor.add_scene(text: scene_params[:text])
 
-    unless @scene.save
-      return render :new, status: :unprocessable_entity
-    end
-
-    last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
-    last_link.update!(next_scene_id: @scene.id) if last_link
-
-    @plot.update!(scene: @scene) if @plot.scene_id.blank?
-
-    @link = PlotSceneLink.create!(plot: @plot, scene: @scene, next_scene_id: nil)
-
-    respond_to do |format|
-      format.html { redirect_to reader_path(@plot, @scene.id) }
-      # format.turbo_stream
-    end
+    render json: { link_id: link.id, scene_id: link.scene_id }, status: :created
+  rescue ActiveRecord::RecordInvalid => e
+    render plain: e.message, status: :unprocessable_entity
   end
 
-  def fork
-    source_link = PlotSceneLink.find(params[:id])
+  def fork(id:)
+    source_link = PlotSceneLink.find(id)
     source_plot = source_link.plot
     return render plain: "見つかりません", status: :not_found unless source_link.plot_id == source_plot.id
 
-    authorize source_plot, :fork?
+    authorize source_plot
 
     begin
-      result = PlotForker.new(plot: source_plot, link: source_link, user: current_user).call
+      result = PlotEditor.new(plot: source_plot, user: current_user).fork(link: source_link)
       redirect_to plot_path(result[:plot]), notice: "分岐プロットを作成しました"
     rescue ArgumentError => e
       redirect_to reader_path(source_plot, source_link.scene_id), alert: e.message
     end
   end
 
-  def update
-    @link = PlotSceneLink.find(params[:id])
+  def update(id:)
+    @link = PlotSceneLink.find(id)
+    authorize @link
     @plot = @link.plot
 
     unless @plot && @plot.user_id == current_user.id

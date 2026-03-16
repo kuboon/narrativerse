@@ -10,10 +10,7 @@ class MessagesController < ApplicationController
 
     ChatResponseJob.perform_later(@chat.id, content, @plot_id, @scene_id)
 
-    respond_to do |format|
-      format.turbo_stream
-      format.html { redirect_to chat_path }
-    end
+    head :no_content
   end
 
   private
@@ -23,7 +20,7 @@ class MessagesController < ApplicationController
   end
 
   def content
-    params[:message][:content]
+    params[:content]
   end
 
   def context_plot_id

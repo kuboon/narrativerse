@@ -1,7 +1,7 @@
 <main class="page">
   <section class="form-card">
     <h1>ユーザー作成</h1>
-    <%= form_with model: @user do |form| %>
+    <% user_form = form_with model: @user do |form| %>
       <div class="field">
         <%= form.label :name, "名前" %>
         <%= form.text_field :name, required: true %>
@@ -19,5 +19,6 @@
         <%= link_to "キャンセル", root_path, class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= user_form %>
   </section>
 </main>

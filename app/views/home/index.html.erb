@@ -98,10 +98,11 @@
     <% if @plots.any? %>
       <div class="cards">
         <% @plots.each do |plot| %>
-          <%= link_to reader_path(plot), class: "card card-link" do %>
+          <% plot_link = capture do %>
             <h3><%= render_plot_title(plot.title) %></h3>
             <div class="card-summary"><%= render_plot_summary(plot.summary) %></div>
           <% end %>
+          <%= link_to plot_link, reader_path(plot), class: "card card-link" %>
         <% end %>
       </div>
     <% else %>
@@ -120,10 +121,11 @@
     <% if @elements.any? %>
       <div class="cards">
         <% @elements.each do |element| %>
-          <%= link_to element_path(element), class: "card card-link" do %>
+          <% element_link = capture do %>
             <h3><%= element.name %></h3>
             <p><%= t("elements.types.#{element.element_type.downcase}") %></p>
           <% end %>
+          <%= link_to element_link, element_path(element), class: "card card-link" %>
         <% end %>
       </div>
     <% else %>

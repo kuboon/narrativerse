@@ -21,7 +21,7 @@
       <h2>作成したプロット</h2>
       <span><%= @plots.size %>件</span>
     </div>
-    <%= form_with url: mypage_path, method: :get, class: "filter-bar" do |form| %>
+    <% plot_form = form_with(url: mypage_path, method: :get, class: "filter-bar") do |form| %>
       <%= form.hidden_field :element_q, value: @element_query %>
       <div class="field">
         <%= form.label :plot_q, "プロット検索" %>
@@ -31,6 +31,7 @@
         <%= form.submit "絞り込む", class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= plot_form %>
 
     <% if @plots.any? %>
       <div class="cards">
@@ -59,7 +60,7 @@
       <h2>作成した要素</h2>
       <span><%= @elements.size %>件</span>
     </div>
-    <%= form_with url: mypage_path, method: :get, class: "filter-bar" do |form| %>
+    <% element_form = form_with(url: mypage_path, method: :get, class: "filter-bar") do |form| %>
       <%= form.hidden_field :plot_q, value: @plot_query %>
       <div class="field">
         <%= form.label :element_q, "要素検索" %>
@@ -69,6 +70,7 @@
         <%= form.submit "絞り込む", class: "btn btn-ghost" %>
       </div>
     <% end %>
+    <%= element_form %>
 
     <% if @elements.any? %>
       <div class="cards">

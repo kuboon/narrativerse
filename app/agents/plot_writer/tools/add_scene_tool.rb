@@ -1,10 +1,12 @@
 # frozen_string_literal: true
 
-module PlotAgent
+module PlotWriter
   module Tools
     class AddSceneTool < BaseTool
       description "現在のプロットに新しいシーンを追加します。"
-      param :text, desc: "シーン本文"
+      params do
+        string :text, min_length: 500, max_length: 1000, description: "シーンの内容"
+      end
 
       def execute(text:)
         return deny_message unless manageable?
@@ -14,14 +16,9 @@ module PlotAgent
         last_link = plot.plot_scene_links.find_by(next_scene_id: nil)
         last_link&.update!(next_scene_id: scene.id)
 
-        link = PlotSceneLink.create!(plot:, scene:, next_scene_id: nil)
+        PlotSceneLink.create!(plot:, scene:, next_scene_id: nil)
 
-        json(
-          status: "ok",
-          message: "シーンを追加しました。",
-          link_id: link.id,
-          scene_id: scene.id
-        )
+        halt "追加しました"
       end
     end
   end

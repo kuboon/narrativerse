@@ -22,15 +22,16 @@ class ChatsController < ApplicationController
   end
 
   def show
+    @chat = current_user.chat
     unless @chat
       @chat = current_user.chats.create!
     end
-
-    seed_initial_plot_choices_if_needed
+    @chat.messages.create(role: "user")
 
     @plot_id = context_plot_id
     @scene_id = context_scene_id
     @message = @chat.messages.build
+
     render layout: false
   end
 

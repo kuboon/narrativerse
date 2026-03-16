@@ -3,9 +3,8 @@ Rails.application.routes.draw do
   # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
+  get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   root "home#index"
   resource :session, only: [ :new, :create, :destroy ]
@@ -13,17 +12,17 @@ Rails.application.routes.draw do
   resources :users, only: [ :new, :create ]
 
   resources :elements, except: :destroy
+
   resources :plots, except: [ :destroy, :create ], shallow: true do
     resources :plot_elements, except: [ :index, :show ], as: :elements do
       patch :refresh_revision, on: :member
     end
-    resources :plot_scenes, only: [ :create, :update ], as: :scenes do
+    resources :plot_scene_links, only: [ :create, :update ] do
       post :fork, on: :member
     end
-    resource :chat, only: %i[ create show ] do
-      resources :messages, only: [ :create ]
-    end
   end
+  resource :chat, only: %i[ show ]
+  resources :messages, only: [ :create ]
 
   get "reader/:plot_id(/:scene_id)", to: "reader#show", as: :reader
 
