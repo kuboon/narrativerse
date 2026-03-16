@@ -7,16 +7,6 @@ class PlotEditor
     @user = user
   end
 
-  def add_scene(text:)
-    scene = Scene.create!(text:, user: @user)
-    last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
-    last_link.update!(next_scene_id: scene.id) if last_link
-    @plot.update!(scene: scene) if @plot.scene_id.blank?
-    new_link = PlotSceneLink.create!(plot: @plot, scene:, next_scene_id: nil)
-    new_link.broadcast_append_to @plot, locals: { own: true }
-    new_link
-  end
-
   def fork(link:)
     raise ArgumentError, "invalid link" unless link.plot_id == @plot.id
 
@@ -39,5 +29,22 @@ class PlotEditor
     end
 
     { plot: new_plot, link: new_link }
+  end
+
+  def add_scene(text:)
+    scene = Scene.create!(text:, user: @user)
+    last_link = PlotSceneLink.find_by(plot_id: @plot.id, next_scene_id: nil)
+    last_link.update!(next_scene_id: scene.id) if last_link
+    @plot.update!(scene: scene) if @plot.scene_id.blank?
+    new_link = PlotSceneLink.create!(plot: @plot, scene:, next_scene_id: nil)
+    new_link.broadcast_append_to @plot, locals: { own: true }
+  end
+
+  def update_scene(link:, text:)
+    raise ArgumentError, "invalid link" unless link.plot_id == @plot.id
+
+    scene = link.scene
+    scene.update!(text:)
+    link.broadcast_replace_to @plot, locals: { own: true }
   end
 end

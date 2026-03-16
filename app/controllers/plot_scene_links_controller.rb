@@ -6,9 +6,9 @@ class PlotSceneLinksController < ApplicationController
     authorize @plot
 
     editor = PlotEditor.new(plot: @plot, user: current_user)
-    link = editor.add_scene(text: scene_params[:text])
+    editor.add_scene(text: scene_params[:text])
 
-    render json: { link_id: link.id, scene_id: link.scene_id }, status: :created
+    head :no_content
   rescue ActiveRecord::RecordInvalid => e
     render plain: e.message, status: :unprocessable_entity
   end
@@ -29,27 +29,14 @@ class PlotSceneLinksController < ApplicationController
   end
 
   def update(id:)
-    @link = PlotSceneLink.find(id)
-    authorize @link
-    @plot = @link.plot
+    link = PlotSceneLink.find(id)
+    authorize link
+    plot_editor = PlotEditor.new(plot: link.plot, user: current_user)
+    plot_editor.update_scene(link:, text: scene_params[:text])
 
-    unless @plot && @plot.user_id == current_user.id
-      head :forbidden
-      return
-    end
-
-    @link.scene.update!(text: scene_params[:text])
-
-    respond_to do |format|
-      format.turbo_stream do
-        render turbo_stream: turbo_stream.replace(
-          ActionView::RecordIdentifier.dom_id(@link),
-          partial: "plot_scene_links/plot_scene_link",
-          locals: { plot_scene_link: @link, own: true }
-        )
-      end
-      format.html { redirect_to plot_path(@plot) }
-    end
+    head :no_content
+  rescue ActiveRecord::RecordInvalid => e
+    render plain: e.message, status: :unprocessable_entity
   end
 
   private
