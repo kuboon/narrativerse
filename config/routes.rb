@@ -23,7 +23,7 @@ Rails.application.routes.draw do
   end
   resource :chat, only: %i[ show ]
   resources :messages, only: [ :create ]
-  post "mcp(/:plot_id)", to: "mcp#create", as: :mcp
+  post "mcp", to: "mcp#create", as: :mcp
 
   get "reader/:plot_id(/:scene_id)", to: "reader#show", as: :reader
 
