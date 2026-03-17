@@ -1,39 +1,72 @@
 @import "tailwindcss";
 @plugin "daisyui" {
-	themes: caramellatte --default, coffee --prefersdark;
+	themes: caramellatte --default;
+}
+
+@plugin "daisyui/theme" {
+  name: "dark-custom";
+  default: false;
+  prefersdark: true;
+  color-scheme: "dark";
+  --color-base-100: oklch(28% 0.066 53.813);
+  --color-base-200: oklch(42% 0.095 57.708);
+  --color-base-300: oklch(47% 0.114 61.907);
+  --color-base-content: oklch(97% 0.071 103.193);
+  --color-primary: oklch(70% 0.213 47.604);
+  --color-primary-content: oklch(98% 0.016 73.684);
+  --color-secondary: oklch(69% 0.17 162.48);
+  --color-secondary-content: oklch(97% 0.021 166.113);
+  --color-accent: oklch(76% 0.188 70.08);
+  --color-accent-content: oklch(98% 0.022 95.277);
+  --color-neutral: oklch(68% 0.162 75.834);
+  --color-neutral-content: oklch(98% 0.026 102.212);
+  --color-info: oklch(58% 0.158 241.966);
+  --color-info-content: oklch(97% 0.013 236.62);
+  --color-success: oklch(62% 0.194 149.214);
+  --color-success-content: oklch(98% 0.018 155.826);
+  --color-warning: oklch(68% 0.162 75.834);
+  --color-warning-content: oklch(98% 0.026 102.212);
+  --color-error: oklch(57% 0.245 27.325);
+  --color-error-content: oklch(97% 0.013 17.38);
 }
 
 @source "../../views/**/*";
 @source "../../javascript/**/*";
 
-:root {
-	--border: #d4c5b3;
-	--shadow: rgba(43, 33, 20, 0.14);
-	--surface-strong: #f1e3d0;
-	--surface-card: #fffdf8;
-	--muted: #6b5a47;
-	--brand: #8f4b35;
-	--accent: #b07647;
-	--brand-soft: #f2e2d7;
-	--bg-layer-1: #f6ede2;
-	--bg-layer-2: #eddfce;
-}
-
 * {
 	box-sizing: border-box;
+}
+
+@font-face {
+  font-family: 'Local Noto Sans JP';
+  src: 
+    local('Noto Sans JP'), /* Windows */
+    local('Noto Sans CJK JP Regular') /* Android */;
+}
+
+:where(:root) {
+  font-family: "Local Noto Sans JP", "Noto Sans JP", sans-serif;
+	 
+  --size-selector: 0.25rem;
+  --size-field: 0.25rem;
+  --border: 3px;
+  --depth: 2;
+  --noise: 1;
+  --radius-selector: 0.25rem;
+  --radius-field: 0.5rem;
+  --radius-box: 0.5rem;
 }
 
 body {
 	min-height: 100vh;
 	background:
-		radial-gradient(circle at 15% 20%, color-mix(in oklab, var(--brand) 22%, transparent) 0%, transparent 45%),
-		radial-gradient(circle at 90% 0%, color-mix(in oklab, var(--accent) 18%, transparent) 0%, transparent 50%),
-		linear-gradient(180deg, var(--bg-layer-1) 0%, var(--bg-layer-2) 100%);
-	font-family: "Avenir Next", "Hiragino Sans", "Yu Gothic", sans-serif;
+		radial-gradient(circle at 15% 20%, color-mix(in oklab, var(--primary) 22%, transparent) 0%, transparent 45%),
+		radial-gradient(circle at 90% 0%, color-mix(in oklab, var(--base-100) 18%, transparent) 0%, transparent 50%),
+		linear-gradient(180deg, var(--base-100) 0%, var(--base-200) 100%);
 }
 
 .site-header {
-	@apply sticky top-0 z-30 border-b border-base-300/70 bg-base-100/85 backdrop-blur;
+	@apply sticky top-0 z-30 border-b border-base-300/70 bg-base-200 backdrop-blur;
 	transition: transform 0.3s ease;
 }
 
@@ -156,13 +189,6 @@ nav {
 
 .meta-label {
 	@apply mb-1 block text-xs font-semibold uppercase tracking-[0.18em] text-base-content/60;
-}
-
-.badge {
-	@apply inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold;
-	border-color: color-mix(in oklab, var(--brand) 45%, white);
-	color: var(--brand);
-	background: color-mix(in oklab, var(--brand) 8%, white);
 }
 
 .panel {
@@ -434,16 +460,12 @@ label.checkbox input[type="checkbox"] {
 	background: color-mix(in oklab, var(--brand) 10%, white);
 }
 
-.scene-container {
-	@apply w-full;
+.scene {
+	@apply rounded-xl bg-base-200 p-3 my-6 transition;
 }
 
-.scene-display {
-	@apply rounded-xl border border-base-300 bg-base-100 p-3 transition;
-}
-
-.scene-display:hover {
-	@apply border-base-content/20;
+.scene.editable:hover {
+	@apply border border-base-content/20;
 }
 
 #messages .thinking-continuation {
@@ -518,9 +540,17 @@ label.checkbox input[type="checkbox"] {
 		@apply flex-col items-stretch;
 	}
 }
-
+#chat-float {
+	@apply fixed bottom-4 right-4 transition-all duration-1000;
+	&:has(:popover-open) {
+		@apply right-80;
+	}
+}
 #chat {
 	@apply block rounded-2xl border border-base-300 bg-base-100 p-5 shadow-md transition duration-200;
 	@apply w-80 max-w-full overflow-x-scroll;
+	display: flex;
+	flex-direction: column-reverse;
+	align-content: end;
 	height: calc(100dvh - 70px);
 }

@@ -36,7 +36,7 @@
                     <%= link_to branch_link, reader_path(branch.plot_id, branch.next_scene_id), class: "scene-branch-menu-item" %>
                   <% end %>
                   <% if current_user.present? %>
-                    <%= link_to "分岐を追加", fork_link_path(link), data: { turbo_method: :post }, class: "scene-branch-menu-item" %>
+                    <%= link_to "分岐を追加", fork_plot_scene_link_path(link), data: { turbo_method: :post }, class: "scene-branch-menu-item" %>
                   <% end %>
                 </div>
               </details>

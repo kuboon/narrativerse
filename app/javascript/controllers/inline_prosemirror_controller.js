@@ -171,7 +171,7 @@ export default class extends Controller {
     this.editorWrapper.className = "prosemirror-editor-container"
 
     const editorDiv = document.createElement("div")
-    editorDiv.className = "prosemirror-editor scene-display w-full p-2 border rounded min-h-25"
+    editorDiv.className = "prosemirror-editor w-full min-h-25"
     this.editorWrapper.appendChild(editorDiv)
 
     this.form = this.buildForm()

@@ -9,10 +9,10 @@
     inline_prosemirror_initial_html_value: scene_html
   } %>
 
-<div id="<%= dom_id(plot_scene_link) %>" data-own="<%= own %>">
+<div id="<%= dom_id(plot_scene_link) %>" data-own="<%= own %>" class="plot-scene-link">
   <% if own %>
-    <%= tag.article(scene_html, id: dom_id(scene), class: "scene-container scene-display", data: editor_data) %>
+    <%= tag.article(scene_html, id: dom_id(scene), class: "scene editable", data: editor_data) %>
   <% else %>
-    <%= tag.article(scene_html, id: dom_id(scene), class: "scene-container scene-display") %>
+    <%= tag.article(scene_html, id: dom_id(scene), class: "scene") %>
   <% end %>
 </div>

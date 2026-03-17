@@ -5,7 +5,7 @@
 </main>
 
 <% if policy(@plot).own? %>
-  <div id="chat-float" class="fixed right-4 bottom-4">
+  <div id="chat-float">
     <button popovertarget="chat-popover" style="anchor-name:--chat-anchor">
       <div class="avatar avatar-online avatar-placeholder">
         <div class="bg-primary text-primary-content w-16 rounded-full">
@@ -15,7 +15,7 @@
     </button>
 
     <div
-      class="dropdown dropdown-left dropdown-end"
+      class="dropdown dropdown-right dropdown-end"
       popover
       id="chat-popover"
       style="position-anchor:--chat-anchor"

@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
 
     if user
       session[:user_id] = user.id
-      redirect_to root_path, notice: "ログインしました"
+      redirect_to mypage_path, notice: "ログインしました"
     else
       redirect_to new_session_path, alert: "ユーザーが見つかりません"
     end
