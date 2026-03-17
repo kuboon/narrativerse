@@ -33,6 +33,22 @@ module ApplicationHelper
     sanitize(value.to_s, tags: PLOT_RICH_TEXT_TAGS).to_s.strip.html_safe
   end
 
+  def message_choice_payload(message)
+    return if message.content.present?
+
+    payload = normalize_message_choice_payload(message.content_raw)
+    return unless payload.is_a?(Hash)
+
+    prompt = payload["question"].presence || payload["prompt"].presence
+    choices = Array(payload["choices"]).filter_map { |choice| choice.to_s.strip.presence }
+    return if prompt.blank? || choices.empty?
+
+    {
+      "prompt" => prompt,
+      "choices" => choices
+    }
+  end
+
   private
 
   def signed_mcp_token(user)
@@ -46,5 +62,29 @@ module ApplicationHelper
     return html unless match
 
     match[1].html_safe
+  end
+
+  def normalize_message_choice_payload(raw)
+    case raw
+    when Hash
+      raw.stringify_keys
+    when String
+      parse_message_choice_payload(raw)
+    when Array
+      normalize_message_choice_payload(extract_message_choice_array_value(raw))
+    end
+  end
+
+  def extract_message_choice_array_value(raw)
+    return raw.last if raw.length == 2 && raw.first == "content_raw"
+    return raw.first if raw.one?
+
+    nil
+  end
+
+  def parse_message_choice_payload(raw)
+    JSON.parse(raw).stringify_keys
+  rescue JSON::ParserError, TypeError
+    nil
   end
 end

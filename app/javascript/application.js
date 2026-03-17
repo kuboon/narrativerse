@@ -13,4 +13,29 @@ const assignMessagePlotId = () => {
 	plotIdInput.value = plotsPathPlotId
 }
 
+const submitChatChoice = (event) => {
+	const button = event.target.closest(".chat-choice-btn")
+	if (!button) return
+
+	const form = document.getElementById("new_message")
+	if (!form) return
+
+	const contentField = form.querySelector("[name='message[content]']")
+	if (!contentField) return
+
+	contentField.value = button.dataset.choice || ""
+	form.requestSubmit()
+}
+
+const installChatChoiceHandler = () => {
+	if (document.body?.dataset.chatChoiceHandlerInstalled === "true") return
+
+	document.addEventListener("click", submitChatChoice)
+	document.body.dataset.chatChoiceHandlerInstalled = "true"
+}
+
+document.addEventListener("turbo:load", () => {
+	assignMessagePlotId()
+	installChatChoiceHandler()
+})
 document.addEventListener("turbo:frame-load", assignMessagePlotId)
