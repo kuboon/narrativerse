@@ -16,17 +16,7 @@ module PlotWriter
           scope = scope.where(element_type:)
         end
 
-        if query.present?
-          q = "%#{query}%"
-          scope = scope.left_joins(:element_revisions)
-                       .where(
-                         "elements.name LIKE ? OR element_revisions.summary LIKE ? OR element_revisions.text LIKE ?",
-                         q,
-                         q,
-                         q
-                       )
-                       .distinct
-        end
+        scope = scope.matching_query(query)
 
         elements = scope.limit(normalized_limit(limit))
                         .includes(:element_revisions)

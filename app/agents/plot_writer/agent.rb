@@ -2,7 +2,7 @@
 
 module PlotWriter
   class Agent < RubyLLM::Agent
-    # chat_model Chat
+    chat_model Chat
     inputs :plot, :scene_text
 
     instructions

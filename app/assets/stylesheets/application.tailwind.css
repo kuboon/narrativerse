@@ -546,7 +546,7 @@ label.checkbox input[type="checkbox"] {
 		@apply right-80;
 	}
 }
-#chat {
+.chat-container {
 	@apply block rounded-2xl border border-base-300 bg-base-100 p-5 shadow-md transition duration-200;
 	@apply w-80 max-w-full overflow-x-scroll;
 	display: flex;

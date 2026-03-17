@@ -3,12 +3,13 @@ class MessagesController < ApplicationController
   before_action :set_chat
 
   def create
-    return unless content.present?
+    return head :unprocessable_entity unless content.present?
+    # @chat.messages.create!(content:, role: :user)
 
-    @plot_id = context_plot_id
-    @scene_id = context_scene_id
+    plot_id = context_plot_id
+    scene_id = context_scene_id
 
-    ChatResponseJob.perform_later(@chat.id, content, @plot_id, @scene_id)
+    ChatResponseJob.perform_later(@chat.id, content:, plot_id:, scene_id:)
 
     head :no_content
   end
@@ -20,7 +21,7 @@ class MessagesController < ApplicationController
   end
 
   def content
-    params[:content]
+    params.dig(:message, :content)
   end
 
   def context_plot_id

@@ -30,7 +30,11 @@ class PlotStory
   end
 
   def scene_ids
-    links.map(&:scene_id)
+    @scene_ids ||= links.map(&:scene_id)
+  end
+
+  def scenes(last: 20)
+    Scene.where(id: scene_ids.last(last)).sort_by { |s| scene_ids.index(s.id) }
   end
 
   def branches
