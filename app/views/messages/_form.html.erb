@@ -1,11 +1,12 @@
 <% msg_form = form_with(model: Message, url: messages_path, id: "new_message") do |form| %>
+  <%= form.hidden_field :plot_id %>
   <div class="flex items-end gap-2">
     <%= form.text_area :content,
         class: "textarea textarea-bordered flex-1 resize-none leading-snug",
         placeholder: "メッセージを入力...",
         autocomplete: "off",
-        rows: 1,
-        data: { chatbot_target: "input" } %>
+        rows: 1
+    %>
     <%= form.submit "送信", class: "btn btn-primary btn-sm h-10 self-end" %>
   </div>
 <% end %>

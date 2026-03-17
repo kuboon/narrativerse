@@ -4,9 +4,6 @@
 
 import { application } from "./application"
 
-import ChatbotController from "./chatbot_controller"
-application.register("chatbot", ChatbotController)
-
 import InlineProsemirrorController from "./inline_prosemirror_controller"
 application.register("inline-prosemirror", InlineProsemirrorController)
 

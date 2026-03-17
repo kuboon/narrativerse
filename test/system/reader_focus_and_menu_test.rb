@@ -3,7 +3,7 @@ require "application_system_test_case"
 class ReaderFocusAndMenuTest < ApplicationSystemTestCase
   test "tapping a scene moves focus" do
     owner = create(:user)
-    plot = create(:plot, user: owner, scenes_count: 3)
+    plot = create(:plot, user: owner, scene_texts: [ "Scene 1", "Scene 2", "Scene 3" ])
     links = plot.plot_scene_links.order(:id)
     first_scene_id = links.first.scene_id
     target_scene_id = links.second.scene_id
@@ -21,7 +21,7 @@ class ReaderFocusAndMenuTest < ApplicationSystemTestCase
   test "three-dot menu opens as popup" do
     owner = create(:user)
     viewer = create(:user)
-    plot = create(:plot, user: owner, scenes_count: 3)
+    plot = create(:plot, user: owner, scene_texts: [ "Scene 1", "Scene 2", "Scene 3" ])
     focus_scene_id = plot.plot_scene_links.order(:id).first.scene_id
 
     visit new_session_path

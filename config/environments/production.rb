@@ -79,6 +79,12 @@ Rails.application.configure do
   # Only use :id for inspections in production.
   config.active_record.attributes_for_inspect = [ :id ]
 
+  # Disable verbose query logs to reduce noise.
+  config.active_record.verbose_query_logs = false
+
+  # Disable query log tags to reduce noise.
+  config.active_record.query_log_tags_enabled = false
+
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [
   #   "example.com",     # Allow requests from example.com
