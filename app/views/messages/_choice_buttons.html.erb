@@ -1,5 +1,5 @@
 <div class="space-y-3">
-  <p class="text-sm leading-relaxed"><%= payload["prompt"] %></p>
+  <p class="text-sm leading-relaxed"><%= payload["question"] %></p>
   <div class="flex flex-wrap gap-2">
     <% payload["choices"].each do |choice| %>
       <button type="button" class="chat-choice-btn btn btn-sm btn-outline" data-choice="<%= choice %>">

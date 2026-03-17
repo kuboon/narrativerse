@@ -1,4 +1,4 @@
-<% choice_payload = message_choice_payload(message) %>
+<% choice_payload = message.choice_payload %>
 <% is_user = message.role.to_s == "user" %>
 <div id="message_<%= message.id %>" class="chat <%= is_user ? "chat-end" : "chat-start" %> my-2" data-message-kind="default">
   <div id="message_<%= message.id %>_content" class="chat-bubble <%= is_user ? "chat-bubble-primary" : "chat-bubble-neutral" %> max-w-[88%] text-sm leading-relaxed">

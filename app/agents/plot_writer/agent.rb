@@ -8,7 +8,7 @@ module PlotWriter
     instructions
 
     schema do
-      string :question, description: "ユーザーに対する質問。ユーザーはこのプロンプトを見て、choicesの中から選択肢を選びます。"
+      string :question, description: "ユーザーに対する質問。ユーザーはこの質問を見て、choicesの中から選択肢を選びます。"
       array :choices, of: :string, description: "ユーザーに提示する選択肢のリスト。ユーザーはこの中から選ぶことができます。"
     end
 
