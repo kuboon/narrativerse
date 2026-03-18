@@ -15,9 +15,9 @@ module PlotWriter
     tools do
       user = chat.user
       [
-        Tools::CrudSceneTool.new(user:, plot:),
-        Tools::CrudElementTool.new(user:, plot:),
-        Tools::SearchElementsTool.new(user:, plot:)
+        Tools::Rubyllm::CrudSceneTool.new(user:, plot:),
+        Tools::Rubyllm::CrudElementTool.new(user:, plot:),
+        Tools::Rubyllm::SearchElementsTool.new(user:, plot:)
       ]
     end
   end

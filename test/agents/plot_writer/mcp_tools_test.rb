@@ -1,6 +1,6 @@
 require "test_helper"
 
-describe PlotWriter::McpTools do
+describe PlotWriter::Tools::Mcp do
   let(:user) { FactoryBot.create(:user) }
   let(:plot) { FactoryBot.create(:plot, user:) }
 
@@ -10,7 +10,7 @@ describe PlotWriter::McpTools do
   end
 
   it "returns an error when server context is invalid" do
-    response = PlotWriter::McpTools::CrudSceneTool.call(text: "本文", server_context: { plot_id: plot.id })
+    response = PlotWriter::Tools::Mcp::CrudSceneTool.call(text: "本文", server_context: { plot_id: plot.id })
     body = payload(response)
 
     _(response.error?).must_equal true
@@ -24,7 +24,7 @@ describe PlotWriter::McpTools do
 
     candidate = FactoryBot.create(:element, :with_revision, user:, name: "候補キャラ", element_type: "Character")
 
-    response = PlotWriter::McpTools::SearchElementsTool.call(
+    response = PlotWriter::Tools::Mcp::SearchElementsTool.call(
       query: "候補",
       limit: 5,
       server_context: { user_id: user.id, plot_id: plot.id }
@@ -40,7 +40,7 @@ describe PlotWriter::McpTools do
   it "delegates crud_element to existing tool logic" do
     element = FactoryBot.create(:element, :with_revision, user:, name: "追加要素")
 
-    response = PlotWriter::McpTools::CrudElementTool.call(
+    response = PlotWriter::Tools::Mcp::CrudElementTool.call(
       element_id: element.id,
       summary: "主人公の相棒",
       server_context: { user_id: user.id, plot_id: plot.id }
@@ -55,7 +55,7 @@ describe PlotWriter::McpTools do
   it "delegates crud_scene to existing tool logic" do
     link = plot.plot_scene_links.first
 
-    response = PlotWriter::McpTools::CrudSceneTool.call(
+    response = PlotWriter::Tools::Mcp::CrudSceneTool.call(
       scene_id: link.scene_id,
       text: "更新した本文",
       server_context: { user_id: user.id, plot_id: plot.id }

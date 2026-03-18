@@ -2,11 +2,28 @@
 
 module PlotWriter
   module Tools
-    class CrudElementTool < BaseTool
-      description "現在のプロットへ要素を追加します。"
-      param :element_id, type: :integer, required: false, desc: "追加する要素 ID"
-      param :summary, required: false, desc: "プロット内の役割"
-      param :secrets, required: false, desc: "秘密の設定"
+    class CrudElementTool < Base
+      def self.description = "現在のプロットへ要素を追加します。"
+
+      def self.schema
+        {
+          type: "object",
+          properties: {
+            element_id: {
+              type: "integer",
+              description: "追加する要素 ID"
+            },
+            summary: {
+              type: "string",
+              description: "プロット内の役割"
+            },
+            secrets: {
+              type: "string",
+              description: "秘密の設定"
+            }
+          }
+        }
+      end
 
       def execute(element_id:, summary: nil, secrets: nil)
         return deny_message unless manageable?

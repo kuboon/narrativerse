@@ -2,7 +2,7 @@
 
 module PlotWriter
   module Tools
-    class BaseTool < RubyLLM::Tool
+    class Base
       MAX_SEARCH_RESULTS = 20
 
       attr_reader :user, :plot
@@ -10,11 +10,23 @@ module PlotWriter
       def initialize(user:, plot:)
         @user = user
         @plot = plot
-        super()
       end
 
-      def name
-        super.split("--").last
+      def self.schema
+        raise NotImplementedError, "#{self} must implement .schema"
+      end
+
+      def self.description
+        raise NotImplementedError, "#{self} must implement .description"
+      end
+
+      # MCP用: すべてのMCPツールを返す
+      def self.all
+        [
+          CrudSceneTool,
+          CrudElementTool,
+          SearchElementsTool
+        ]
       end
 
       private
@@ -37,6 +49,10 @@ module PlotWriter
         value = limit.to_i
         value = default if value <= 0
         [ value, MAX_SEARCH_RESULTS ].min
+      end
+
+      def halt(message)
+        json(status: "ok", message:)
       end
     end
   end

@@ -2,12 +2,29 @@
 
 module PlotWriter
   module Tools
-    class CrudSceneTool < BaseTool
-      description "現在のプロットのシーン本文を更新します。"
-      params do
-        integer :scene_id, required: false, description: "更新する scene ID"
-        string :text, min_length: 500, max_length: 1000, description: "シーンの内容"
-        boolean :delete, required: false, description: "シーンを削除する場合は true"
+    class CrudSceneTool < Base
+      def self.description = "現在のプロットのシーンを追加・更新・削除します。"
+
+      def self.schema
+        {
+          type: "object",
+          properties: {
+            scene_id: {
+              type: "integer",
+              description: "更新する scene ID"
+            },
+            text: {
+              type: "string",
+              minLength: 500,
+              maxLength: 1000,
+              description: "シーンの内容"
+            },
+            delete: {
+              type: "boolean",
+              description: "シーンを削除する場合は true"
+            }
+          }
+        }
       end
 
       def execute(scene_id: nil, text: nil, delete: false)

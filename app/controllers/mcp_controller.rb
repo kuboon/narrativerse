@@ -8,7 +8,7 @@ class McpController < ApplicationController
       title: "Narrativerse Plot Writer",
       version: "1.0.0",
       instructions: "Narrativerse のプロット編集を行うための MCP サーバーです。",
-      tools: PlotWriter::McpTools.all,
+      tools: PlotWriter::Tools::Mcp::Base.all,
       prompts: PlotWriter::McpPrompts.all,
       server_context: {
         user_id: @mcp_user.id,

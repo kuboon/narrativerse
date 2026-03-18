@@ -2,11 +2,29 @@
 
 module PlotWriter
   module Tools
-    class SearchElementsTool < BaseTool
-      description "プロット外の要素を検索します。"
-      param :query, required: false, desc: "検索キーワード"
-      param :element_type, required: false, desc: "Character / Item / Field"
-      param :limit, type: :integer, required: false, desc: "件数上限(最大20)"
+    class SearchElementsTool < Base
+      def self.description = "プロット外の要素を検索します。"
+
+      def self.schema
+        {
+          type: "object",
+          properties: {
+            query: {
+              type: "string",
+              description: "検索キーワード"
+            },
+            element_type: {
+              type: "string",
+              enum: Element::ELEMENT_TYPES,
+              description: "Character / Item / Field"
+            },
+            limit: {
+              type: "integer",
+              description: "件数上限(最大20)"
+            }
+          }
+        }
+      end
 
       def execute(query: nil, element_type: nil, limit: 10)
         scope = Element.order(created_at: :desc)
