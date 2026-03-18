@@ -27,11 +27,7 @@ module PlotWriter
           secrets:
         )
 
-        json(
-          status: "ok",
-          message: "要素を追加しました。",
-          plot_element_id: plot_element.id
-        )
+        halt "要素を追加しました: #{plot_element.id}"
       end
     end
   end

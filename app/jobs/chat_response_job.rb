@@ -4,8 +4,8 @@ class ChatResponseJob < ApplicationJob
     chat = PlotWriter::Agent.find(chat_id, plot:)
 
     chat.ask(content) do |chunk|
-      next if chunk.content.blank?
-      Rails.logger.info "Received chunk: #{chunk.content}, messages count: #{chat.messages.count}"
+      # next if chunk.content.blank?
+      # Rails.logger.info "Received chunk: #{chunk.content}, messages count: #{chat.messages.count}"
       # chat.messages.where(role: :assistant).last&.broadcast_append_chunk(chunk.content)
     end
   rescue => e

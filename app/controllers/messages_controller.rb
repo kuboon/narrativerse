@@ -4,7 +4,6 @@ class MessagesController < ApplicationController
 
   def create
     return head :unprocessable_entity unless content.present?
-    # @chat.messages.create!(content:, role: :user)
 
     plot_id = context_plot_id
     scene_id = context_scene_id

@@ -14,7 +14,7 @@ const assignMessagePlotId = () => {
 }
 
 const submitChatChoice = (event) => {
-	const button = event.target.closest(".chat-choice-btn")
+	const button = event.target.closest(".chat-choice")
 	if (!button) return
 
 	const form = document.getElementById("new_message")

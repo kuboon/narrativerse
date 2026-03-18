@@ -554,3 +554,6 @@ label.checkbox input[type="checkbox"] {
 	align-content: end;
 	height: calc(100dvh - 70px);
 }
+.chat-choice {
+	@apply border p-2 text-left text-sm rounded-lg bg-base-200 hover:bg-base-300 transition;
+}

@@ -42,7 +42,7 @@ class ChatChoicesTest < ApplicationSystemTestCase
     find("#chat-float button[popovertarget='chat-popover']").click
 
     assert_selector "#chat-frame #messages"
-    assert_selector "#chat-frame .chat-choice-btn", text: choice
+    assert_selector "#chat-frame .chat-choice", text: choice
     assert_text "現在のプロットは要素がまだありません。共同創作を始めるため、次のいずれかを選んでください。"
 
     page.execute_script(<<~JS)

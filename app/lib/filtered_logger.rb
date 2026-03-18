@@ -23,7 +23,9 @@ class FilteredLogger
     return true if message_text.empty?
     return true if excluded?(message_text)
 
-    @inner_logger.add(severity, message, progname)
+    message2 = message.is_a?(String) ? mutate_message(message) : message
+
+    @inner_logger.add(severity, message2, progname)
   end
 
   def debug(progname = nil, &block)
@@ -69,6 +71,22 @@ class FilteredLogger
       message.include?("TRANSACTION")
     # || message.start_with?("[cable]")
     # || message.start_with?("[jobs]")
+  end
+
+  GID_PREFIX = Base64.strict_encode64("gid://narrativerse").freeze
+  def mutate_message(message)
+    # Turbo::StreamsChannel is streaming from Z2lkOi8vbmFycmF0aXZlcnNlL1Bsb3QvNw
+    # base64decode
+    if message.include?(GID_PREFIX)
+      encoded_part = message[/#{GID_PREFIX}([A-Za-z0-9\-_]+)=*/, 0]
+      if encoded_part
+        decoded_part = Base64.decode64(encoded_part) rescue nil
+        if decoded_part
+          return message.sub(encoded_part, decoded_part)
+        end
+      end
+    end
+    message
   end
 end
 
