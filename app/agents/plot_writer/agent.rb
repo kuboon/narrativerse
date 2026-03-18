@@ -2,8 +2,7 @@
 
 module PlotWriter
   class Agent < RubyLLM::Agent
-    chat_model Chat
-    inputs :plot, :scene_text
+    inputs :user, :plot, :scene_text
 
     instructions
 
@@ -13,11 +12,10 @@ module PlotWriter
     end
 
     tools do
-      user = chat.user
       [
-        Tools::Rubyllm::CrudSceneTool.new(user:, plot:),
-        Tools::Rubyllm::CrudElementTool.new(user:, plot:),
-        Tools::Rubyllm::SearchElementsTool.new(user:, plot:)
+        Tools::ForRubyLLM::CrudSceneTool.new(user:, plot:),
+        Tools::ForRubyLLM::CrudElementTool.new(user:, plot:),
+        Tools::ForRubyLLM::SearchElementsTool.new(user:, plot:)
       ]
     end
   end

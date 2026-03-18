@@ -2,7 +2,7 @@
 
 module PlotWriter
   module Tools
-    module Rubyllm
+    module ForRubyLLM
       class CrudElementTool < Base
         wraps PlotWriter::Tools::CrudElementTool
       end

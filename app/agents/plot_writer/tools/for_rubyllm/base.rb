@@ -2,7 +2,7 @@
 
 module PlotWriter
   module Tools
-    module Rubyllm
+    module ForRubyLLM
       class Base < RubyLLM::Tool
         @pure_tool_class = nil
 

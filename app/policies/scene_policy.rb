@@ -1,2 +1,2 @@
-class ElementPolicy < ApplicationPolicy
+class ScenePolicy < ApplicationPolicy
 end

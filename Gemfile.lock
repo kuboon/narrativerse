@@ -141,13 +141,13 @@ GEM
       raabro (~> 1.4)
     globalid (1.3.0)
       activesupport (>= 6.1)
-    herb (0.9.0-aarch64-linux-gnu)
-    herb (0.9.0-aarch64-linux-musl)
-    herb (0.9.0-arm-linux-gnu)
-    herb (0.9.0-arm-linux-musl)
-    herb (0.9.0-arm64-darwin)
-    herb (0.9.0-x86_64-linux-gnu)
-    herb (0.9.0-x86_64-linux-musl)
+    herb (0.9.1-aarch64-linux-gnu)
+    herb (0.9.1-aarch64-linux-musl)
+    herb (0.9.1-arm-linux-gnu)
+    herb (0.9.1-arm-linux-musl)
+    herb (0.9.1-arm64-darwin)
+    herb (0.9.1-x86_64-linux-gnu)
+    herb (0.9.1-x86_64-linux-musl)
     i18n (1.14.8)
       concurrent-ruby (~> 1.0)
     io-console (0.8.2)
@@ -168,7 +168,7 @@ GEM
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
     logger (1.7.0)
-    loofah (2.25.0)
+    loofah (2.25.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
     mail (2.9.0)
@@ -315,13 +315,13 @@ GEM
       rubocop-performance (>= 1.24)
       rubocop-rails (>= 2.30)
     ruby-progressbar (1.13.0)
-    ruby_llm (1.13.2)
+    ruby_llm (1.14.0)
       base64
       event_stream_parser (~> 1)
-      faraday (>= 2.0)
+      faraday (>= 1.10.0)
       faraday-multipart (>= 1)
       faraday-net_http (>= 1)
-      faraday-retry (>= 2.0)
+      faraday-retry (>= 1)
       marcel (~> 1)
       ruby_llm-schema (~> 0)
       zeitwerk (~> 2)
@@ -343,13 +343,13 @@ GEM
       fugit (~> 1.11)
       railties (>= 7.1)
       thor (>= 1.3.1)
-    sqlite3 (2.9.1-aarch64-linux-gnu)
-    sqlite3 (2.9.1-aarch64-linux-musl)
-    sqlite3 (2.9.1-arm-linux-gnu)
-    sqlite3 (2.9.1-arm-linux-musl)
-    sqlite3 (2.9.1-arm64-darwin)
-    sqlite3 (2.9.1-x86_64-linux-gnu)
-    sqlite3 (2.9.1-x86_64-linux-musl)
+    sqlite3 (2.9.2-aarch64-linux-gnu)
+    sqlite3 (2.9.2-aarch64-linux-musl)
+    sqlite3 (2.9.2-arm-linux-gnu)
+    sqlite3 (2.9.2-arm-linux-musl)
+    sqlite3 (2.9.2-arm64-darwin)
+    sqlite3 (2.9.2-x86_64-linux-gnu)
+    sqlite3 (2.9.2-x86_64-linux-musl)
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.2.0)
@@ -469,13 +469,13 @@ CHECKSUMS
   ferrum (0.17.1) sha256=51d591120fc593e5a13b5d9d6474389f5145bb92a91e36eab147b5d096c8cbe7
   fugit (1.12.1) sha256=5898f478ede9b415f0804e42b8f3fd53f814bd85eebffceebdbc34e1107aaf68
   globalid (1.3.0) sha256=05c639ad6eb4594522a0b07983022f04aa7254626ab69445a0e493aa3786ff11
-  herb (0.9.0-aarch64-linux-gnu) sha256=d9130f8f1549e75874ee2528a3fdf44c44290b90a7caf597e356a03f9318acae
-  herb (0.9.0-aarch64-linux-musl) sha256=57b884f71a4cd9d6ce4451072c1d7e72a5662e4cee8203531e8ac87848d43421
-  herb (0.9.0-arm-linux-gnu) sha256=d153631a1e09a4e0f16aa7cb11f118f690981d5d5d91eab5d363744944d62bad
-  herb (0.9.0-arm-linux-musl) sha256=e0b38e69b5bbf91f7df2fbea5c32458f9ae66ef0259fcf5fabc0f9ee4f11fdf9
-  herb (0.9.0-arm64-darwin) sha256=20b16c3f57ec7f985737659c19f0786eab658014c0247881df07f041452ccd5c
-  herb (0.9.0-x86_64-linux-gnu) sha256=04b67ed7de5f98acd534ceb85163609716518089152cf9e73e90e7cace58b66a
-  herb (0.9.0-x86_64-linux-musl) sha256=cddc44b8af89359b2a793a878614b1cd182f56cbfbae1e288c3d6f2d7fc31cfa
+  herb (0.9.1-aarch64-linux-gnu) sha256=1a6b50fd9244b8643a718e17a00100d3817e87ac25066141889ebd772a9d4bcc
+  herb (0.9.1-aarch64-linux-musl) sha256=d75c7481ad35717e7ef4981e862b126f6a911e55f023f0afc3ad87336f97c325
+  herb (0.9.1-arm-linux-gnu) sha256=76a41939b6b8c2c6bec368e556ff700bc4ba0d770561c2157b845370671ade7e
+  herb (0.9.1-arm-linux-musl) sha256=f45b6214c1ba2fd5e2dbd04d5fe57f8721762586564dafcae640791591692c9e
+  herb (0.9.1-arm64-darwin) sha256=af839d1932b35b9f1a8e7bec9cb22c431417d3b71d8905b5be2dc4a3e1f05d1f
+  herb (0.9.1-x86_64-linux-gnu) sha256=43b6217d5737407179814b43c96ee902f9f0153daffd088b0e585b53e96573eb
+  herb (0.9.1-x86_64-linux-musl) sha256=f162c11c42b2a674d264f6b824dafd1490598a95a4ecae363f217b5ecc2071f2
   i18n (1.14.8) sha256=285778639134865c5e0f6269e0b818256017e8cde89993fdfcbfb64d088824a5
   io-console (0.8.2) sha256=d6e3ae7a7cc7574f4b8893b4fca2162e57a825b223a177b7afa236c5ef9814cc
   irb (1.17.0) sha256=168c4ddb93d8a361a045c41d92b2952c7a118fa73f23fe14e55609eb7a863aae
@@ -486,7 +486,7 @@ CHECKSUMS
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
-  loofah (2.25.0) sha256=df5ed7ac3bac6a4ec802df3877ee5cc86d027299f8952e6243b3dac446b060e6
+  loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
   marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
@@ -540,19 +540,19 @@ CHECKSUMS
   rubocop-rails (2.34.3) sha256=10d37989024865ecda8199f311f3faca990143fbac967de943f88aca11eb9ad2
   rubocop-rails-omakase (1.1.0) sha256=2af73ac8ee5852de2919abbd2618af9c15c19b512c4cfc1f9a5d3b6ef009109d
   ruby-progressbar (1.13.0) sha256=80fc9c47a9b640d6834e0dc7b3c94c9df37f08cb072b7761e4a71e22cff29b33
-  ruby_llm (1.13.2) sha256=f8bd7fa0e3c486368b318167775eac086896e3477986ad5ca2c3b38b1e2913c5
+  ruby_llm (1.14.0) sha256=57c6f7034fc4a44504ea137d70f853b07824f1c1cdbe774ab3ab3522e7098deb
   ruby_llm-schema (0.3.0) sha256=a591edc5ca1b7f0304f0e2261de61ba4b3bea17be09f5cf7558153adfda3dec6
   securerandom (0.4.1) sha256=cc5193d414a4341b6e225f0cb4446aceca8e50d5e1888743fac16987638ea0b1
   solid_cable (3.0.12) sha256=a168a54731a455d5627af48d8441ea3b554b8c1f6e6cd6074109de493e6b0460
   solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
   solid_queue (1.3.2) sha256=44a53047be4255f616ff13fa5d35980e7b3eee6e31d957eadb88fbe8e0db4509
-  sqlite3 (2.9.1-aarch64-linux-gnu) sha256=85535ddf1c37f116ebebe0330bbbffc2ccb55d09f69717a565f8cfb35142f136
-  sqlite3 (2.9.1-aarch64-linux-musl) sha256=646a28a655fc0298ff4266de0af89b66477a2d9ad65cebb5abad190bb64ed092
-  sqlite3 (2.9.1-arm-linux-gnu) sha256=ed25696b0fb4694ca4f47287eaaa9e0d46a0a0c92990c453743d6ab6b4f51fa0
-  sqlite3 (2.9.1-arm-linux-musl) sha256=82ca90eefe50935c827ab0c8dffff5219f57b5da0c92039e3e27f7dbccc9e992
-  sqlite3 (2.9.1-arm64-darwin) sha256=e0cc5521aa03361e2da56635f3745242510b0b98c4608a3824b7e31ab2e7ffb9
-  sqlite3 (2.9.1-x86_64-linux-gnu) sha256=1cbb644204ed143e5c96f6d59b5c571ba6f18b18a9dc5aa11c101187ff227afd
-  sqlite3 (2.9.1-x86_64-linux-musl) sha256=bbd50dd1caca78b6c069701d9009ef714461495985d4c374ea1a1def061ba67c
+  sqlite3 (2.9.2-aarch64-linux-gnu) sha256=eeb86db55645b85327ba75129e3614658d974bf4da8fdc87018a0d42c59f6e42
+  sqlite3 (2.9.2-aarch64-linux-musl) sha256=4feff91fb8c2b13688da34b5627c9d1ed9cedb3ee87a7114ec82209147f07a6d
+  sqlite3 (2.9.2-arm-linux-gnu) sha256=1ee2eb06b5301aaf5ce343a6e88d99ac932d95202d7b350f0e7b6d8d588580d7
+  sqlite3 (2.9.2-arm-linux-musl) sha256=8ca0de6aceede968de0394e22e95d549834c4d8e318f69a92a52f049878a0057
+  sqlite3 (2.9.2-arm64-darwin) sha256=d15bd9609a05f9d54930babe039585efc8cadd57517c15b64ec7dfa75158a5e9
+  sqlite3 (2.9.2-x86_64-linux-gnu) sha256=dce83ffcb7e72f9f7aeb6e5404f15d277a45332fe18ccce8a8b3ed51e8d23aee
+  sqlite3 (2.9.2-x86_64-linux-musl) sha256=e8dd906a613f13b60f6d47ae9dda376384d9de1ab3f7e3f2fdf2fd18a871a2d7
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
   thor (1.5.0) sha256=e3a9e55fe857e44859ce104a84675ab6e8cd59c650a49106a05f55f136425e73

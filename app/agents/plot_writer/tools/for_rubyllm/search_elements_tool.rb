@@ -2,7 +2,7 @@
 
 module PlotWriter
   module Tools
-    module Rubyllm
+    module ForRubyLLM
       class SearchElementsTool < Base
         wraps PlotWriter::Tools::SearchElementsTool
       end
