@@ -63,12 +63,13 @@ class FilteredLogger
   private
 
   def excluded?(message)
-    message.include?("solid_queue_processes") ||
-      message.include?("Scheduler::Manager") ||
-      message.include?('"schema_migrations"."version"') ||
-      message.include?('INSERT INTO "solid_cable_messages"') ||
-      message.include?('INSERT INTO "solid_queue_failed_executions"') ||
-      message.include?("TRANSACTION")
+    message.include?("solid_queue_processes")
+    || message.include?("Scheduler::Manager")
+    || message.include?('"schema_migrations"."version"')
+    || message.include?('INSERT INTO "solid_cable_messages"')
+    || message.include?('INSERT INTO "solid_queue_failed_executions"')
+    || message.include?("TRANSACTION")
+    || message.include?("SolidQueue::Job Create")
     # || message.start_with?("[cable]")
     # || message.start_with?("[jobs]")
   end

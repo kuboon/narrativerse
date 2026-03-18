@@ -1,9 +1,18 @@
 class ChatResponseJob < ApplicationJob
   def perform(chat_id, content:, plot_id:, scene_id:)
+    chat = Chat.find(chat_id)
     plot = Plot.find(plot_id)
-    chat = PlotWriter::Agent.find(chat_id, plot:)
+    user = chat.user
 
-    chat.ask(content) do |chunk|
+    agent = PlotWriter::Agent.chat(user:, plot:)
+    chat.messages.each { |msg| agent.add_message(msg.to_llm) }
+    agent.on_end_message do |message|
+      m = chat.messages.build
+      m.assign_message(message)
+      m.save!
+    end
+
+    agent.ask(content) do |chunk|
       # next if chunk.content.blank?
       # Rails.logger.info "Received chunk: #{chunk.content}, messages count: #{chat.messages.count}"
       # chat.messages.where(role: :assistant).last&.broadcast_append_chunk(chunk.content)
