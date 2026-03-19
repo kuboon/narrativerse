@@ -41,21 +41,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
 
   create_table "chats", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "model_id"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.integer "model_id"
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
   create_table "element_revisions", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "element_id", null: false
-    t.integer "revision", null: false
-    t.text "summary"
-    t.text "text"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.integer "element_id", null: false
+    t.integer "revision", null: false
+    t.text "appearance"
+    t.text "description"
     t.index ["element_id", "revision"], name: "index_element_revisions_on_element_id_and_revision", unique: true
     t.index ["element_id"], name: "index_element_revisions_on_element_id"
     t.index ["user_id"], name: "index_element_revisions_on_user_id"
@@ -63,30 +63,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
 
   create_table "elements", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.string "element_type", null: false
-    t.string "name", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.string "element_type", null: false
+    t.string "name", null: false
     t.index ["element_type"], name: "index_elements_on_element_type"
     t.index ["user_id"], name: "index_elements_on_user_id"
   end
 
   create_table "messages", force: :cascade do |t|
-    t.integer "cache_creation_tokens"
-    t.integer "cached_tokens"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "chat_id", null: false
+    t.string "role", null: false
     t.text "content"
     t.json "content_raw"
-    t.datetime "created_at", null: false
+    t.integer "cache_creation_tokens"
+    t.integer "cached_tokens"
     t.integer "input_tokens"
     t.integer "model_id"
     t.integer "output_tokens"
-    t.string "role", null: false
     t.text "thinking_signature"
     t.text "thinking_text"
     t.integer "thinking_tokens"
     t.integer "tool_call_id"
-    t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["model_id"], name: "index_messages_on_model_id"
     t.index ["role"], name: "index_messages_on_role"
@@ -115,24 +115,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
 
   create_table "plot_elements", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "element_id", null: false
-    t.integer "element_revision_id", null: false
-    t.integer "plot_id", null: false
-    t.text "secrets", comment: "このプロットにおける秘密の役割。読者には提示しない。"
-    t.text "summary"
     t.datetime "updated_at", null: false
-    t.index ["element_id"], name: "index_plot_elements_on_element_id"
+    t.integer "plot_id", null: false
+    t.integer "element_revision_id", null: false
+    t.text "summary"
+    t.text "secrets", comment: "このプロットにおける秘密の役割。読者には提示しない。"
     t.index ["element_revision_id"], name: "index_plot_elements_on_element_revision_id"
-    t.index ["plot_id", "element_id"], name: "index_plot_elements_on_plot_id_and_element_id", unique: true
     t.index ["plot_id"], name: "index_plot_elements_on_plot_id"
   end
 
   create_table "plot_scene_links", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.integer "next_scene_id"
+    t.datetime "updated_at", null: false
     t.integer "plot_id", null: false
     t.integer "scene_id", null: false
-    t.datetime "updated_at", null: false
+    t.integer "next_scene_id"
     t.index ["next_scene_id"], name: "index_plot_scene_links_on_next_scene_id"
     t.index ["plot_id", "scene_id"], name: "index_plot_scene_links_on_plot_id_and_scene_id", unique: true
     t.index ["plot_id"], name: "index_plot_scene_links_on_plot_id"
@@ -141,21 +138,21 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
 
   create_table "plots", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.json "parent_plot_ids", default: []
-    t.integer "scene_id"
-    t.text "summary"
-    t.string "title"
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.integer "scene_id", comment: "プロットの開始シーン"
+    t.json "parent_plot_ids", default: [], comment: "分岐元"
+    t.text "summary"
+    t.string "title"
     t.index ["scene_id"], name: "index_plots_on_scene_id"
     t.index ["user_id"], name: "index_plots_on_user_id"
   end
 
   create_table "scenes", force: :cascade do |t|
     t.datetime "created_at", null: false
-    t.text "text", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id", null: false
+    t.text "text", null: false
     t.index ["user_id"], name: "index_scenes_on_user_id"
   end
 
@@ -173,11 +170,11 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
   end
 
   create_table "users", force: :cascade do |t|
-    t.text "bio"
     t.datetime "created_at", null: false
-    t.string "icon"
-    t.string "name", null: false
     t.datetime "updated_at", null: false
+    t.string "name", null: false
+    t.text "bio"
+    t.string "icon"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
@@ -191,7 +188,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
   add_foreign_key "messages", "models"
   add_foreign_key "messages", "tool_calls"
   add_foreign_key "plot_elements", "element_revisions"
-  add_foreign_key "plot_elements", "elements"
   add_foreign_key "plot_elements", "plots"
   add_foreign_key "plot_scene_links", "plots"
   add_foreign_key "plot_scene_links", "scenes"

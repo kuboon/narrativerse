@@ -3,6 +3,7 @@
 module PlotWriter
   module Tools
     class SearchElementsTool < Base
+      MAX_SEARCH_RESULTS = 20
       def self.description = "プロット外の要素を検索します。"
 
       def self.schema
@@ -14,19 +15,13 @@ module PlotWriter
               description: "検索キーワード"
             },
             element_type: {
-              type: "string",
-              enum: Element::ELEMENT_TYPES,
-              description: "Character / Item / Field"
-            },
-            limit: {
-              type: "integer",
-              description: "件数上限(最大20)"
+              enum: Element::ELEMENT_TYPES
             }
           }
         }
       end
 
-      def execute(query: nil, element_type: nil, limit: 10)
+      def execute(query: nil, element_type: nil)
         scope = Element.order(created_at: :desc)
                        .where.not(id: plot.plot_elements.select(:element_id))
 
@@ -34,20 +29,11 @@ module PlotWriter
           scope = scope.where(element_type:)
         end
 
-        scope = scope.matching_query(query)
-
-        elements = scope.limit(normalized_limit(limit))
-                        .includes(:element_revisions)
-                        .map do |element|
-          {
-            id: element.id,
-            name: element.name,
-            element_type: element.element_type,
-            latest_summary: element.latest_revision&.summary
-          }
-        end
-
-        json(status: "ok", elements:)
+        scope
+        .matching_query(query)
+        .limit(MAX_SEARCH_RESULTS)
+        .includes(:latest_revision)
+        .map { _1.json_to(user:) }
       end
     end
   end

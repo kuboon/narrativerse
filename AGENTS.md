@@ -17,6 +17,9 @@
 - `bin/rubocop` を実行して警告がないこと。
 - 以上が完了したら適切なコミットメッセージでコミットする。 (push はしない)
 
+# 権限
+app/policies に集約する
+
 ## PlotStory
 Plot から Scene の配列を生成する。
 
@@ -27,9 +30,3 @@ Plot から Scene の配列を生成する。
 - ElementRevisionManager updates owned plot elements to latest revision and prunes unreferenced revisions.
 - Locale config: `config.i18n.default_locale = :ja` in `config/application.rb`.
 - Pundit導入済み（Plot/Elementポリシーで作成・編集・分岐を制御）。
-
-## Files of Interest
-- Routes: `config/routes.rb`
-- Reading flow: `app/controllers/reader_controller.rb`, `app/services/plot_story.rb`, `app/views/reader/show.html.erb`
-- Plot elements: `app/controllers/plot_elements_controller.rb`, `app/views/plot_elements/new.html.erb`, `app/views/plots/show.html.erb`
-- Revisions: `app/services/element_revision_manager.rb`

@@ -3,8 +3,8 @@
 module PlotWriter
   module Tools
     module Mcp
-      class CrudElementTool < Base
-        wraps PlotWriter::Tools::CrudElementTool
+      class AddElementTool < Base
+        wraps PlotWriter::Tools::AddElementTool
 
         class << self
           def call(element_id: nil, summary: nil, secrets: nil, server_context:)

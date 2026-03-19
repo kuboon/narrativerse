@@ -7,7 +7,8 @@ module PlotWriter
         def self.all
           [
             CrudSceneTool,
-            CrudElementTool,
+            AddElementTool,
+            UpdateElementTool,
             SearchElementsTool
           ]
         end

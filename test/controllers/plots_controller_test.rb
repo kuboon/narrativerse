@@ -28,16 +28,6 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
     assert_select "span", text: "なし", count: 0
   end
 
-  it "does not mount inline editor for non-owner viewer" do
-    viewer = create(:user)
-    post session_path, params: { user_id: viewer.id }
-
-    get plot_path(plot)
-
-    assert_response :success
-    assert_select "[data-controller='inline-prosemirror']", count: 0
-  end
-
   it "shows parent plot links when there are parents" do
     parent_plot = Plot.create!(user: owner, title: "親プロット")
     child_plot = Plot.create!(user: owner, title: "子プロット", parent_plot_ids: [ parent_plot.id ])

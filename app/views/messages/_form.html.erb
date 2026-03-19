@@ -1,4 +1,4 @@
-<% msg_form = form_with(model: Message, url: messages_path, id: "new_message") do |form| %>
+<%= form_with(model: Message, url: messages_path, id: "new_message") do |form| %>
   <%= form.hidden_field :plot_id %>
   <div class="flex items-end gap-2">
     <%= form.text_area :content,
@@ -7,7 +7,6 @@
         autocomplete: "off",
         rows: 1
     %>
-    <%= form.submit "送信", class: "btn btn-primary btn-sm h-10 self-end" %>
+    <%= form.submit "送信", class: "btn btn-primary btn-sm h-10 self-end", "data-turbo-submits-with" => "送信中" %>
   </div>
 <% end %>
-<%= msg_form %>

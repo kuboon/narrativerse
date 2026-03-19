@@ -3,11 +3,8 @@ FactoryBot.define do
     association :user
     element_type { "Character" }
     sequence(:name) { |n| "Element #{n}" }
-
-    trait :with_revision do
-      after(:create) do |element|
-        create(:element_revision, element:, user: element.user)
-      end
+    after(:build) do |element|
+      element.build_latest_revision(user: element.user, revision: 1, appearance: "外見の説明", description: "詳細な説明")
     end
   end
 end

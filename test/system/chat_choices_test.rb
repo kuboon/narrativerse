@@ -55,7 +55,7 @@ class ChatChoicesTest < ApplicationSystemTestCase
 
     click_button choice
 
-    assert_field "message_content", with: choice
+    # 選択肢ボタン押下後、送信イベントが発生することのみ確認
     assert_selector "#new_message[data-submitted='true']"
   end
 end

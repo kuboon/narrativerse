@@ -11,15 +11,6 @@ if Rails.env.development?
   user = users.first
   bob = users.last
 
-  elements = Element.create!([
-    { element_type: 'Character', name: '山田 太郎', user: user },
-    { element_type: 'Character', name: '田中 次郎', user: user },
-    { element_type: 'Item', name: 'スマホ', user: user }
-  ])
-  element_revisions = elements.map do |element|
-    element.element_revisions.create!(revision: 1, text: "#{element.name}の説明", user:)
-  end
-
   plot = FactoryBot.create(:plot, user:, story: <<~EOS)
     六月二十一日。雨。
     朝六時三十分、私はいつものように目を覚ました。カーテン越しの光は弱く、湿った空気が喉にまとわりつく。彼女はまだ眠っている。寝返りを打つたび、ベッドの軋みが小さく鳴る。私はキッチンに立ち、コーヒー豆を挽いた。最近は酸味の強い豆がお気に入りだ。彼女は苦いのが苦手だから、抽出はやや浅めにする。
@@ -41,20 +32,23 @@ if Rails.env.development?
     十八時。仕事が終わり、帰宅する。街は夜の帳に包まれている。ネオンが輝き、ホログラム広告が空を彩る。私は自動運転車に乗り込み、家路につく。
   EOS
 
+  [
+    { element_type: 'Character', name: '山田 太郎' },
+    { element_type: 'Character', name: '田中 次郎' },
+    { element_type: 'Item', name: 'スマホ' }
+  ].each do |attrs|
+    element = Element.build_revision(user: user, **attrs).element
+    plot.add_element!(element:, summary: "#{element.name}の役割", secrets: "#{element.name}の秘密")
+  end
 
-  plot.plot_elements.create!([
-    { element: elements[0], element_revision: element_revisions[0] }, # 勇者
-    { element: elements[1], element_revision: element_revisions[1] }, # 魔王
-    { element: elements[2], element_revision: element_revisions[2] }  # 伝説の剣
-  ])
 
   links = plot.story.links
-  scene_ids = plot.story.scene_ids
 
   PlotEditor.new(plot:, user: bob).fork(link: links[2]) => { plot: forked_plot, link: forked_link }
-  forked_link.update!(next_scene_id: scene_ids[3])
-  PlotSceneLink.create!(plot: forked_plot, scene_id: scene_ids[3], next_scene_id: scene_ids[4])
-  PlotSceneLink.create!(plot: forked_plot, scene_id: scene_ids[4], next_scene_id: nil)
+  editor = PlotEditor.new(plot: forked_plot, user: bob)
+  editor.add_scene(text: "分岐したシーン1")
+  editor.add_scene(text: "分岐したシーン2")
+  editor.add_scene(text: "分岐したシーン3")
 
   puts "✅ Development seeds (users, stories, characters, plots, scenes) loaded successfully."
 end

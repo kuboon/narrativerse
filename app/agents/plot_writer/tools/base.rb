@@ -3,8 +3,6 @@
 module PlotWriter
   module Tools
     class Base
-      MAX_SEARCH_RESULTS = 20
-
       attr_reader :user, :plot
 
       def initialize(user:, plot:)
@@ -20,40 +18,20 @@ module PlotWriter
         raise NotImplementedError, "#{self} must implement .description"
       end
 
-      # MCP用: すべてのMCPツールを返す
-      def self.all
-        [
-          CrudSceneTool,
-          CrudElementTool,
-          SearchElementsTool
-        ]
-      end
-
       private
 
-      def policy
-        @policy ||= PlotPolicy.new(user, plot)
+      def plot_policy
+        @plot_policy ||= PlotPolicy.new(user, plot)
       end
 
-      def manageable? = policy.own?
+      def own_plot? = plot_policy.own?
 
-      def deny_message
-        json(status: "error", message: "このプロットを編集する権限がありません。")
-      end
+      def json(payload) = JSON.generate(payload)
 
-      def json(payload)
-        JSON.generate(payload)
-      end
+      def success_response(message) = json(status: "ok", message:)
+      def error_response(message) = json(status: "error", message:)
 
-      def normalized_limit(limit, default: 10)
-        value = limit.to_i
-        value = default if value <= 0
-        [ value, MAX_SEARCH_RESULTS ].min
-      end
-
-      def halt(message)
-        json(status: "ok", message:)
-      end
+      def deny_message = error_response("このプロットを編集する権限がありません。")
     end
   end
 end

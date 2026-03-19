@@ -28,12 +28,12 @@ class Message < ApplicationRecord
   def assign_message(message)
     return unless message
 
-    tool_call_id = find_tool_call_id(message.tool_call_id) if message.tool_call_id
+    # tool_call_id = find_tool_call_id(message.tool_call_id) if message.tool_call_id
 
     content_text, attachments_to_persist, content_raw = prepare_content_for_storage(message.content)
 
     attrs = {
-      tool_call_id:,
+      tool_call_id: message.tool_call_id,
       role: message.role,
       content: content_text,
       input_tokens: message.input_tokens,
@@ -42,7 +42,8 @@ class Message < ApplicationRecord
       cache_creation_tokens: message.cache_creation_tokens,
       thinking_text: message.thinking&.text,
       thinking_signature: message.thinking&.signature,
-      thinking_tokens: message.thinking_tokens
+      thinking_tokens: message.thinking_tokens,
+      content_raw:
     }
 
     # if tool_call_id
@@ -50,12 +51,16 @@ class Message < ApplicationRecord
     #   attrs[parent_tool_call_assoc.foreign_key] = tool_call_id
     # end
 
-    @message.assign_attributes(attrs)
-    @message.content_raw = content_raw if @message.respond_to?(:content_raw=)
+    assign_attributes(attrs)
 
     # persist_content(@message, attachments_to_persist) if attachments_to_persist
     # persist_tool_calls(message.tool_calls) if message.tool_calls.present?
   end
+
+  def to_partial_path
+    "messages/message"
+  end
+
   private
 
   def normalize_choice_payload(raw)
@@ -99,6 +104,6 @@ class Message < ApplicationRecord
       content_text = nil
     end
 
-    [content_text, attachments, content_raw]
+    [ content_text, attachments, content_raw ]
   end
 end

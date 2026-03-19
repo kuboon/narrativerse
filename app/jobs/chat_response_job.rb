@@ -7,6 +7,7 @@ class ChatResponseJob < ApplicationJob
     agent = PlotWriter::Agent.chat(user:, plot:)
     chat.messages.each { |msg| agent.add_message(msg.to_llm) }
     agent.on_end_message do |message|
+      p message
       m = chat.messages.build
       m.assign_message(message)
       m.save!

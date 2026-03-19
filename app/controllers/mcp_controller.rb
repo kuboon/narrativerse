@@ -3,28 +3,21 @@ class McpController < ApplicationController
   skip_before_action :verify_authenticity_token, only: :create
 
   def create
-    server = MCP::Server.new(
-      name: "narrativerse_plot_writer",
-      title: "Narrativerse Plot Writer",
-      version: "1.0.0",
-      instructions: "Narrativerse のプロット編集を行うための MCP サーバーです。",
-      tools: PlotWriter::Tools::Mcp::Base.all,
-      prompts: PlotWriter::McpPrompts.all,
-      server_context: {
-        user_id: @mcp_user.id,
-        plot_id: @mcp_user.plots.latest&.id
-      }
+    server = PlotWriter::McpServer.new(
+      user: @mcp_user,
+      plot: @mcp_user.plots.latest
     )
 
     transport = MCP::Server::Transports::StreamableHTTPTransport.new(server)
     server.transport = transport
 
-    status, headers, body = transport.handle_request(request)
+    status, headers_, body = transport.handle_request(request)
+    headers = response_headers(headers_)
     payload = body.respond_to?(:first) ? body.first : body
 
-    return head status, headers: response_headers(headers) if payload.nil?
+    return head status, headers: headers if payload.nil?
 
-    render json: payload, status: status, headers: response_headers(headers)
+    render json: payload, status: status, headers:
   end
 
   private

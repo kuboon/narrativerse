@@ -1,6 +1,5 @@
 class PlotElementPolicy < ApplicationPolicy
-  def plot_policy = PlotPolicy.new(user, record.plot)
-  delegate :own?, to: :plot_policy
+  def user_id = record.plot.user_id
 
   class Scope < ApplicationPolicy::Scope
     def resolve

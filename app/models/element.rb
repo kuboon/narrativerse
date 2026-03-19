@@ -23,4 +23,35 @@ class Element < ApplicationRecord
   validates :element_type, presence: true, inclusion: { in: ELEMENT_TYPES }
   validates :name, presence: true
   broadcasts
+
+  def self.build_revision(user:, element_type:, name:)
+    element = new(user:, element_type:, name:)
+    element.build_latest_revision(user:, revision: 1)
+  end
+
+  def json_to(user:)
+    {
+      id: id,
+      element_type: element_type,
+      name: name,
+      own: user == self.user,
+      appearance: latest_revision.appearance,
+      description: latest_revision.description
+    }
+  end
+
+  def new_revision!(user:, appearance:, description:)
+    latest_revision.with_lock do
+      if latest_revision.plot_elements.where.not(user: user).exists?
+        element_revisions.create!(
+          user:,
+          revision: latest_revision.revision + 1,
+          appearance:,
+          description:
+        )
+      else
+        latest_revision.update!(appearance:, description:)
+      end
+    end
+  end
 end

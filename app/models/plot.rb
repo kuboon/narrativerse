@@ -4,6 +4,7 @@ class Plot < ApplicationRecord
   belongs_to :user
   belongs_to :scene, optional: true
   has_many :plot_elements, dependent: :destroy
+  has_many :elements, through: :plot_elements
   has_many :plot_scene_links, dependent: :destroy
   has_many :parent_plots, class_name: "Plot", foreign_key: "parent_plot_ids", primary_key: "id"
 
@@ -20,4 +21,8 @@ class Plot < ApplicationRecord
   # end
 
   def story = @story ||= PlotStory.new(self)
+
+  def add_element!(element:, summary: nil, secrets: nil)
+    plot_elements.create!(element_revision: element.latest_revision, summary:, secrets:)
+  end
 end

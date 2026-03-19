@@ -20,7 +20,9 @@ class ApplicationPolicy
 
   def destroy? = own?
 
-  def own? = user.present? && record.respond_to?(:user_id) && record.user_id == user.id
+  def own? = user.present? && user.id = user_id
+
+  def user_id = raise "not impl"
 
   class Scope
     attr_reader :user, :scope

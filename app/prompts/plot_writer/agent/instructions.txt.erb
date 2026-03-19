@@ -34,12 +34,11 @@ title: <%= plot.title %>
 summary: <%= plot.summary %>
 elements:
 <%=
-  plot.plot_elements.includes(:element).map do |pe|
+  plot.plot_elements.includes(element_revision: :element).map do |pe|
     {
-      name: pe.element.name,
-      type: pe.element.element_type,
-      summary: pe.summary,
-      secrets: pe.secrets
+      element: pe.element_revision.element.slice(:id, :name, :element_type),
+      revision: pe.element_revision.slice(:appearance, :description),
+      plot_element: pe.slice(:id, :summary, :secrets)
     }
   end.to_yaml
 %>
@@ -47,12 +46,12 @@ elements:
 scenes_count: <%= plot.story.links.count %>
 
 ## latest 10 scenes
+<%= plot.story.scenes(last: 10).map do |s| %>
+scene_id: <%= s.id %>
 ```html
-<%
-  scenes = plot.story.scenes(last: 10)
-  scene_texts = scenes.map(&:text).join("<hr />\n")
-%>
-<%= scene_texts %>
+<%= s.text %>
+````
+<% end.join("<hr />\n") %>
 
 # 期待するアウトプット
 - 常にユーザに選択肢を提示し、ユーザが選択肢から選ぶ形式で物語を共同創作していく
