@@ -35,8 +35,8 @@ module RubyLLM
       # the block.  Accepts either a plain text string (auto-wrapped)
       # or a full Bedrock Converse response hash.
       #
-      #   StubProvider.stub_chat("Hello!") { ... }
-      #   StubProvider.stub_chat({ "output" => { ... }, "usage" => { ... } }) { ... }
+      #   StubProvider.stub_chat("Hello!")
+      #   StubProvider.stub_chat({ "output" => { ... }, "usage" => { ... } })
       #
       def stub_chat(body, &block)
         response_body = body.is_a?(Hash) ? body : bedrock_response(body)
@@ -45,9 +45,20 @@ module RubyLLM
             [ 200, { "Content-Type" => "application/json" }, response_body ]
           end
         end
-        Thread.current[:stub_provider_stubs] = stubs
-        block.call
-      ensure
+
+        if block_given?
+          begin
+            Thread.current[:stub_provider_stubs] = stubs
+            yield
+          ensure
+            Thread.current[:stub_provider_stubs] = nil
+          end
+        else
+          Thread.current[:stub_provider_stubs] = stubs
+        end
+      end
+
+      def clear_stubs
         Thread.current[:stub_provider_stubs] = nil
       end
 
@@ -127,12 +138,14 @@ module RubyLLM
         params
       )
 
+      response = connection.post(completion_url, payload)
+      result = parse_completion_response(response)
+
       if block_given?
-        raise NotImplementedError, "StubProvider does not support streaming yet"
+        yield result
       end
 
-      response = connection.post(completion_url, payload)
-      parse_completion_response(response)
+      result
     end
 
     # -- Models -----------------------------------------------------------
@@ -152,4 +165,22 @@ module RubyLLM
   end
 
   Provider.register(:stub, StubProvider)
+
+  # Monkey-patch RubyLLM::Models.resolve to always use the :stub provider in test environment.
+  # This ensures that all LLM calls (Chat, Embedding, etc.) are routed through the StubProvider
+  # unless a provider is explicitly specified (though even then, we might want to force :stub).
+  class Models
+    class << self
+      alias_method :original_resolve, :resolve
+
+      def resolve(model_id, provider: nil, assume_exists: false, config: nil)
+        if Rails.env.test?
+          # Always force the :stub provider in tests to prevent accidental real API calls.
+          provider = :stub
+          assume_exists = true
+        end
+        original_resolve(model_id, provider: provider, assume_exists: assume_exists, config: config)
+      end
+    end
+  end
 end

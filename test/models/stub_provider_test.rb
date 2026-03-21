@@ -100,4 +100,10 @@ class StubProviderTest < ActiveSupport::TestCase
   it "has no configuration requirements" do
     _(RubyLLM::StubProvider.configuration_requirements).must_equal []
   end
+
+  it "automatically redirects all Models.resolve calls to :stub in test environment" do
+    model_info, provider_instance = RubyLLM::Models.resolve("gpt-5-nano")
+    _(provider_instance).must_be_kind_of RubyLLM::StubProvider
+    _(model_info.id).must_equal "gpt-5-nano"
+  end
 end

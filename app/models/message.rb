@@ -28,12 +28,9 @@ class Message < ApplicationRecord
   def assign_message(message)
     return unless message
 
-    # tool_call_id = find_tool_call_id(message.tool_call_id) if message.tool_call_id
-
     content_text, attachments_to_persist, content_raw = prepare_content_for_storage(message.content)
 
     attrs = {
-      tool_call_id: message.tool_call_id,
       role: message.role,
       content: content_text,
       input_tokens: message.input_tokens,
@@ -46,15 +43,33 @@ class Message < ApplicationRecord
       content_raw:
     }
 
-    # if tool_call_id
-    #   parent_tool_call_assoc = @message.class.reflect_on_association(:parent_tool_call)
-    #   attrs[parent_tool_call_assoc.foreign_key] = tool_call_id
-    # end
+    if message.role.to_s == "assistant" && message.tool_call?
+      attrs[:content_raw] ||= {}
+      attrs[:content_raw]["tool_calls"] = message.tool_calls.transform_values(&:to_h)
+    elsif message.role.to_s == "tool"
+      attrs[:content_raw] ||= {}
+      attrs[:content_raw]["tool_call_id"] = message.tool_call_id
+    end
 
     assign_attributes(attrs)
+  end
 
-    # persist_content(@message, attachments_to_persist) if attachments_to_persist
-    # persist_tool_calls(message.tool_calls) if message.tool_calls.present?
+  def extract_tool_calls
+    return {} unless role == "assistant" && content_raw.is_a?(Hash) && content_raw["tool_calls"]
+
+    content_raw["tool_calls"].transform_values do |tc|
+      RubyLLM::ToolCall.new(
+        id: tc["id"],
+        name: tc["name"],
+        arguments: tc["arguments"],
+        thought_signature: tc["thought_signature"]
+      )
+    end
+  end
+
+  def extract_tool_call_id
+    return nil unless role == "tool" && content_raw.is_a?(Hash)
+    content_raw["tool_call_id"]
   end
 
   def to_partial_path

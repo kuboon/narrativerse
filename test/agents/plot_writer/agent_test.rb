@@ -8,10 +8,17 @@ class PlotWriterAgentTest < ActiveSupport::TestCase
   let(:agent) { PlotWriter::Agent.chat(user:, plot:) }
 
   it "raise no error" do
-    assert_nothing_raised do
-      agent.ask("プロットの要約を教えて") do |chunk|
-        # puts "Received chunk: #{chunk.content}"
-      end
+    RubyLLM::StubProvider.stub_chat("これはテストの要約です。")
+    chunks = []
+    result = agent.ask("プロットの要約を教えて") do |chunk|
+      chunks << chunk.content
     end
+    _(result.content).must_equal "これはテストの要約です。"
+    _(chunks).must_include "これはテストの要約です。"
+  end
+
+  it "stub is reset after each test" do
+    result = agent.ask("Hello")
+    _(result.content).must_equal "(no stub registered)"
   end
 end

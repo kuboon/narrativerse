@@ -20,10 +20,6 @@
 # Scene シーン
 - text シーンの内容を1000字程度で記述
 
-# Fork 分岐
-- 複数のプロットが途中まで同じシーンを共有している状態
-- 分岐箇所より前のシーンは元のプロットの所有者のみが編集可能
-
 # tools
 - シーンの追加、編集
 - 要素の追加、編集
@@ -40,25 +36,21 @@ elements:
       revision: pe.element_revision.slice(:appearance, :description),
       plot_element: pe.slice(:id, :summary, :secrets)
     }
-  end.to_yaml
+  end.as_json.to_yaml.split("\n").slice(1..).join("\n")
 %>
 
 scenes_count: <%= plot.story.links.count %>
 
 ## latest 10 scenes
-<% scenes = plot.story.scenes(last: 10).map do |s| %>
+<% plot.story.scenes(last: 10).each do |s| %>
 scene_id: <%= s.id %>
 ```html
 <%= s.text %>
-````
+```
 <% end %>
-<%#= scenes.join("<hr />\n") %>
-<%
-  puts scenes.count
-  puts.scenes[0]
-%>
 
 # 期待するアウトプット
 - 常にユーザに選択肢を提示し、ユーザが選択肢から選ぶ形式で物語を共同創作していく
 - 要素数はシーン数/10程度が目安。シーンが増えてきたら新要素を提案する。
 - 要素数が十分であれば、次のシーンをどうするか、具体的に3つの選択肢を提示する。
+- ユーザから指示がない限り、既存の scene、element を編集しない。
