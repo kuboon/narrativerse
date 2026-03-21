@@ -25,13 +25,11 @@ module PlotWriter
                   type: "object",
                   properties: {
                     type: {
-                      enum: Element::ELEMENT_TYPES,
-                      required: true
+                      enum: Element::ELEMENT_TYPES
                     },
                     name: {
                       type: "string",
-                      description: "要素の名前",
-                      required: true
+                      description: "要素の名前"
                     }
                   },
                   required: [ "type", "name" ]
@@ -42,8 +40,7 @@ module PlotWriter
               properties: {
                 appearance: {
                   type: "string",
-                  description: "外見の説明",
-                  required: true
+                  description: "外見の説明"
                 },
                 description: {
                   type: "string",

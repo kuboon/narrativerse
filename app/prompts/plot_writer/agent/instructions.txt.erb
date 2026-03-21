@@ -46,12 +46,17 @@ elements:
 scenes_count: <%= plot.story.links.count %>
 
 ## latest 10 scenes
-<%= plot.story.scenes(last: 10).map do |s| %>
+<% scenes = plot.story.scenes(last: 10).map do |s| %>
 scene_id: <%= s.id %>
 ```html
 <%= s.text %>
 ````
-<% end.join("<hr />\n") %>
+<% end %>
+<%#= scenes.join("<hr />\n") %>
+<%
+  puts scenes.count
+  puts.scenes[0]
+%>
 
 # 期待するアウトプット
 - 常にユーザに選択肢を提示し、ユーザが選択肢から選ぶ形式で物語を共同創作していく

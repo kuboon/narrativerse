@@ -14,7 +14,8 @@ module PlotWriter
     tools do
       [
         Tools::ForRubyLLM::CrudSceneTool.new(user:, plot:),
-        Tools::ForRubyLLM::CrudElementTool.new(user:, plot:),
+        Tools::ForRubyLLM::AddElementTool.new(user:, plot:),
+        Tools::ForRubyLLM::UpdateElementTool.new(user:, plot:),
         Tools::ForRubyLLM::SearchElementsTool.new(user:, plot:)
       ]
     end

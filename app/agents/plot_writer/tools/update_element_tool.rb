@@ -17,8 +17,7 @@ module PlotWriter
               properties: {
                 appearance: {
                   type: "string",
-                  description: "外見の説明",
-                  required: true
+                  description: "外見の説明"
                 },
                 description: {
                   type: "string",
