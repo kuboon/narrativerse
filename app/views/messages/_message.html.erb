@@ -1,4 +1,4 @@
-<% return if message.role == "assistant" && message.content.blank? # tool call %>
+<% return if message.role == "assistant" && message.content.blank? && message.extract_tool_calls.present? # tool call %>
 <%
 if message.role == "tool"
   tool_result = message.content_raw

@@ -19,11 +19,15 @@ class FilteredLogger
       end
     end
 
-    message_text = message.to_s
+    message_text = message.to_s.dup
+    if message_text.encoding == Encoding::BINARY || !message_text.valid_encoding?
+      message_text.force_encoding("UTF-8").scrub!
+    end
+
     return true if message_text.empty?
     return true if excluded?(message_text)
 
-    message2 = message.is_a?(String) ? mutate_message(message) : message
+    message2 = message.is_a?(String) ? mutate_message(message_text) : message_text
 
     @inner_logger.add(severity, message2, progname)
   end
