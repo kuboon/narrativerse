@@ -24,7 +24,7 @@ module PlotWriter
         result = tool.execute(element: { "element_type" => "Character", "name" => "テストキャラ" })
         parsed = JSON.parse(result)
         assert_equal "ok", parsed["status"], parsed["message"]
-        assert @plot.elements.any? { it.name == "テストキャラ" }
+        assert @plot.elements.any? { _1.name == "テストキャラ" }
       end
 
       test "要素が見つからない場合はエラー" do

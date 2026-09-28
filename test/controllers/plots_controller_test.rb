@@ -7,9 +7,9 @@ class PlotsControllerTest < ActionDispatch::IntegrationTest
   let(:plot) { create(:plot, user: owner) }
 
   it "does not route post /plots" do
-    post plots_path, params: { plot: { title: "unused" } }
-
-    assert_response :not_found
+    assert_raises(ActionController::RoutingError) do
+      Rails.application.routes.recognize_path("/plots", method: :post)
+    end
   end
 
   it "redirects edit path to show" do
