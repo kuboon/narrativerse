@@ -66,7 +66,7 @@ group :development do
   gem "web-console"
 end
 
-group :test do
+group :development, :test do
   gem "minitest", "~> 6.0"
   gem "factory_bot_rails"
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]

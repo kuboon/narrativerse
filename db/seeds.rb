@@ -1,6 +1,3 @@
-require 'factory_bot'
-FactoryBot.find_definitions
-
 Model.refresh!
 
 if Rails.env.development?
