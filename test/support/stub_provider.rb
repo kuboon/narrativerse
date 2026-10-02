@@ -1,9 +1,8 @@
 # frozen_string_literal: true
 
 module RubyLLM
-  # Test provider that reuses Bedrock's Chat/Media modules for payload
-  # rendering and response parsing, but replaces HTTP transport with
-  # Faraday's test adapter so no real network calls are made.
+  # Test provider that uses Bedrock Converse payloads and response parsing,
+  # but replaces HTTP transport with Faraday's test adapter.
   #
   # Usage in tests:
   #
@@ -12,8 +11,7 @@ module RubyLLM
   #   end
   #
   class StubProvider < Provider
-    include Providers::Bedrock::Chat
-    include Providers::Bedrock::Media
+    protocol :converse, Protocols::Converse
 
     # -- Provider identity ------------------------------------------------
 
@@ -122,30 +120,14 @@ module RubyLLM
       end
     end
 
-    # -- Chat completion --------------------------------------------------
-
-    def complete(messages, tools:, temperature:, model:, params: {}, headers: {}, schema: nil, thinking: nil, tool_prefs: nil, &block)
-      payload = Utils.deep_merge(
-        render_payload(
-          messages,
-          tools: tools,
-          temperature: temperature,
-          model: model,
-          stream: block_given?,
-          schema: schema,
-          thinking: thinking
-        ),
-        params
-      )
-
-      response = connection.post(completion_url, payload)
-      result = parse_completion_response(response)
-
-      if block_given?
-        yield result
-      end
-
+    def complete(messages, **options, &block)
+      result = super(messages, **options, &nil)
+      block&.call(result)
       result
+    end
+
+    def sign_headers(*)
+      {}
     end
 
     # -- Models -----------------------------------------------------------
@@ -166,20 +148,17 @@ module RubyLLM
 
   Provider.register(:stub, StubProvider)
 
-  # Monkey-patch RubyLLM::Models.resolve to always use the :stub provider in test environment.
-  # This ensures that all LLM calls (Chat, Embedding, etc.) are routed through the StubProvider
-  # unless a provider is explicitly specified (though even then, we might want to force :stub).
+  # Route model resolution through the stub provider in the test environment.
   class Models
     class << self
       alias_method :original_resolve, :resolve
 
-      def resolve(model_id, provider: nil, assume_exists: false, config: nil)
+      def resolve(model_id, provider: nil, assume_model_exists: false, config: nil)
         if Rails.env.test?
-          # Always force the :stub provider in tests to prevent accidental real API calls.
           provider = :stub
-          assume_exists = true
+          assume_model_exists = true
         end
-        original_resolve(model_id, provider: provider, assume_exists: assume_exists, config: config)
+        original_resolve(model_id, provider: provider, assume_model_exists: assume_model_exists, config: config)
       end
     end
   end
