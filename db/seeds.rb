@@ -1,5 +1,3 @@
-Model.refresh!
-
 if Rails.env.development?
   users = User.create!([
     { name: '山田 太郎' },
