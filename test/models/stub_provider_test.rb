@@ -5,7 +5,7 @@ class StubProviderTest < ActiveSupport::TestCase
 
   let(:provider) { RubyLLM::StubProvider.new(RubyLLM.config) }
   let(:model) do
-    RubyLLM::Model::Info.new(
+    RubyLLM::Model.new(
       id: "stub-model",
       name: "Stub Model",
       provider: "stub",
@@ -28,8 +28,8 @@ class StubProviderTest < ActiveSupport::TestCase
       _(result).must_be_kind_of RubyLLM::Message
       _(result.role).must_equal :assistant
       _(result.content).must_equal "こんにちは！"
-      _(result.input_tokens).must_equal 10
-      _(result.output_tokens).must_equal 20
+      _(result.tokens.input).must_equal 10
+      _(result.tokens.output).must_equal 20
     end
   end
 

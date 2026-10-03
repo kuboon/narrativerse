@@ -12,7 +12,7 @@ module PlotWriter
           def wraps(tool_class)
             @pure_tool_class = tool_class
             description(tool_class.description)
-            params(**tool_class.schema)
+            parameters(tool_class.schema)
           end
 
           def schema

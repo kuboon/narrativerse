@@ -1,8 +1,3 @@
-require 'factory_bot'
-FactoryBot.find_definitions
-
-Model.refresh!
-
 if Rails.env.development?
   users = User.create!([
     { name: '山田 太郎' },

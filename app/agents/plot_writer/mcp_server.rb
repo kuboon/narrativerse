@@ -1,6 +1,6 @@
 module PlotWriter
   class McpServer < MCP::Server
-    def initialize(user_id:, plot_id:)
+    def initialize(user:, plot:)
       super(
         name: "narrativerse_plot_writer",
         title: "Narrativerse Plot Writer",

@@ -20,6 +20,7 @@ class McpControllerTest < ActionDispatch::IntegrationTest
     user = create(:user)
     create(:plot, user:)
     signature = McpAuth.sign_user_id(user.id)
+    host! "localhost"
 
     post mcp_path(signature:), params: {
       jsonrpc: "2.0",
