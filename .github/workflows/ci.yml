@@ -20,7 +20,7 @@ jobs:
           bundler-cache: true
 
       - id: setup-chrome
-        uses: browser-actions/setup-chrome@4f8e94349a351df0f048634f25fec36c3c91eded
+        uses: browser-actions/setup-chrome@2e1d749697dd1612b833dba4a722266286fbefcd
         with:
           chrome-version: stable
       - run: ${{ steps.setup-chrome.outputs.chrome-path }} --version
