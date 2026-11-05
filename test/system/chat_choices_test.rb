@@ -1,19 +1,7 @@
 require "application_system_test_case"
 
 class ChatChoicesTest < ApplicationSystemTestCase
-  include ActiveJob::TestHelper
-
-  setup do
-    clear_enqueued_jobs
-    clear_performed_jobs
-  end
-
-  teardown do
-    clear_enqueued_jobs
-    clear_performed_jobs
-  end
-
-  test "renders content_raw choices and submits the selected text" do
+  test "renders choices and streams the reply to the selected one" do
     owner = create(:user)
     plot = create(:plot, user: owner)
     chat = create(:chat, user: owner)
@@ -21,7 +9,7 @@ class ChatChoicesTest < ApplicationSystemTestCase
 
     chat.messages.create!(
       role: "assistant",
-      content_raw: {
+      content: {
         question: "現在のプロットは要素がまだありません。共同創作を始めるため、次のいずれかを選んでください。",
         choices: [
           "1) 初期要素セットを追加して土台を作る",
@@ -45,17 +33,14 @@ class ChatChoicesTest < ApplicationSystemTestCase
     assert_selector "#chat-frame .chat-choice", text: choice
     assert_text "現在のプロットは要素がまだありません。共同創作を始めるため、次のいずれかを選んでください。"
 
-    page.execute_script(<<~JS)
-      const form = document.getElementById("new_message")
-      form.dataset.submitted = "false"
-      form.addEventListener("submit", () => {
-        form.dataset.submitted = "true"
-      }, { once: true })
-    JS
-
     click_button choice
 
-    # 選択肢ボタン押下後、送信イベントが発生することのみ確認
-    assert_selector "#new_message[data-submitted='true']"
+    within "#chat-frame #messages" do
+      assert_selector ".chat-end .chat-bubble", text: choice
+      assert_selector ".chat-start .chat-bubble", text: "(no stub registered)"
+      assert_no_selector "#message_streaming"
+    end
+    assert_equal "", find("#new_message textarea").value
+    assert_equal %w[user assistant], chat.messages.order(:id).last(2).map(&:role)
   end
 end

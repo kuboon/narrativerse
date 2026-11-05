@@ -78,7 +78,6 @@ ActiveRecord::Schema[8.1].define(version: 2026_02_28_142457) do
     t.integer "chat_id", null: false
     t.string "role", null: false
     t.text "content"
-    t.json "content_raw"
     t.integer "cache_creation_tokens"
     t.integer "cached_tokens"
     t.integer "input_tokens"

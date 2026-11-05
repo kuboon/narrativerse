@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import ChatStreamController from "./chat_stream_controller"
+application.register("chat-stream", ChatStreamController)
+
 import InlineProsemirrorController from "./inline_prosemirror_controller"
 application.register("inline-prosemirror", InlineProsemirrorController)
 

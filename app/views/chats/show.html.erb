@@ -1,7 +1,6 @@
 <turbo-frame id="chat-frame">
   <div id="<%= dom_id(@chat) %>" class="chat-container">
     <%= render "messages/form" %>
-    <%= turbo_stream_from(@chat) %>
     <div id="messages">
       <%= render @chat.messages %>
     </div>
