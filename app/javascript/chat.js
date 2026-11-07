@@ -21,9 +21,6 @@ const setupChatFrame = () => {
     contentField.value = button.dataset.choice || ""
     form.requestSubmit()
   })
-  form.addEventListener("turbo:submit-end", () => {
-    contentField.value = ""
-  })
 	frame.dataset.chatChoiceHandlerInstalled = "true"
 }
 

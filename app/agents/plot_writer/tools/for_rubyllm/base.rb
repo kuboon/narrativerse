@@ -38,10 +38,6 @@ module PlotWriter
           @plot = plot
           super()
         end
-
-        def json(val)
-          RubyLLM::Content::Raw.new(val)
-        end
       end
     end
   end
