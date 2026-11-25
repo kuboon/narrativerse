@@ -1,7 +1,9 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    action_args (2.7.3)
+    action_args (2.8.0)
+      actionpack (>= 4.1)
+      railties (>= 4.1)
     action_text-trix (2.1.19)
       railties
     actioncable (8.1.4)
@@ -437,7 +439,7 @@ DEPENDENCIES
   web-console
 
 CHECKSUMS
-  action_args (2.7.3) sha256=d1e52c2de32046449e61727d6175efcf80c48a843ef088c3c59225978126c898
+  action_args (2.8.0) sha256=c3cf65b49eafd55d50bedc17ae5585d3236fc27f507246ca197fc249877ec8b1
   action_text-trix (2.1.19) sha256=7012f59421009cf284aa651294896414d653a61a2417c9b8714c8476d2f74009
   actioncable (8.1.4) sha256=cfcd72f8c861e01ccdc96d772ad8c5ad6ed0ea7c571aef81a794b6027eaa7f11
   actionmailbox (8.1.4) sha256=9c4525e577ebb671ce558f3ea78b8a634f64e56a0e6e8d105b28b873793a06eb
