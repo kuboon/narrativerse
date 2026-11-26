@@ -67,7 +67,7 @@ group :development do
 end
 
 group :development, :test do
-  gem "minitest", "~> 6.0"
+  gem "minitest", "~> 6.1"
   gem "factory_bot_rails"
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"

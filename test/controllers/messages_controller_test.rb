@@ -49,7 +49,7 @@ class MessagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_response :success
     assistant_message = chat.messages.where(role: "assistant").last
-    _(assistant_message.choice_payload).must_equal("question" => "どうしますか？", "choices" => [ "次へ", "やめる" ])
+    _(assistant_message.choice_payload).must_equal({ "question" => "どうしますか？", "choices" => [ "次へ", "やめる" ] })
     _(sse_data(response.body).last).must_match %r{id="message_#{assistant_message.id}".*chat-choice.*次へ}m
   end
 
